@@ -1,0 +1,8 @@
+
+{
+  "dev-host": "http://localhost:3333/api",
+  "qa-host": "",
+  "test-host": "http://localhost:3333/api",
+  "staging-host": "https://muveplay.com/api",
+  "environment": "development"
+}
