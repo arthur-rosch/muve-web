@@ -23,4 +23,4 @@ RUN chmod -R 777 /web
 EXPOSE 8080
 
 # Comando para iniciar a aplicação Vite
-CMD ["pnpm", "run", "dev"]
+CMD ["pnpm", "run", "preview"]
