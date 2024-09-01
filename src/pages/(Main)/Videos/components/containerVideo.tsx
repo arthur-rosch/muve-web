@@ -11,7 +11,7 @@ import {
 } from '../../../../components'
 
 export const ContainerVideo: FC<{ video: Video }> = ({ video }) => {
-  const { deleteVideo, getAllVideosByUserId } = useVideo()
+  const { deleteVideo, getAllVideosByUserId } = useVideo('')
 
   const [isOpenPreviewPlayerModal, setIsOpenPreviewPlayerModal] =
     useState(false)

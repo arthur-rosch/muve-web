@@ -38,6 +38,7 @@ export function Player() {
   const [isFetched, setIsFetched] = useState(false)
   const [transitionDuration, setTransitionDuration] = useState(0)
   const [playStartTime, setPlayStartTime] = useState<number | null>(null)
+  const [playEndTime, setPlayEndTime] = useState<number | null>(null)
   const [playerData, setPlayerData] = useState<{
     userIp: string
     deviceType: string
@@ -140,7 +141,7 @@ export function Player() {
       if (playStartTime !== null) {
         const currentTime = player.current?.currentTime || 0
         const duration = currentTime - playStartTime
-        setPlayDuration(duration)
+        setPlayEndTime(duration)
         console.log('Pause event triggered at:', currentTime)
         console.log('Play duration:', duration)
 
