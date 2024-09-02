@@ -63,10 +63,8 @@ export function Player({ video }: { video: Video }) {
         const geoData = await getGeolocation(ipAddress)
 
         const playerData = {
+          ...geoData,
           userIp: ipAddress,
-          city: geoData.city,
-          region: geoData.region,
-          country: geoData.country,
           agent: navigator.userAgent,
           deviceType: /Mobi|Android/i.test(navigator.userAgent)
             ? 'Mobile'
