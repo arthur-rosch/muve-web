@@ -82,10 +82,7 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
       onCanPlay={onCanPlay}
       crossOrigin="anonymous"
       onProviderChange={onProviderChange}
-      src={{
-        src: video.url,
-        type: 'video/mp4',
-      }}
+      src={video.url}
       className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
     >
       <MediaProvider>
