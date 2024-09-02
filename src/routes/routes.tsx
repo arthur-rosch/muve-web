@@ -17,7 +17,7 @@ export function Router() {
         <Route path="/analytics" element={<Analytics />} />
       </Route>
 
-      <Route path="/player/:videoId" element={<PlayerWrapper />} />
+      <Route path="/player" element={<PlayerWrapper />} />
     </Routes>
   )
 }

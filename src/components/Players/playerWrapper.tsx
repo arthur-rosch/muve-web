@@ -1,19 +1,26 @@
 import { Player } from './player'
 import type { Video } from '../../types'
-import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useLocation } from 'react-router-dom'
 
 export function PlayerWrapper() {
-  const params = useParams()
+  const location = useLocation()
   const [video, setVideo] = useState<Video | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  // Function to get the videoId from the query string
+  const getVideoIdFromQuery = () => {
+    const searchParams = new URLSearchParams(location.search)
+    return searchParams.get('videoId')
+  }
+
   const fetchVideo = async () => {
+    const videoId = getVideoIdFromQuery()
     try {
-      if (params.videoId) {
+      if (videoId) {
         const response = await axios.get(
-          `http://localhost:3333/api/video/${params.videoId}`,
+          `http://localhost:3333/api/video/${videoId}`,
         )
         const video = response.data.video
         if (video) {
@@ -32,7 +39,7 @@ export function PlayerWrapper() {
 
   useEffect(() => {
     fetchVideo()
-  }, [params.videoId])
+  }, [location.search]) // Re-fetch video when query changes
 
   if (isLoading) {
     return <div>Loading...</div> // Loading indicator or placeholder
