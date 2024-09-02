@@ -1,6 +1,6 @@
 import { useEffect, useState, type FC } from 'react'
-import { dataFormatter } from '../../../../../utils'
 import type { ChartProps } from '../../../../../types'
+import { convertDurationToSeconds, dataFormatter } from '../../../../../utils'
 import {
   Table,
   TableRow,
@@ -22,43 +22,72 @@ interface CountryMetrics {
   totalPlays: number
 }
 
-export const ChartRegion: FC<ChartProps> = ({ analytics, selectedVideo }) => {
+export const ChartCountry: FC<ChartProps> = ({ analytics, selectedVideo }) => {
   const [chartData, setChartData] = useState<ChartData[]>([])
   const [countryMetrics, setCountryMetrics] = useState<CountryMetrics[]>([])
 
   useEffect(() => {
-    const totalDuration = 20 * 60 // 20 minutos em segundos
-    const retentionData: { [country: string]: number[] } = {}
+    const totalDuration = convertDurationToSeconds(selectedVideo.duration)
+
     const totalViewsByCountry: { [country: string]: number } = {}
     const totalPlaysByCountry: { [country: string]: number } = {}
+    const retentionData: { [country: string]: number[] } = {}
 
     let maxEndTime = 0
 
-    analytics.viewTimestamps
-      .filter((view) => Math.floor(view.startTimestamp) === 0)
-      .forEach((view) => {
-        const start = Math.floor(view.startTimestamp)
-        const end = Math.min(Math.floor(view.endTimestamp), totalDuration)
-        const country = view.country || 'Unknown'
+    analytics.viewUnique.forEach((view) => {
+      const country = view.country || 'Unknown'
 
-        if (!retentionData[country]) {
-          retentionData[country] = Array(totalDuration + 1).fill(0)
-          totalViewsByCountry[country] = 0
-          totalPlaysByCountry[country] = 0
+      if (!totalViewsByCountry[country]) {
+        totalViewsByCountry[country] = 0
+      }
+
+      totalViewsByCountry[country]++
+    })
+
+    // Contagem de plays por país (ViewTimestamps)
+    analytics.viewTimestamps.forEach((view) => {
+      const country = view.country || 'Unknown'
+
+      if (!totalPlaysByCountry[country]) {
+        totalPlaysByCountry[country] = 0
+      }
+
+      totalPlaysByCountry[country]++
+    })
+
+    const filteredViews = analytics.viewTimestamps.filter(
+      (view) => Math.floor(view.startTimestamp) === 0,
+    )
+
+    filteredViews.forEach((view, index) => {
+      const country = view.country || 'Unknown'
+      let end = Math.min(Math.floor(view.endTimestamp), totalDuration)
+
+      for (let i = index + 1; i < filteredViews.length; i++) {
+        if (Math.floor(filteredViews[i].startTimestamp) === end) {
+          end = Math.min(
+            Math.floor(filteredViews[i].endTimestamp),
+            totalDuration,
+          )
+          break
         }
+      }
 
-        if (end > maxEndTime) {
-          maxEndTime = end
-        }
+      if (!retentionData[country]) {
+        retentionData[country] = Array(totalDuration + 1).fill(0)
+      }
 
-        for (let i = start; i <= end; i++) {
-          retentionData[country][i]++
-        }
+      if (end > maxEndTime) {
+        maxEndTime = end
+      }
 
-        totalViewsByCountry[country]++
-        totalPlaysByCountry[country] += end - start + 1
-      })
+      for (let i = 0; i <= end; i++) {
+        retentionData[country][i]++
+      }
+    })
 
+    // Construção do gráfico de retenção
     const retentionPercentages: ChartData[] = Array.from(
       { length: maxEndTime + 1 },
       (_, index) => {
@@ -72,19 +101,14 @@ export const ChartRegion: FC<ChartProps> = ({ analytics, selectedVideo }) => {
 
         for (const country in retentionData) {
           dataPoint[country] =
-            (retentionData[country][index] /
-              analytics.viewTimestamps.filter(
-                (view) =>
-                  Math.floor(view.startTimestamp) === 0 &&
-                  view.country === country,
-              ).length) *
-            100
+            (retentionData[country][index] / filteredViews.length) * 100
         }
 
         return dataPoint
       },
     )
 
+    // Preparando as métricas de países
     const metrics = Object.keys(totalViewsByCountry)
       .map((country) => ({
         country,
@@ -93,6 +117,7 @@ export const ChartRegion: FC<ChartProps> = ({ analytics, selectedVideo }) => {
       }))
       .sort((a, b) => b.totalViews - a.totalViews) // Ordena por totalViews em ordem decrescente
 
+    // Atualiza os estados com as métricas calculadas
     setChartData(retentionPercentages)
     setCountryMetrics(metrics)
   }, [analytics, selectedVideo])
@@ -104,14 +129,14 @@ export const ChartRegion: FC<ChartProps> = ({ analytics, selectedVideo }) => {
   return (
     <div className="w-full">
       <AreaChart
-        className="mt-4 w-full h-[75%]"
         data={chartData}
         index="date"
-        categories={countries}
-        colors={['indigo', 'rose', 'green', 'yellow', 'red', 'blue', 'purple']}
-        valueFormatter={dataFormatter}
         yAxisWidth={60}
+        categories={countries}
+        valueFormatter={dataFormatter}
+        className="mt-4 w-full h-[75%]"
         onValueChange={(v) => console.log(v)}
+        colors={['red', 'yellow', 'rose', 'blue', 'purple', 'indigo']}
       />
       <div className="mt-8">
         <Table>

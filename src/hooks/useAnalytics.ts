@@ -1,8 +1,8 @@
-import { useMutation, useQuery } from 'react-query'
+import { useMutation } from 'react-query'
 import { AnalyticsService } from './../services/AnalyticsService'
-import type { AddViewTimestamps, AddViewUnique, VideoAnalytics } from '../types'
+import type { AddViewTimestamps, AddViewUnique } from '../types'
 
-export const useAnalytics = (videoId: string) => {
+export const useAnalytics = () => {
   const addViewTimestamps = useMutation(async (view: AddViewTimestamps) => {
     const { data, success, error } =
       await AnalyticsService.addViewTimesTamps(view)
@@ -16,26 +16,8 @@ export const useAnalytics = (videoId: string) => {
     return { data, success, error }
   })
 
-  const getAnalyticsByVideoId = useQuery<VideoAnalytics>(
-    ['getAnalyticsByVideoId'],
-    async () => {
-      console.log(videoId)
-      const { success, data, error } =
-        await AnalyticsService.getAnalyticsByVideoId(videoId)
-
-      if (success) {
-        console.log(data)
-
-        return data.analytics
-      }
-
-      throw error
-    },
-  )
-
   return {
     addViewUnique,
     addViewTimestamps,
-    getAnalyticsByVideoId,
   }
 }

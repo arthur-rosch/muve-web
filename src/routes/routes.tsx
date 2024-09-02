@@ -1,10 +1,10 @@
 import { Route, Routes } from 'react-router-dom'
 
-import { Player } from '../components'
 import { Login } from '../pages/(Auth)'
 import { Analytics, Video } from '../pages/(Main)'
 import { UserLayout } from '../layout/UserLayout'
 import { SplashScreen } from '../pages/SplashScreen'
+import { PlayerWrapper } from '../components/Players/playerWrapper'
 
 export function Router() {
   return (
@@ -17,7 +17,7 @@ export function Router() {
         <Route path="/analytics" element={<Analytics />} />
       </Route>
 
-      <Route path="/player/:videoId" element={<Player />} />
+      <Route path="/player/:videoId" element={<PlayerWrapper />} />
     </Routes>
   )
 }

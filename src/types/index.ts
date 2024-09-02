@@ -17,24 +17,6 @@ export interface User {
   created_at: Date
 }
 
-export interface Video {
-  id: string
-  url: string
-  tags: string
-  duration: string
-  folderId?: string
-  format: '9/16' | '16/9'
-  type: 'Vsl' | 'Curso'
-  color?: string
-  chapters?: {
-    title?: string
-    startTime?: string
-    endTime?: string
-  }[]
-  fictitiousProgress?: boolean
-  created_at: Date
-}
-
 export interface CreateVideoVariables {
   url: string
   duration: string
@@ -48,14 +30,6 @@ export interface CreateVideoVariables {
     endTime?: string
   }[]
   fictitiousProgress?: boolean
-}
-
-export interface Folder {
-  id: string
-  name: string
-  userId: string
-  created_at: Date
-  videos: Video[]
 }
 
 export interface ViewTimestamp {
@@ -87,6 +61,7 @@ export interface ViewUnique {
 export interface VideoAnalytics {
   id: string
   totalPlays: number
+  totalViews: number
   videoId: string
   created_at: Date
   viewTimestamps: ViewTimestamp[]
@@ -123,11 +98,6 @@ export interface VideoMetrics {
   uniqueViews: number
 }
 
-export interface ChartProps {
-  analytics: VideoAnalytics
-  selectedVideo: Video
-}
-
 export interface GenerateUrlVariables {
   videoId: string
 }
@@ -138,4 +108,44 @@ export interface ValidateUrlVariables {
 
 export interface InvalidateTokenVariables {
   token: string
+}
+
+export interface PlayerDataVariables {
+  userIp: string
+  deviceType: string
+  agent: string
+  country: string
+  region: string
+  city: string
+}
+export interface Video {
+  id: string
+  url: string
+  tags: string
+  duration: string
+  folderId?: string
+  format: '9/16' | '16/9'
+  type: 'Vsl' | 'Curso'
+  color?: string
+  chapters?: {
+    title?: string
+    startTime?: string
+    endTime?: string
+  }[]
+  fictitiousProgress?: boolean
+  created_at: Date
+
+  analytics: VideoAnalytics
+}
+
+export interface ChartProps {
+  analytics: VideoAnalytics
+  selectedVideo: Video
+}
+export interface Folder {
+  id: string
+  name: string
+  userId: string
+  created_at: Date
+  videos: Video[]
 }

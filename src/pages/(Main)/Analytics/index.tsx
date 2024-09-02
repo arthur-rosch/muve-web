@@ -1,11 +1,11 @@
+import { useVideo } from '../../../hooks'
 import { useState, useEffect, type FC } from 'react'
-import { calculateVideoMetrics } from '../../../utils'
-import { useAnalytics, useVideo } from '../../../hooks'
 import type { Video, VideoMetrics } from '../../../types'
+import { calculateVideoMetrics, convertDurationToSeconds } from '../../../utils'
 import {
   CardMetrics,
   ChartDevice,
-  ChartRegion,
+  ChartCountry,
   ChartRetention,
   CustomModalSelectVideo,
 } from './components'
@@ -17,24 +17,26 @@ export const Analytics: FC = () => {
   const [selectedVideo, setSelectVideo] = useState<Video | null>(null)
   const [selectedTypeDataChart, setSelectedTypeDataChart] = useState('retencao')
 
-  const { getAllVideosByUserId } = useVideo('')
+  const { getAllVideosByUserId } = useVideo()
   const { data: videos } = getAllVideosByUserId
 
-  const { getAnalyticsByVideoId } = useAnalytics(selectedVideo!.id)
-  const { data: analytics } = getAnalyticsByVideoId
-  console.log('Analytics', analytics)
   useEffect(() => {
-    if (analytics) {
-      setMetrics(calculateVideoMetrics(analytics))
+    if (selectedVideo) {
+      setMetrics(
+        calculateVideoMetrics(
+          convertDurationToSeconds(selectedVideo.duration),
+          selectedVideo.analytics,
+        ),
+      )
       setTimeout(() => setLoading(false), 1000)
     }
-  }, [analytics, selectedVideo])
+  }, [selectedVideo])
 
   useEffect(() => {
-    if (!analytics) {
+    if (!selectedVideo) {
       setLoading(true)
     }
-  }, [analytics])
+  }, [selectedVideo])
 
   return (
     <>
@@ -65,70 +67,62 @@ export const Analytics: FC = () => {
             </button>
           </div>
 
-          {loading ? (
+          {!selectedVideo ? (
+            <div className="w-full h-full flex items-center justify-center text-center text-gray-500">
+              Por favor, selecione um vídeo para visualizar as métricas.
+            </div>
+          ) : loading ? (
             <div className="bg-[#121316] w-full h-[100vh] flex items-center justify-center flex-col">
               <div
                 className="w-8 h-8 border-4 border-solid rounded-full animate-spin"
                 style={{ borderTopColor: '#217CE5' }}
               ></div>
             </div>
-          ) : (
+          ) : metrics &&
+            selectedVideo.analytics &&
+            selectedVideo.analytics.viewTimestamps.length > 0 ? (
             <>
               <div className="w-full grid grid-cols-6 gap-2 my-4">
-                <>
-                  {selectedVideo && metrics && (
-                    <>
-                      <CardMetrics information={metrics.views} text="Views" />
-                      <CardMetrics information={metrics.plays} text="Plays" />
-                      <CardMetrics
-                        information={metrics.uniqueViews}
-                        text="Views Únicas"
-                      />
-                      <CardMetrics
-                        information={metrics.uniquePlays}
-                        text="Plays Únicos"
-                      />
-                      <CardMetrics
-                        information={`${metrics.playRate} %`}
-                        text="Play Rate"
-                      />
-                      <CardMetrics
-                        information={`${metrics.engagement} %`}
-                        text="Engajamento"
-                      />
-                    </>
-                  )}
-                </>
+                <CardMetrics information={metrics.views} text="Views" />
+                <CardMetrics information={metrics.plays} text="Plays" />
+                <CardMetrics
+                  information={metrics.uniqueViews}
+                  text="Views Únicas"
+                />
+                <CardMetrics
+                  information={metrics.uniquePlays}
+                  text="Plays Únicos"
+                />
+                <CardMetrics
+                  information={`${metrics.playRate} %`}
+                  text="Play Rate"
+                />
+                <CardMetrics
+                  information={`${metrics.engagement} %`}
+                  text="Engajamento"
+                />
               </div>
-              {selectedVideo && analytics ? (
-                analytics.viewTimestamps.length > 0 ? (
-                  selectedTypeDataChart === 'retencao' ? (
-                    <ChartRetention
-                      analytics={analytics}
-                      selectedVideo={selectedVideo!}
-                    />
-                  ) : selectedTypeDataChart === 'pais' ? (
-                    <ChartRegion
-                      analytics={analytics}
-                      selectedVideo={selectedVideo!}
-                    />
-                  ) : (
-                    <ChartDevice
-                      analytics={analytics}
-                      selectedVideo={selectedVideo!}
-                    />
-                  )
-                ) : (
-                  <div className="text-center text-gray-500">
-                    Não temos dados para analisar ainda
-                  </div>
-                )
+              {selectedTypeDataChart === 'retencao' ? (
+                <ChartRetention
+                  analytics={selectedVideo.analytics}
+                  selectedVideo={selectedVideo!}
+                />
+              ) : selectedTypeDataChart === 'pais' ? (
+                <ChartCountry
+                  analytics={selectedVideo.analytics}
+                  selectedVideo={selectedVideo!}
+                />
               ) : (
-                <div className="text-center text-gray-500">
-                  Nenhuma análise disponível
-                </div>
+                <ChartDevice
+                  analytics={selectedVideo.analytics}
+                  selectedVideo={selectedVideo!}
+                />
               )}
             </>
+          ) : (
+            <div className="text-center text-gray-500">
+              Não temos dados para analisar ainda.
+            </div>
           )}
         </div>
       </div>

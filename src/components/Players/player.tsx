@@ -1,11 +1,14 @@
 import '@vidstack/react/player/styles/base.css'
+
 import { PlayIcon } from 'lucide-react'
 import { ProgressBar } from './components'
-import { useParams } from 'react-router-dom'
+import { useAnalytics } from '../../hooks'
 import { VideoLayout } from './layouts/videoLayout'
-import { useEffect, useRef, useState } from 'react'
-import { useAnalytics, useVideo } from '../../hooks'
+import type { PlayerDataVariables, Video } from '../../types'
 import { getYoutubeVideoId, getIPAddress, getGeolocation } from '../../utils'
+
+import { useEffect, useRef, useState } from 'react'
+
 import {
   Poster,
   PlayButton,
@@ -20,33 +23,17 @@ import {
   type MediaProviderAdapter,
   type MediaProviderChangeEvent,
 } from '@vidstack/react'
-import type { Video } from '../../types'
 
-export function Player() {
-  const params = useParams()
-
-  const { getVideoById } = useVideo(params.videoId!)
-
+export function Player({ video }: { video: Video }) {
   const player = useRef<MediaPlayerInstance>(null)
+
   const { currentTime, duration, paused } = useMediaStore(player)
+  const { addViewTimestamps, addViewUnique } = useAnalytics()
 
-  const { addViewTimestamps, addViewUnique } = useAnalytics(params.videoId!)
-
-  const hasFetchedData = useRef(false)
   const [progress, setProgress] = useState(0)
-  const [video, setVideo] = useState<Video>()
-  const [isFetched, setIsFetched] = useState(false)
   const [transitionDuration, setTransitionDuration] = useState(0)
   const [playStartTime, setPlayStartTime] = useState<number | null>(null)
-  const [playEndTime, setPlayEndTime] = useState<number | null>(null)
-  const [playerData, setPlayerData] = useState<{
-    userIp: string
-    deviceType: string
-    agent: string
-    country: string
-    region: string
-    city: string
-  }>()
+  const [playerData, setPlayerData] = useState<PlayerDataVariables>()
 
   function onProviderChange(
     provider: MediaProviderAdapter | null,
@@ -69,106 +56,72 @@ export function Player() {
     console.log(detail, nativeEvent)
   }
 
-  const fetchVideo = async () => {
-    try {
-      const { data } = getVideoById
-      if (data) {
-        setVideo(data)
-        setIsFetched(true)
-      }
-    } catch (error) {
-      console.error('Erro ao buscar vídeo:', error)
-    }
-  }
+  // useEffect(() => {
+  //   const view = async () => {
+  //     const ipAddress = await getIPAddress()
+  //     const geoData = await getGeolocation(ipAddress)
 
-  useEffect(() => {
-    if (!isFetched) {
-      fetchVideo()
-    }
-  }, [getVideoById, isFetched])
+  //     const playerData = {
+  //       userIp: ipAddress,
+  //       city: geoData.city,
+  //       region: geoData.region,
+  //       country: geoData.country,
+  //       agent: navigator.userAgent,
+  //       deviceType: /Mobi|Android/i.test(navigator.userAgent)
+  //         ? 'Mobile'
+  //         : 'Desktop',
+  //     }
+
+  //     setPlayerData(playerData)
+
+  //     await addViewUnique.mutateAsync({
+  //       ...playerData,
+  //       videoId: video.id,
+  //     })
+  //   }
+  //   view()
+  // }, [addViewUnique, video.id])
 
   useEffect(() => {
     if (video) {
-      const fetchData = async () => {
-        const ipAddress = await getIPAddress()
-        const geoData = await getGeolocation(ipAddress)
-
-        const data = {
-          userIp: ipAddress,
-          city: geoData.city,
-          region: geoData.region,
-          country: geoData.country,
-          agent: navigator.userAgent,
-          deviceType: /Mobi|Android/i.test(navigator.userAgent)
-            ? 'Mobile'
-            : 'Desktop',
-        }
-
-        setPlayerData(data)
-
-        try {
-          await addViewUnique.mutateAsync({
-            videoId: video.id,
-            userIp: ipAddress,
-            city: geoData.city,
-            region: geoData.region,
-            country: geoData.country,
-            agent: navigator.userAgent,
-            deviceType: /Mobi|Android/i.test(navigator.userAgent)
-              ? 'Mobile'
-              : 'Desktop',
-          })
-        } catch (error) {
-          console.error('Erro ao enviar dados de visualização:', error)
-        }
-      }
-
-      if (!hasFetchedData.current) {
-        fetchData()
-        hasFetchedData.current = true
-      }
-    }
-  }, [video, addViewUnique])
-
-  useEffect(() => {
-    const handlePlay = () => {
-      const currentTime = player.current?.currentTime || 0
-      setPlayStartTime(currentTime)
-      console.log('Play event triggered at:', currentTime)
-    }
-
-    const handlePause = async () => {
-      if (playStartTime !== null) {
+      const handlePlay = () => {
         const currentTime = player.current?.currentTime || 0
-        const duration = currentTime - playStartTime
-        setPlayEndTime(duration)
-        console.log('Pause event triggered at:', currentTime)
-        console.log('Play duration:', duration)
+        setPlayStartTime(currentTime)
+        console.log('Play event triggered at:', currentTime)
+      }
 
-        try {
-          await addViewTimestamps.mutateAsync({
-            ...playerData!,
-            endTimestamp: duration,
-            startTimestamp: playStartTime,
-            videoId: '0640bafe-1f85-4ee2-b88f-3b4def75694d',
-          })
-        } catch (error) {
-          console.error('Erro ao adicionar timestamps:', error)
+      const handlePause = async () => {
+        if (playStartTime !== null) {
+          const currentTime = player.current?.currentTime || 0
+          const duration = currentTime - playStartTime
+          console.log('Pause event triggered at:', currentTime)
+          console.log('Play duration:', duration)
+
+          try {
+            await addViewTimestamps.mutateAsync({
+              ...playerData!,
+              endTimestamp: duration,
+              startTimestamp: playStartTime,
+              videoId: video.id,
+            })
+          } catch (error) {
+            console.error('Erro ao adicionar timestamps:', error)
+          }
+        }
+      }
+
+      const playerInstance = player.current
+      if (playerInstance) {
+        playerInstance.addEventListener('play', handlePlay)
+        playerInstance.addEventListener('pause', handlePause)
+
+        return () => {
+          playerInstance.removeEventListener('play', handlePlay)
+          playerInstance.removeEventListener('pause', handlePause)
         }
       }
     }
-
-    const playerInstance = player.current
-    if (playerInstance) {
-      playerInstance.addEventListener('play', handlePlay)
-      playerInstance.addEventListener('pause', handlePause)
-
-      return () => {
-        playerInstance.removeEventListener('play', handlePlay)
-        playerInstance.removeEventListener('pause', handlePause)
-      }
-    }
-  }, [playStartTime, addViewTimestamps, playerData])
+  }, [playStartTime, addViewTimestamps, playerData, video])
 
   useEffect(() => {
     if (video && !paused) {
@@ -210,9 +163,9 @@ export function Player() {
           <MediaProvider>
             <Poster
               alt="Poster image"
-              src={`https://img.youtube.com/vi/${getYoutubeVideoId(
-                video.url,
-              )}/maxresdefault.jpg`}
+              // src={`https://img.youtube.com/vi/${getYoutubeVideoId(
+              //   video.url,
+              // )}/maxresdefault.jpg`}
               className="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 object-cover"
             />
           </MediaProvider>

@@ -1,6 +1,6 @@
 import { useEffect, useState, type FC } from 'react'
-import { convertDurationToSeconds, dataFormatter } from '../../../../../utils'
 import type { ChartProps } from '../../../../../types'
+import { convertDurationToSeconds, dataFormatter } from '../../../../../utils'
 import {
   Table,
   TableRow,
@@ -55,13 +55,23 @@ export const ChartRetention: FC<ChartProps> = ({
     let maxEndTime = 0
     const retentionArray = Array(totalDuration + 1).fill(0)
 
-    const filteredViews = analytics.viewTimestamps.filter(
-      (view) => Math.floor(view.startTimestamp) === 0,
-    )
+    const filteredViews = analytics.viewTimestamps
+      .filter((view) => Math.floor(view.startTimestamp) === 0)
+      .sort((a, b) => a.startTimestamp - b.startTimestamp)
 
-    filteredViews.forEach((view) => {
+    filteredViews.forEach((view, index) => {
       const start = Math.floor(view.startTimestamp)
-      const end = Math.min(Math.floor(view.endTimestamp), totalDuration)
+      let end = Math.min(Math.floor(view.endTimestamp), totalDuration)
+
+      for (let i = index + 1; i < filteredViews.length; i++) {
+        if (Math.floor(filteredViews[i].startTimestamp) === end) {
+          end = Math.min(
+            Math.floor(filteredViews[i].endTimestamp),
+            totalDuration,
+          )
+          break
+        }
+      }
 
       if (end > maxEndTime) {
         maxEndTime = end
@@ -97,10 +107,6 @@ export const ChartRetention: FC<ChartProps> = ({
 
         const startTime = `${String(Math.floor(startSeconds / 60)).padStart(2, '0')}:${String(startSeconds % 60).padStart(2, '0')}`
         const endTime = `${String(Math.floor(endSeconds / 60)).padStart(2, '0')}:${String(endSeconds % 60).padStart(2, '0')}`
-
-        const filteredViews = analytics.viewTimestamps.filter(
-          (view) => view.startTimestamp === 0,
-        )
 
         const playsInInterval = filteredViews.filter((play) => {
           return (

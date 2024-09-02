@@ -22,7 +22,7 @@ export const Video: FC = () => {
   const { getAllFolderByUserId } = useFolder()
   const { data: folders } = getAllFolderByUserId
 
-  const { getAllVideosByUserId } = useVideo('')
+  const { getAllVideosByUserId } = useVideo()
   const { data: videos } = getAllVideosByUserId
 
   const handleCloseFolder = () => {

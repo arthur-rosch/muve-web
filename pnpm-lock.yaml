@@ -74,6 +74,9 @@ importers:
       react-hook-form:
         specifier: ^7.52.1
         version: 7.52.1(react@18.3.1)
+      react-ipgeolocation:
+        specifier: ^1.4.0
+        version: 1.4.0
       react-modal:
         specifier: ^3.16.1
         version: 3.16.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2730,6 +2733,9 @@ packages:
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
+
+  react-ipgeolocation@1.4.0:
+    resolution: {integrity: sha512-pZ+/wxDVsHW3lHoPRkyu8NDXuNhz7d+vgp4vILJxpkktM46A90c4l6AxeU5P0jxDVv6b92lWphX30ahZZJapvg==}
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -6066,6 +6072,8 @@ snapshots:
   react-hook-form@7.52.1(react@18.3.1):
     dependencies:
       react: 18.3.1
+
+  react-ipgeolocation@1.4.0: {}
 
   react-is@16.13.1: {}
 

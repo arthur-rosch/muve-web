@@ -59,7 +59,7 @@ export const CustomCreateVideoModal: FC<CustomCreateVideoModalProps> = ({
   const { getAllFolderByUserId } = useFolder()
   const { data: folders } = getAllFolderByUserId
 
-  const { createVideo, getAllVideosByUserId } = useVideo('')
+  const { createVideo, getAllVideosByUserId } = useVideo()
 
   const {
     reset,

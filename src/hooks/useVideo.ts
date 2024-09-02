@@ -2,7 +2,7 @@ import { useMutation, useQuery } from 'react-query'
 import { VideoService } from './../services/VideoService'
 import type { CreateVideoVariables, Video } from '../types'
 
-export const useVideo = (videoId: string) => {
+export const useVideo = () => {
   const createVideo = useMutation(async (video: CreateVideoVariables) => {
     const { data, success, error } = await VideoService.createVideo(video)
 
@@ -27,15 +27,10 @@ export const useVideo = (videoId: string) => {
       throw error
     },
   )
-
-  const getVideoById = useQuery<Video>(['getVideoById'], async () => {
+  const getVideoById = useMutation(async (videoId: string) => {
     const { success, data, error } = await VideoService.getVideoById(videoId)
-    console.log(success, data, error)
-    if (success) {
-      return data.video
-    }
 
-    throw error
+    return { data, success, error }
   })
 
   return {
