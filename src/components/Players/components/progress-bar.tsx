@@ -9,7 +9,6 @@ export function ProgressBar({
   progress,
   transitionDuration,
 }: ProgressBarProps) {
-  console.log(color)
   return (
     <div className="absolute bottom-0 left-0 w-full z-50">
       <div className="relative w-full h-10">

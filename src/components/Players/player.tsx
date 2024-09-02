@@ -56,51 +56,50 @@ export function Player({ video }: { video: Video }) {
     console.log(detail, nativeEvent)
   }
 
-  // useEffect(() => {
-  //   const view = async () => {
-  //     const ipAddress = await getIPAddress()
-  //     const geoData = await getGeolocation(ipAddress)
+  useEffect(() => {
+    const view = async () => {
+      try {
+        const ipAddress = await getIPAddress()
+        const geoData = await getGeolocation(ipAddress)
 
-  //     const playerData = {
-  //       userIp: ipAddress,
-  //       city: geoData.city,
-  //       region: geoData.region,
-  //       country: geoData.country,
-  //       agent: navigator.userAgent,
-  //       deviceType: /Mobi|Android/i.test(navigator.userAgent)
-  //         ? 'Mobile'
-  //         : 'Desktop',
-  //     }
+        const playerData = {
+          userIp: ipAddress,
+          city: geoData.city,
+          region: geoData.region,
+          country: geoData.country,
+          agent: navigator.userAgent,
+          deviceType: /Mobi|Android/i.test(navigator.userAgent)
+            ? 'Mobile'
+            : 'Desktop',
+        }
 
-  //     setPlayerData(playerData)
+        setPlayerData(playerData)
 
-  //     await addViewUnique.mutateAsync({
-  //       ...playerData,
-  //       videoId: video.id,
-  //     })
-  //   }
-  //   view()
-  // }, [addViewUnique, video.id])
+        await addViewUnique.mutateAsync({
+          ...playerData,
+          videoId: video.id,
+        })
+      } catch (error) {
+        console.error('Erro ao adicionar visualização única:', error)
+      }
+    }
+
+    view()
+  }, [video.id])
 
   useEffect(() => {
     if (video) {
       const handlePlay = () => {
-        const currentTime = player.current?.currentTime || 0
         setPlayStartTime(currentTime)
         console.log('Play event triggered at:', currentTime)
       }
 
       const handlePause = async () => {
-        if (playStartTime !== null) {
-          const currentTime = player.current?.currentTime || 0
-          const duration = currentTime - playStartTime
-          console.log('Pause event triggered at:', currentTime)
-          console.log('Play duration:', duration)
-
+        if (playStartTime) {
           try {
             await addViewTimestamps.mutateAsync({
               ...playerData!,
-              endTimestamp: duration,
+              endTimestamp: currentTime,
               startTimestamp: playStartTime,
               videoId: video.id,
             })
@@ -121,7 +120,7 @@ export function Player({ video }: { video: Video }) {
         }
       }
     }
-  }, [playStartTime, addViewTimestamps, playerData, video])
+  }, [playStartTime, addViewTimestamps, playerData, video, currentTime])
 
   useEffect(() => {
     if (video && !paused) {
