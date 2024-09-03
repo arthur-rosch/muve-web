@@ -9,7 +9,6 @@ export function PlayerWrapper() {
   const [video, setVideo] = useState<Video | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // Function to get the videoId from the query string
   const getVideoIdFromQuery = () => {
     const searchParams = new URLSearchParams(location.search)
     return searchParams.get('videoId')
