@@ -298,6 +298,9 @@ export const CustomCreateVideoModal: FC<CustomCreateVideoModalProps> = ({
                 <Input {...field} placeholder="URL do vídeo" />
               )}
             />
+            {errors.url && (
+              <span className="text-red-500">{errors.url.message}</span>
+            )}
 
             <Controller
               name="duration"
@@ -306,6 +309,9 @@ export const CustomCreateVideoModal: FC<CustomCreateVideoModalProps> = ({
                 <Input {...field} placeholder="Duração (mm:ss)" />
               )}
             />
+            {errors.duration && (
+              <span className="text-red-500">{errors.duration.message}</span>
+            )}
 
             <InputSelect
               register={register('folderId')}
