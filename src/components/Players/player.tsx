@@ -44,6 +44,8 @@ export function Player({ video }: { video: Video }) {
         provider.cookies = true
       }
       if (isHLSProvider(provider)) {
+        provider.library =
+          'https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.min.js'
         provider.config = {}
       }
     }
@@ -146,10 +148,7 @@ export function Player({ video }: { video: Video }) {
           playsInline
           ref={player}
           load="visible"
-          src={{
-            src: video.url,
-            type: 'video/mp4',
-          }}
+          src={video.url}
           posterLoad="visible"
           onCanPlay={onCanPlay}
           crossOrigin="anonymous"
