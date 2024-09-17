@@ -4,7 +4,7 @@ import { useMutation } from 'react-query'
 import { setUser } from '../redux/actions/user'
 
 import { Local } from '../services/Local'
-import type { SignInVariables } from '../types'
+import type { SignInVariables, SignUpVariables } from '../types'
 import { AuthService } from '../services/AuthService'
 
 export const useAuth = () => {
@@ -24,6 +24,15 @@ export const useAuth = () => {
     },
     [dispatch],
   )
+
+  const signUp = useCallback(async (variables: SignUpVariables) => {
+    const response = await AuthService.signUp(variables)
+
+    if (response.success) {
+      return { success: true, Message: 'Usuário cadastrado com sucesso!' }
+    }
+    return { success: false, Erro: response.error }
+  }, [])
 
   const checkEmailExistence = useMutation(
     async ({ email }: { email: string }) => {
@@ -47,6 +56,7 @@ export const useAuth = () => {
 
   return {
     signIn,
+    signUp,
     checkJWT,
     checkEmailExistence,
   }

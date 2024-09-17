@@ -2,7 +2,7 @@
 import axios from 'axios'
 import host from '../utils/host'
 import { Local } from './Local'
-import type { SignInVariables } from '../types'
+import type { SignInVariables, SignUpVariables } from '../types'
 
 export class AuthService {
   static async signIn(signIn: SignInVariables) {
@@ -25,6 +25,30 @@ export class AuthService {
       console.log(error)
       const errorMessage =
         error.response?.data?.error || 'Erro ao logar usuário'
+      return {
+        error: errorMessage,
+        success: false,
+      }
+    }
+  }
+
+  static async signUp(signUp: SignUpVariables) {
+    const url = `${host()}/users`
+    try {
+      const response = await axios.post(url, signUp)
+      console.log(response)
+      if (response.status === 201) {
+        return { data: response.data, success: true }
+      } else {
+        return {
+          error: response.data?.message || 'Erro desconhecido',
+          success: false,
+        }
+      }
+    } catch (error: any) {
+      console.log(error)
+      const errorMessage =
+        error.response?.data?.error || 'Erro ao criar usuário'
       return {
         error: errorMessage,
         success: false,

@@ -130,14 +130,14 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
   )
 
   return (
-    <div className="w-full">
+    <div className="max-h-[500px] overflow-auto">
       <AreaChart
         data={chartData}
         index="date"
         yAxisWidth={60}
         categories={devices}
         valueFormatter={dataFormatter}
-        className="mt-4 w-full h-[75%]"
+        className="mt-4 w-full h-[500px]"
         onValueChange={(v) => console.log(v)}
         colors={['green', 'yellow', 'rose', 'red', 'blue', 'purple', 'indigo']}
       />

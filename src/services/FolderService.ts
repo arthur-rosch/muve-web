@@ -2,13 +2,14 @@
 import axios from 'axios'
 import { Local } from './Local'
 import host from '../utils/host'
+import type { CreateFolderVariables } from '../types'
 
 export class FolderService {
-  static async createFolder(name: string) {
+  static async createFolder(data: CreateFolderVariables) {
     const url = `${host()}/folder`
 
     try {
-      const response = await (await this.getAxiosInstance()).post(url, { name })
+      const response = await (await this.getAxiosInstance()).post(url, data)
       if (response.status === 201) {
         return { data: response.data, success: true }
       } else {
@@ -25,6 +26,63 @@ export class FolderService {
         }
       return {
         error: 'Erro ao criar Pasta',
+        success: false,
+      }
+    }
+  }
+
+  static async deleteFolder(folderId: string) {
+    const url = `${host()}/folder/${folderId}`
+
+    try {
+      const response = await (await this.getAxiosInstance()).delete(url)
+      if (response.status === 200) {
+        return { data: response.data, success: true }
+      } else {
+        return {
+          error: response.data.message,
+          success: false,
+        }
+      }
+    } catch (error: any) {
+      if (error.response.data.error)
+        return {
+          error: error.response.data.error,
+          success: false,
+        }
+      return {
+        error: 'Erro ao deletar Pasta',
+        success: false,
+      }
+    }
+  }
+
+  static async addFavoriteFolder(folderId: string, value: boolean) {
+    const url = `${host()}/folder/favorite`
+    console.log(folderId, value)
+    try {
+      const response = await (
+        await this.getAxiosInstance()
+      ).post(url, {
+        folderId,
+        value,
+      })
+      if (response.status === 200) {
+        return { data: response.data, success: true }
+      } else {
+        return {
+          error: response.data.message,
+          success: false,
+        }
+      }
+    } catch (error: any) {
+      if (error.response.data.error)
+        return {
+          error: error.response.data.error,
+          success: false,
+        }
+      return {
+        error: 'Erro ao add Pasta como favorita',
         success: false,
       }
     }

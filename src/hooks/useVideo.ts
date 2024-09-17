@@ -27,6 +27,21 @@ export const useVideo = () => {
       throw error
     },
   )
+
+  const getManyVideosNotFolderId = useQuery<Video[]>(
+    ['getManyVideosNotFolderId'],
+    async () => {
+      const { success, data, error } =
+        await VideoService.getManyVideosNotFolderId()
+
+      if (success) {
+        return data.videos
+      }
+
+      throw error
+    },
+  )
+
   const getVideoById = useMutation(async (videoId: string) => {
     const { success, data, error } = await VideoService.getVideoById(videoId)
 
@@ -38,5 +53,6 @@ export const useVideo = () => {
     deleteVideo,
     getVideoById,
     getAllVideosByUserId,
+    getManyVideosNotFolderId,
   }
 }

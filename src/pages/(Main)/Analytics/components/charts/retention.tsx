@@ -136,13 +136,13 @@ export const ChartRetention: FC<ChartProps> = ({
   }, [analytics, selectedVideo])
 
   return (
-    <>
+    <div className="max-h-[500px] overflow-auto">
       <AreaChart
         data={chartData}
         index="date"
         yAxisWidth={60}
         colors={['blue']}
-        className="mt-4 w-full h-[75%]"
+        className="mt-4 w-full h-[500px]"
         categories={['Retenção']}
         valueFormatter={dataFormatter}
         onValueChange={(v) => console.log(v)}
@@ -189,6 +189,6 @@ export const ChartRetention: FC<ChartProps> = ({
           </TableBody>
         </Table>
       </div>
-    </>
+    </div>
   )
 }

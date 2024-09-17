@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import type { ChangeEventHandler, FC } from 'react'
 import type { UseFormRegisterReturn } from 'react-hook-form'
 
 interface InputSelectProps {
@@ -6,21 +6,24 @@ interface InputSelectProps {
   register?: UseFormRegisterReturn
   error?: string
   placeholder?: string
+  className?: string
+  onChange?: ChangeEventHandler<HTMLSelectElement>
 }
 
 export const InputSelect: FC<InputSelectProps> = ({
   options,
   register,
   error,
+  className,
+  onChange,
   placeholder = 'Selecione uma opção',
 }) => {
   return (
     <div>
       <select
         {...register}
-        className={`w-full h-14 bg-[#1d1f21] text-white border border-gray-600 rounded-md p-2 focus:border-[#217CE5] focus:outline-none ${
-          error ? 'border-red-500' : ''
-        }`}
+        onChange={onChange}
+        className={`bg-[#141414] border-[1px] border-[#333333] border-solid bg-opacity-50 rounded text-white hover:border-[#187BF0] ${className}`}
       >
         <option value="">{placeholder}</option>
         {options.map((option) => (

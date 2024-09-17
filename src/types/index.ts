@@ -8,10 +8,19 @@ export interface SignInVariables {
   password: string
 }
 
+export interface SignUpVariables {
+  email: string
+  name: string
+  phone: string
+  password: string
+}
+
 export interface User {
   id: string
   name: string
   email: string
+  phone: string
+  document: string
   password_hash: string
   role: Role
   created_at: Date
@@ -19,6 +28,7 @@ export interface User {
 
 export interface CreateVideoVariables {
   url: string
+  name: string
   duration: string
   folderId?: string
   format: '9/16' | '16/9'
@@ -30,6 +40,12 @@ export interface CreateVideoVariables {
     endTime?: string
   }[]
   fictitiousProgress?: boolean
+}
+
+export interface CreateFolderVariables {
+  name: string
+  coverUrl?: string
+  videosId?: string[]
 }
 
 export interface ViewTimestamp {
@@ -118,20 +134,24 @@ export interface PlayerDataVariables {
   region: string
   city: string
 }
+
+export interface Chapters {
+  title: string
+  startTime: string
+  endTime: string
+}
 export interface Video {
   id: string
   url: string
   tags: string
+  name: string
   duration: string
+  thumbnail: string
   folderId?: string
   format: '9/16' | '16/9'
   type: 'Vsl' | 'Curso'
   color?: string
-  chapters?: {
-    title?: string
-    startTime?: string
-    endTime?: string
-  }[]
+  Chapter: Chapters[] | []
   fictitiousProgress?: boolean
   created_at: Date
 
@@ -145,6 +165,8 @@ export interface ChartProps {
 export interface Folder {
   id: string
   name: string
+  coverUrl?: string
+  favorite: boolean
   userId: string
   created_at: Date
   videos: Video[]

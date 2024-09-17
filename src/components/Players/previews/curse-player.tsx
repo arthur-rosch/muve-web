@@ -45,7 +45,7 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
       }
     }
   }
-
+  console.log(video)
   return (
     <MediaPlayer
       crossorigin
@@ -68,7 +68,7 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
         />
       </MediaProvider>
 
-      <VideoLayout type={video.type} />
+      <VideoLayout type={video.type} chapters={video.Chapter} />
     </MediaPlayer>
   )
 }

@@ -1,4 +1,5 @@
-import type { FC, ChangeEvent } from 'react'
+import { type FC, type ChangeEvent } from 'react'
+import { motion, type Variants } from 'framer-motion'
 
 interface InputProps {
   type?: string
@@ -7,6 +8,8 @@ interface InputProps {
   placeholder?: string
   id?: string
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
+  animation?: boolean
+  variants?: Variants
 }
 
 export const Input: FC<InputProps> = ({
@@ -15,16 +18,36 @@ export const Input: FC<InputProps> = ({
   onChange,
   placeholder,
   type = 'text',
-  className = '',
+  className,
+  animation = false,
+  variants,
 }) => {
-  return (
+  const inputClassName = `bg-[#141414] border-[1px] border-[#333333] border-solid bg-opacity-50 rounded text-white hover:border-[#187BF0] ${className}`
+
+  const InputComponent = (
     <input
       id={id}
       type={type}
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className={`w-full h-14 bg-[#1d1f21] text-white border border-gray-600 rounded-md p-2 focus:border-[#217CE5] focus:outline-none ${className}`}
+      className={inputClassName}
     />
+  )
+
+  return animation ? (
+    <motion.input
+      initial="hidden"
+      animate="visible"
+      variants={variants}
+      className={inputClassName}
+      id={id}
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+    />
+  ) : (
+    InputComponent
   )
 }

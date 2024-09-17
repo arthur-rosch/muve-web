@@ -187,7 +187,7 @@ export function Player({ video }: { video: Video }) {
             />
           )}
 
-          <VideoLayout type={video.type} />
+          <VideoLayout type={video.type} chapters={video.Chapter} />
         </MediaPlayer>
       )}
     </>
