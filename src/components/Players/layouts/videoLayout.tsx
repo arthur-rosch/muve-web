@@ -16,7 +16,7 @@ const popupOffset = 30
 
 interface VideoLayoutProps {
   type: 'Vsl' | 'Curso'
-  chapters: Chapters[] | []
+  chapters?: Chapters[]
 }
 
 export function VideoLayout({ type, chapters }: VideoLayoutProps) {
@@ -38,7 +38,7 @@ export function VideoLayout({ type, chapters }: VideoLayoutProps) {
               <TimeGroup />
               <ChapterTitle />
               <div className="flex-1" />
-              <ChapterMenu chapters={chapters} />
+              <ChapterMenu chapters={chapters!} />
               <MenuPlayer />
               <Fullscreen tooltipAlign="end" tooltipOffset={popupOffset} />
             </Controls.Group>
