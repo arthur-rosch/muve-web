@@ -1,10 +1,10 @@
 import clsx from 'clsx'
 import type { FC } from 'react'
 import * as Checkbox from '@radix-ui/react-checkbox'
-import { CheckIcon, Cross2Icon } from '@radix-ui/react-icons'
+import { CheckIcon } from '@radix-ui/react-icons'
 
 interface CheckBoxProps {
-  checked: boolean
+  checked?: boolean
   onCheckedChange: (checked: boolean) => void
   disabled?: boolean
   className?: string
@@ -26,17 +26,13 @@ export const CheckBox: FC<CheckBoxProps> = ({
         disabled={disabled}
         onCheckedChange={onCheckedChange}
         className={clsx(
-          'w-6 h-6 border border-gray-600 rounded flex items-center justify-center',
-          { 'bg-blue-500': checked, 'bg-transparent': !checked },
-          { 'cursor-not-allowed': disabled },
+          'w-6 h-6 border border-gray-600 rounded flex items-center justify-center transition-colors duration-300 ',
         )}
+        data-state={disabled ? 'unchecked' : 'checked'} // This should be dynamically set based on the actual state
+        data-disabled={disabled ? '' : undefined}
       >
         <Checkbox.Indicator>
-          {checked ? (
-            <CheckIcon className="text-white" />
-          ) : (
-            <Cross2Icon className="text-gray-600" />
-          )}
+          <CheckIcon className="text-white" />
         </Checkbox.Indicator>
       </Checkbox.Root>
     </div>

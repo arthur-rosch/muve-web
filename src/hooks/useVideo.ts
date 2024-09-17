@@ -2,7 +2,7 @@ import { useMutation, useQuery } from 'react-query'
 import { VideoService } from './../services/VideoService'
 import type { CreateVideoVariables, Video } from '../types'
 
-export const useVideo = (videoId: string) => {
+export const useVideo = () => {
   const createVideo = useMutation(async (video: CreateVideoVariables) => {
     const { data, success, error } = await VideoService.createVideo(video)
 
@@ -28,14 +28,24 @@ export const useVideo = (videoId: string) => {
     },
   )
 
-  const getVideoById = useQuery<Video>(['getVideoById'], async () => {
-    const { success, data, error } = await VideoService.getVideoById(videoId)
-    console.log(success, data, error)
-    if (success) {
-      return data.video
-    }
+  const getManyVideosNotFolderId = useQuery<Video[]>(
+    ['getManyVideosNotFolderId'],
+    async () => {
+      const { success, data, error } =
+        await VideoService.getManyVideosNotFolderId()
 
-    throw error
+      if (success) {
+        return data.videos
+      }
+
+      throw error
+    },
+  )
+
+  const getVideoById = useMutation(async (videoId: string) => {
+    const { success, data, error } = await VideoService.getVideoById(videoId)
+
+    return { data, success, error }
   })
 
   return {
@@ -43,5 +53,6 @@ export const useVideo = (videoId: string) => {
     deleteVideo,
     getVideoById,
     getAllVideosByUserId,
+    getManyVideosNotFolderId,
   }
 }

@@ -15,10 +15,8 @@ interface GeolocationData {
  */
 export async function getGeolocation(ip: string): Promise<GeolocationData> {
   try {
-    const formattedIp = ip.replace(/\./g, '')
-
     const response = await axios.get(
-      `http://www.geoplugin.net/json.gp?ip=${formattedIp}`,
+      `https://api.hackertarget.com/geoip?q=${ip}&output=json`,
     )
     if (response.status !== 200) {
       throw new Error(`Erro HTTP! Status: ${response.status}`)
@@ -27,11 +25,11 @@ export async function getGeolocation(ip: string): Promise<GeolocationData> {
     const data = response.data
     console.log('Dados de geolocalização:', data)
     return {
-      country: data.geoplugin_countryName || '',
-      region: data.geoplugin_regionName || '',
-      city: data.geoplugin_city || '',
-      latitude: data.geoplugin_latitude || '',
-      longitude: data.geoplugin_longitude || '',
+      country: data.country || '',
+      region: data.state || '',
+      city: data.city || '',
+      latitude: data.latitude || '',
+      longitude: data.longitude || '',
     }
   } catch (error) {
     console.error('Erro ao obter a localização geográfica:', error)

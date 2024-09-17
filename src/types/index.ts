@@ -8,35 +8,27 @@ export interface SignInVariables {
   password: string
 }
 
+export interface SignUpVariables {
+  email: string
+  name: string
+  phone: string
+  password: string
+}
+
 export interface User {
   id: string
   name: string
   email: string
+  phone: string
+  document: string
   password_hash: string
   role: Role
   created_at: Date
 }
 
-export interface Video {
-  id: string
-  url: string
-  tags: string
-  duration: string
-  folderId?: string
-  format: '9/16' | '16/9'
-  type: 'Vsl' | 'Curso'
-  color?: string
-  chapters?: {
-    title?: string
-    startTime?: string
-    endTime?: string
-  }[]
-  fictitiousProgress?: boolean
-  created_at: Date
-}
-
 export interface CreateVideoVariables {
   url: string
+  name: string
   duration: string
   folderId?: string
   format: '9/16' | '16/9'
@@ -50,12 +42,10 @@ export interface CreateVideoVariables {
   fictitiousProgress?: boolean
 }
 
-export interface Folder {
-  id: string
+export interface CreateFolderVariables {
   name: string
-  userId: string
-  created_at: Date
-  videos: Video[]
+  coverUrl?: string
+  videosId?: string[]
 }
 
 export interface ViewTimestamp {
@@ -87,6 +77,7 @@ export interface ViewUnique {
 export interface VideoAnalytics {
   id: string
   totalPlays: number
+  totalViews: number
   videoId: string
   created_at: Date
   viewTimestamps: ViewTimestamp[]
@@ -123,11 +114,6 @@ export interface VideoMetrics {
   uniqueViews: number
 }
 
-export interface ChartProps {
-  analytics: VideoAnalytics
-  selectedVideo: Video
-}
-
 export interface GenerateUrlVariables {
   videoId: string
 }
@@ -138,4 +124,50 @@ export interface ValidateUrlVariables {
 
 export interface InvalidateTokenVariables {
   token: string
+}
+
+export interface PlayerDataVariables {
+  userIp: string
+  deviceType: string
+  agent: string
+  country: string
+  region: string
+  city: string
+}
+
+export interface Chapters {
+  title: string
+  startTime: string
+  endTime: string
+}
+export interface Video {
+  id: string
+  url: string
+  tags: string
+  name: string
+  duration: string
+  thumbnail: string
+  folderId?: string
+  format: '9/16' | '16/9'
+  type: 'Vsl' | 'Curso'
+  color?: string
+  Chapter: Chapters[] | []
+  fictitiousProgress?: boolean
+  created_at: Date
+
+  analytics: VideoAnalytics
+}
+
+export interface ChartProps {
+  analytics: VideoAnalytics
+  selectedVideo: Video
+}
+export interface Folder {
+  id: string
+  name: string
+  coverUrl?: string
+  favorite: boolean
+  userId: string
+  created_at: Date
+  videos: Video[]
 }

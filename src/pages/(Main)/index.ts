@@ -1,2 +1,3 @@
-export * from './Videos'
+export * from './Folder'
+export * from './Dashboard'
 export * from './Analytics'

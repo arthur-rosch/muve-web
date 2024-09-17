@@ -24,6 +24,12 @@ export class VideoService {
           error: error.response.data.error,
           success: false,
         }
+      if (error.response.data.message === 'Limite de vídeos excedido.') {
+        return {
+          error: 'Limite de vídeos excedido.',
+          success: false,
+        }
+      }
       return {
         error: 'Erro ao criar Video',
         success: false,
@@ -77,6 +83,31 @@ export class VideoService {
         }
       return {
         error: 'Erro ao buscar as videos do usuário',
+        success: false,
+      }
+    }
+  }
+
+  static async getManyVideosNotFolderId() {
+    const url = `${host()}/video/not/folder`
+    try {
+      const response = await (await this.getAxiosInstance()).get(url)
+      if (response.status === 200) {
+        return { data: response.data, success: true }
+      } else {
+        return {
+          error: response.data.message,
+          success: false,
+        }
+      }
+    } catch (error: any) {
+      if (error.response.data.error)
+        return {
+          error: error.response.data.error,
+          success: false,
+        }
+      return {
+        error: 'Erro ao buscar as videos sem pasta',
         success: false,
       }
     }

@@ -1,5 +1,5 @@
-import type { FC, ReactNode } from 'react'
 import ReactModal from 'react-modal'
+import type { FC, ReactNode } from 'react'
 
 interface CustomModalProps {
   children: ReactNode
@@ -38,7 +38,7 @@ export const CustomModalRoot: FC<CustomModalProps> = ({
         isOpen={isOpen}
       >
         <div
-          className={`bg-[#121212] rounded-3xl flex flex-col items-center ${styles}`}
+          className={`bg-[#1D1D1D] rounded-lg flex flex-col items-center border-[1px] border-solid border-[#333333] ${styles}`}
         >
           {children}
         </div>

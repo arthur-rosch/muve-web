@@ -14,6 +14,8 @@ import {
   type MediaCanPlayDetail,
   type MediaProviderAdapter,
   type MediaProviderChangeEvent,
+  isYouTubeProvider,
+  isHLSProvider,
 } from '@vidstack/react'
 
 import '@vidstack/react/player/styles/base.css'
@@ -58,7 +60,16 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
   function onProviderChange(
     provider: MediaProviderAdapter | null,
     nativeEvent: MediaProviderChangeEvent,
-  ) {}
+  ) {
+    if (provider) {
+      if (isYouTubeProvider(provider)) {
+        provider.cookies = true
+      }
+      if (isHLSProvider(provider)) {
+        provider.config = {}
+      }
+    }
+  }
 
   return (
     <MediaPlayer
@@ -71,13 +82,7 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
       onCanPlay={onCanPlay}
       crossOrigin="anonymous"
       onProviderChange={onProviderChange}
-      // src={{
-      //   src: 'https://videos.pexels.com/video-files/27880315/12253981_1440_2560_30fps.mp4',
-      //   type: 'video/mp4',
-      // }}
-      src={
-        'https://www.youtube.com/watch?v=Ps042FNImds&list=RDPs042FNImds&start_radio=1'
-      }
+      src={video.url}
       className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
     >
       <MediaProvider>

@@ -10,6 +10,8 @@ import {
   type MediaCanPlayDetail,
   type MediaProviderChangeEvent,
   type MediaProviderAdapter,
+  isYouTubeProvider,
+  isHLSProvider,
 } from '@vidstack/react'
 import '@vidstack/react/player/styles/base.css'
 import '@vidstack/react/player/styles/default/theme.css'
@@ -34,9 +36,16 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
     provider: MediaProviderAdapter | null,
     nativeEvent: MediaProviderChangeEvent,
   ) {
-    console.log(provider, nativeEvent)
+    if (provider) {
+      if (isYouTubeProvider(provider)) {
+        provider.cookies = true
+      }
+      if (isHLSProvider(provider)) {
+        provider.config = {}
+      }
+    }
   }
-
+  console.log(video)
   return (
     <MediaPlayer
       crossorigin
@@ -48,10 +57,6 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
       onCanPlay={onCanPlay}
       crossOrigin="anonymous"
       onProviderChange={onProviderChange}
-      // src={{
-      //   src: 'https://videos.pexels.com/video-files/27880315/12253981_1440_2560_30fps.mp4',
-      //   type: 'video/mp4',
-      // }}
       src={video.url}
       className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
     >
@@ -63,7 +68,7 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
         />
       </MediaProvider>
 
-      <VideoLayout type={video.type} />
+      <VideoLayout type={video.type} chapters={video.Chapter} />
     </MediaPlayer>
   )
 }

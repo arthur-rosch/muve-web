@@ -1,6 +1,6 @@
 import { useEffect, useState, type FC } from 'react'
-import { dataFormatter } from '../../../../../utils'
 import type { ChartProps } from '../../../../../types'
+import { convertDurationToSeconds, dataFormatter } from '../../../../../utils'
 import {
   Table,
   TableRow,
@@ -27,41 +27,70 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
   const [deviceMetrics, setDeviceMetrics] = useState<DeviceMetrics[]>([])
 
   useEffect(() => {
-    const totalDuration = 20 * 60 // 20 minutos em segundos
-    const retentionData: { [device: string]: number[] } = {}
+    const totalDuration = convertDurationToSeconds(selectedVideo.duration)
+
     const totalViewsByDevice: { [device: string]: number } = {}
     const totalPlaysByDevice: { [device: string]: number } = {}
+    const retentionData: { [device: string]: number[] } = {}
 
     let maxEndTime = 0
 
-    // Filtra visualizações que começam em 0
+    // Contagem de views por dispositivo (ViewUnique)
+    analytics.viewUnique.forEach((view) => {
+      const device = view.deviceType || 'Unknown'
+
+      if (!totalViewsByDevice[device]) {
+        totalViewsByDevice[device] = 0
+      }
+
+      totalViewsByDevice[device]++
+    })
+
+    // Contagem de plays por dispositivo (ViewTimestamps)
+    analytics.viewTimestamps.forEach((view) => {
+      const device = view.deviceType || 'Unknown'
+
+      if (!totalPlaysByDevice[device]) {
+        totalPlaysByDevice[device] = 0
+      }
+
+      totalPlaysByDevice[device]++
+    })
+    console.log(totalPlaysByDevice)
+    // Cálculo de retenção para cada dispositivo
     const filteredViews = analytics.viewTimestamps.filter(
       (view) => Math.floor(view.startTimestamp) === 0,
     )
 
-    filteredViews.forEach((view) => {
-      const start = Math.floor(view.startTimestamp)
-      const end = Math.min(Math.floor(view.endTimestamp), totalDuration)
+    filteredViews.forEach((view, index) => {
       const device = view.deviceType || 'Unknown'
+      let end = Math.min(Math.floor(view.endTimestamp), totalDuration)
+
+      // Verificar se esse endTimestamp coincide com algum startTimestamp de outra view
+      for (let i = index + 1; i < filteredViews.length; i++) {
+        if (Math.floor(filteredViews[i].startTimestamp) === end) {
+          end = Math.min(
+            Math.floor(filteredViews[i].endTimestamp),
+            totalDuration,
+          )
+          break
+        }
+      }
 
       if (!retentionData[device]) {
         retentionData[device] = Array(totalDuration + 1).fill(0)
-        totalViewsByDevice[device] = 0
-        totalPlaysByDevice[device] = 0
       }
 
       if (end > maxEndTime) {
         maxEndTime = end
       }
 
-      for (let i = start; i <= end; i++) {
+      for (let i = 0; i <= end; i++) {
         retentionData[device][i]++
       }
-
-      totalViewsByDevice[device]++
-      totalPlaysByDevice[device] += end - start + 1
     })
 
+    // Construção do gráfico de retenção
     const retentionPercentages: ChartData[] = Array.from(
       { length: maxEndTime + 1 },
       (_, index) => {
@@ -82,14 +111,16 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
       },
     )
 
+    // Preparando as métricas de dispositivos
     const metrics = Object.keys(totalViewsByDevice)
       .map((device) => ({
         device,
         totalViews: totalViewsByDevice[device],
         totalPlays: totalPlaysByDevice[device],
       }))
-      .sort((a, b) => b.totalViews - a.totalViews) // Ordena por totalViews em ordem decrescente
+      .sort((a, b) => b.totalViews - a.totalViews)
 
+    // Atualiza os estados com as métricas calculadas
     setChartData(retentionPercentages)
     setDeviceMetrics(metrics)
   }, [analytics, selectedVideo])
@@ -99,14 +130,14 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
   )
 
   return (
-    <div className="w-full">
+    <div className="max-h-[500px] overflow-auto">
       <AreaChart
         data={chartData}
         index="date"
         yAxisWidth={60}
         categories={devices}
         valueFormatter={dataFormatter}
-        className="mt-4 w-full h-[75%]"
+        className="mt-4 w-full h-[500px]"
         onValueChange={(v) => console.log(v)}
         colors={['green', 'yellow', 'rose', 'red', 'blue', 'purple', 'indigo']}
       />

@@ -1,3 +1,4 @@
+import type { Chapters } from '../../../types'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { ChapterTitle, Controls, Gesture } from '@vidstack/react'
 import {
@@ -15,9 +16,11 @@ const popupOffset = 30
 
 interface VideoLayoutProps {
   type: 'Vsl' | 'Curso'
+  chapters: Chapters[] | []
 }
 
-export function VideoLayout({ type }: VideoLayoutProps) {
+export function VideoLayout({ type, chapters }: VideoLayoutProps) {
+  console.log(chapters)
   return (
     <>
       <Gestures />
@@ -35,7 +38,7 @@ export function VideoLayout({ type }: VideoLayoutProps) {
               <TimeGroup />
               <ChapterTitle />
               <div className="flex-1" />
-              <ChapterMenu />
+              <ChapterMenu chapters={chapters} />
               <MenuPlayer />
               <Fullscreen tooltipAlign="end" tooltipOffset={popupOffset} />
             </Controls.Group>
