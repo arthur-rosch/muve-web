@@ -90,7 +90,7 @@ export const Analytics: FC = () => {
 
   const isPlanVisible = (label: string) => {
     switch (userPlan) {
-      case 'Free':
+      case 'FREE':
         return label === 'Plays' || label === 'Views'
       case 'ESSENTIAL':
         return (
