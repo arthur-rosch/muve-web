@@ -39,7 +39,7 @@ export function VideoLayout({ type, chapters }: VideoLayoutProps) {
               <TimeGroup />
               <ChapterTitle />
               <div className="flex-1" />
-              {plan.plan === 'Free' && (
+              {plan.plan === 'FREE' && (
                 <a href="https://web.muveplayer.com/">
                   <img src={logo} alt="" className="w-20 h-w-20" />
                 </a>
