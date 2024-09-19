@@ -1,3 +1,4 @@
+import logo from '../../assets/logo.svg'
 import type { FC } from 'react'
 import type { Video } from '../../types'
 import { motion, type Variants } from 'framer-motion'
@@ -20,7 +21,7 @@ export const CardVideo: FC<CardVideoProps> = ({
       <img
         alt=""
         className="rounded w-full mb-4"
-        src="https://s2-techtudo.glbimg.com/SSAPhiaAy_zLTOu3Tr3ZKu2H5vg=/0x0:1024x609/888x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2022/c/u/15eppqSmeTdHkoAKM0Uw/dall-e-2.jpg"
+        src={video.thumbnail ? video.thumbnail : logo}
       />
       <DotsThreeOutlineVertical
         weight="fill"

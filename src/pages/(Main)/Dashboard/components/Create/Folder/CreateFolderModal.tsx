@@ -94,7 +94,7 @@ export const CreateFolderModal: FC<CreateFolderModalProps> = ({
     <CustomModal.Root
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      styles={'h-[50rem] w-[50rem]'}
+      styles={'h-auto w-[50rem] flex flex-col mt-auto'}
     >
       <CustomModal.Title
         title="+ Nova pasta"

@@ -178,7 +178,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
     <CustomModal.Root
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      styles={'h-[50rem] w-[50rem]'}
+      styles={'h-auto w-[50rem] flex flex-col mt-auto'}
     >
       <CustomModal.Title
         title="+ Novo video"
@@ -206,7 +206,12 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
         </>
       ) : (
         <>
-          <div className="w-full h-full p-6">
+          <motion.div
+            className="w-full max-h-[80%] p-6"
+            initial="hidden"
+            animate="visible"
+            variants={cardVariants}
+          >
             <div className="w-full flex flex-col gap-6">
               <motion.div className="max-h-[35rem] overflow-auto">
                 <span className="text-white">Tipo de vídeo</span>
@@ -481,9 +486,14 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                 )}
               </motion.div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="w-full gap-12 flex items-center justify-between py-6 px-8 border-t-[1px] border-solid border-[#333333]">
+          <motion.div
+            className="w-full gap-12 flex items-center justify-between py-6 px-8 border-t-[1px] border-solid border-[#333333]"
+            initial="hidden"
+            animate="visible"
+            variants={cardVariants}
+          >
             <Button
               type="button"
               variant="danger"
@@ -504,7 +514,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
             >
               Criar
             </Button>
-          </div>
+          </motion.div>
         </>
       )}
     </CustomModal.Root>

@@ -1,3 +1,4 @@
+import logo from '../../../assets/logo.svg'
 import type { Chapters } from '../../../types'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { ChapterTitle, Controls, Gesture } from '@vidstack/react'
@@ -20,7 +21,7 @@ interface VideoLayoutProps {
 }
 
 export function VideoLayout({ type, chapters }: VideoLayoutProps) {
-  console.log(chapters)
+  const plan = JSON.parse(localStorage.getItem('@storage:plan')!)
   return (
     <>
       <Gestures />
@@ -38,6 +39,11 @@ export function VideoLayout({ type, chapters }: VideoLayoutProps) {
               <TimeGroup />
               <ChapterTitle />
               <div className="flex-1" />
+              {plan.plan === 'Free' && (
+                <a href="https://web.muveplayer.com/">
+                  <img src={logo} alt="" className="w-20 h-w-20" />
+                </a>
+              )}
               <ChapterMenu chapters={chapters!} />
               <MenuPlayer />
               <Fullscreen tooltipAlign="end" tooltipOffset={popupOffset} />

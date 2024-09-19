@@ -18,6 +18,16 @@ export const useAuth = () => {
       if (response.success) {
         dispatch(setUser(response.data.user))
         await Local.setJWT(response.data.token)
+        if (response.data.signature) {
+          await Local.setPlan(
+            response.data.signature.plan,
+            response.data.signature.next_charge_date,
+            response.data.signature.ChargeFrequency,
+          )
+        } else {
+          await Local.setPlan('FREE', '00/00/0000', '')
+        }
+
         return { success: true, Message: 'Usuário fez login com sucesso!' }
       }
       return { success: false, Erro: response.error }
