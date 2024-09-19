@@ -21,14 +21,9 @@ export const Analytics: FC = () => {
     location.state?.videoUrl || '',
   )
   const [loading, setLoading] = useState(true)
+  const [userPlan, setUserPlan] = useState<string>('')
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null)
   const [selectedTypeDataChart, setSelectedTypeDataChart] = useState('retencao')
-
-  const options = [
-    { value: 'retencao', label: 'Retenção' },
-    { value: 'dispositivo', label: 'Dispositivo' },
-    { value: 'pais', label: 'País' },
-  ]
 
   const goBack = () => {
     navigate('/dashboard')
@@ -41,9 +36,9 @@ export const Analytics: FC = () => {
         (video: Video) => video.url === selectedVideoUrl,
       )
       setSelectedVideo(foundVideo || null)
-      setLoading(false) // Para o loading após a busca
+      setLoading(false)
     } else {
-      setLoading(false) // Para o loading se não houver URL
+      setLoading(false)
     }
   }, [selectedVideoUrl, videos])
 
@@ -57,6 +52,18 @@ export const Analytics: FC = () => {
     }
   }, [selectedVideo])
 
+  useEffect(() => {
+    const storedPlan = localStorage.getItem('@storage:plan')
+    if (storedPlan) {
+      try {
+        const plan = JSON.parse(storedPlan)
+        setUserPlan(plan.plan)
+      } catch (error) {
+        console.error('Error parsing user plan from localStorage:', error)
+      }
+    }
+  }, [])
+
   const metricsData = metrics
     ? [
         { label: 'Plays', value: metrics.plays },
@@ -68,8 +75,40 @@ export const Analytics: FC = () => {
       ]
     : []
 
+  const availableCharts = (plan: string) => {
+    switch (plan) {
+      case 'Free':
+      case 'ESSENTIAL':
+        return ['retencao']
+      case 'UNLIMITED':
+      case 'PROFESSIONAL':
+        return ['retencao', 'pais', 'dispositivos']
+      default:
+        return []
+    }
+  }
+
+  const isPlanVisible = (label: string) => {
+    switch (userPlan) {
+      case 'Free':
+        return label === 'Plays' || label === 'Views'
+      case 'ESSENTIAL':
+        return (
+          label === 'Plays' ||
+          label === 'Views' ||
+          label === 'Unique Plays' ||
+          label === 'Unique Views'
+        )
+      case 'UNLIMITED':
+      case 'PROFESSIONAL':
+        return true
+      default:
+        return false
+    }
+  }
+
   return (
-    <section className="w-full h-full mx-8">
+    <section className="w-full h-[95vh] mx-8 overflow-auto pr-4">
       <HeaderFolder name={'Análise'} />
 
       <div className="w-full h-full flex flex-col items-start justify-between mt-10">
@@ -103,7 +142,7 @@ export const Analytics: FC = () => {
         />
 
         <motion.div
-          className="w-full overflow-auto p-6 bg-[#141414] border-[1px] border-solid border-[#333333] mt-8"
+          className="w-full overflow-auto p-6 bg-[#141414] border-[1px] border-solid border-[#333333] mt-8 pb-20"
           initial="hidden"
           animate="visible"
           variants={cardVariants}
@@ -122,19 +161,31 @@ export const Analytics: FC = () => {
             <div className="w-full h-full flex flex-col">
               <div className="flex items-start justify-between">
                 <div className="flex items-start justify-start gap-4 flex-wrap">
-                  {metricsData.map(({ label, value }) => (
-                    <Card
-                      key={label}
-                      variant="secondary"
-                      className="w-44 h-32 flex flex-col justify-between px-5 py-6 rounded-lg bg-transparent"
-                    >
-                      <span className="text-[#909090] text-sm">{label}</span>
-                      <span className="text-white text-3xl">{value}</span>
-                    </Card>
-                  ))}
+                  {metricsData.map(({ label, value }) => {
+                    const isVisible = isPlanVisible(label)
+                    const cardClassName = !isVisible
+                      ? 'w-44 h-32 flex flex-col justify-between px-5 py-6 rounded-lg bg-transparent blur-sm'
+                      : 'w-44 h-32 flex flex-col justify-between px-5 py-6 rounded-lg bg-transparent'
+
+                    return (
+                      <Card
+                        key={label}
+                        variant="secondary"
+                        className={cardClassName}
+                      >
+                        <span className="text-[#909090] text-sm">{label}</span>
+                        <span className="text-white text-3xl">
+                          {!isVisible ? '********' : value}
+                        </span>
+                      </Card>
+                    )
+                  })}
                 </div>
                 <InputSelect
-                  options={options}
+                  options={availableCharts(userPlan).map((chart) => ({
+                    value: chart,
+                    label: chart.charAt(0).toUpperCase() + chart.slice(1),
+                  }))}
                   onChange={(e) => setSelectedTypeDataChart(e.target.value)}
                 />
               </div>

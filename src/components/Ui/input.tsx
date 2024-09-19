@@ -10,6 +10,7 @@ interface InputProps {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   animation?: boolean
   variants?: Variants
+  disabled?: boolean
 }
 
 export const Input: FC<InputProps> = ({
@@ -21,6 +22,7 @@ export const Input: FC<InputProps> = ({
   className,
   animation = false,
   variants,
+  disabled = false,
 }) => {
   const inputClassName = `bg-[#141414] border-[1px] border-[#333333] border-solid bg-opacity-50 rounded text-white hover:border-[#187BF0] ${className}`
 
@@ -30,6 +32,7 @@ export const Input: FC<InputProps> = ({
       type={type}
       value={value}
       onChange={onChange}
+      disabled={disabled}
       placeholder={placeholder}
       className={inputClassName}
     />
@@ -39,6 +42,7 @@ export const Input: FC<InputProps> = ({
     <motion.input
       initial="hidden"
       animate="visible"
+      disabled={disabled}
       variants={variants}
       className={inputClassName}
       id={id}

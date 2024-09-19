@@ -62,8 +62,7 @@ export const Sidebar: FC = () => {
     <aside className="h-screen w-72 rounded-xl flex flex-col items-start justify-start p-4 m-2 bg-[#1D1D1D]">
       <div className="w-full flex items-center justify-between border-b-[1px] border-[#333333] border-solid pb-6">
         <div className="flex items-center justify-center gap-4 text-white">
-          <img src={logo} alt="Muve Logo" />
-          <span className="font-semibold text-xl">Muve.</span>
+          <img src={logo} alt="Muve Logo" className="w-32 h-w-32" />
         </div>
         <button className="w-6 h-6 rounded flex items-center justify-center border-[1px] border-solid border-[#777777] text-[#777777] hover:bg-[#777777] hover:text-white transition-all">
           <CaretDoubleLeft />

@@ -25,7 +25,7 @@ export function ChapterMenu({ chapters }: ChapterMenuProps) {
         placement="top end"
         offset={10}
       >
-        {chapters.length > 0 ? (
+        {chapters && chapters.length > 0 ? (
           chapters.map((chapter, index) => (
             <div
               key={index}

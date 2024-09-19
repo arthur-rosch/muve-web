@@ -19,6 +19,7 @@
     "@radix-ui/themes": "^3.1.1",
     "@rocketseat/eslint-config": "^2.2.2",
     "@tailwindcss/forms": "^0.5.7",
+    "@tanstack/react-table": "^8.20.5",
     "@tremor/react": "^3.17.4",
     "@vidstack/react": "^1.9.7",
     "axios": "^1.7.2",

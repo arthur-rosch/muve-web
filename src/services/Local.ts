@@ -1,6 +1,7 @@
 const keys = {
   USER: '@storage:userId',
   JWT: '@storage:jwt',
+  PLAN: '@storage:plan',
 }
 
 type Keys = keyof typeof keys
@@ -12,6 +13,15 @@ export class Local {
 
   static async setJWT(jwt: string) {
     return await this.set('JWT', JSON.stringify(jwt))
+  }
+
+  static async setPlan(
+    plan: string,
+    validity: string,
+    chargeFrequency: string,
+  ) {
+    const planInfo = { plan, validity, chargeFrequency }
+    return await this.set('PLAN', JSON.stringify(planInfo))
   }
 
   static async get(key: Keys) {
@@ -41,5 +51,6 @@ export class Local {
   static async logout() {
     localStorage.removeItem(keys.JWT)
     localStorage.removeItem(keys.USER)
+    localStorage.removeItem(keys.PLAN)
   }
 }

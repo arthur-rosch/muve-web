@@ -1,3 +1,4 @@
+import logo from '../../../../assets/logo.svg'
 import type { FC } from 'react'
 import { motion } from 'framer-motion'
 import { Card } from '../../../../components'
@@ -88,11 +89,11 @@ export const VideoPerformance: FC<VideoPerformanceProps> = ({
             <img
               className="w-28 h-14 rounded"
               alt="thumbnail video"
-              src="https://s2-techtudo.glbimg.com/SSAPhiaAy_zLTOu3Tr3ZKu2H5vg=/0x0:1024x609/888x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2022/c/u/15eppqSmeTdHkoAKM0Uw/dall-e-2.jpg"
+              src={video.thumbnail ? video.thumbnail : logo}
             />
             <div className="flex flex-col items-start justify-center gap-2">
               <span className="text-white text-sm font-semibold">
-                {'TESTE'}
+                {video.name}
               </span>
               <span className="text-[#909090] text-sm font-semibold">
                 {video.analytics.totalViews} views

@@ -38,13 +38,14 @@ export const MyProfile: FC = () => {
             type="text"
             animation={true}
             className="w-full"
+            disabled={true}
             variants={cardVariants}
             placeholder={user.name}
           />
         </div>
       </motion.div>
       <motion.div
-        className="flex items-start justify-start border-b-[1px] border-solid border-[#333333] mb-6 pb-3"
+        className="flex items-start justify-start mb-6 pb-3"
         initial="hidden"
         animate="visible"
         variants={cardVariants}
@@ -65,6 +66,7 @@ export const MyProfile: FC = () => {
               id="folderName1"
               type="text"
               placeholder={user.name}
+              disabled={true}
               className="w-full mt-2 mb-2"
             />
           </div>
@@ -76,6 +78,7 @@ export const MyProfile: FC = () => {
               id="folderName2"
               type="text"
               placeholder={user.phone}
+              disabled={true}
               className="w-full mt-2 mb-2"
             />
           </div>
@@ -86,6 +89,7 @@ export const MyProfile: FC = () => {
             <Input
               id="folderName3"
               type="text"
+              disabled={true}
               placeholder={user.document}
               className="w-full mt-2 mb-2"
             />
@@ -97,6 +101,7 @@ export const MyProfile: FC = () => {
             <Input
               id="folderName4"
               type="text"
+              disabled={true}
               placeholder={user.email}
               className="w-full mt-2 mb-2"
             />

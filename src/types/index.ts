@@ -171,3 +171,36 @@ export interface Folder {
   created_at: Date
   videos: Video[]
 }
+
+export enum StatusSignature {
+  APPROVED = 'APPROVED',
+  PENDING = 'PENDING',
+  CANCELED = 'CANCELED',
+}
+
+export enum Plan {
+  FREE = 'FREE',
+  ESSENTIAL = 'ESSENTIAL',
+  UNLIMITED = 'UNLIMITED',
+  PROFESSIONAL = 'PROFESSIONAL',
+}
+
+export enum ChargeFrequency {
+  ANNUALLY = 'ANNUALLY',
+  MONTHLY = 'MONTHLY',
+}
+
+export interface Signature {
+  id: string
+  status: StatusSignature
+  plan: Plan
+  ChargeFrequency: ChargeFrequency
+  price: string
+  payment_method: string
+  userId: string
+  kirvano_type: string
+  kirvano_sale_id: string
+  kirvano_checkout_id: string
+  next_charge_date: string
+  created_at: Date
+}
