@@ -67,6 +67,38 @@ export class ProfileService {
     }
   }
 
+  static async updateProfile(name: string, document: string, phone: string) {
+    const url = `${host()}/update/profile`
+
+    try {
+      const response = await (
+        await this.getAxiosInstance()
+      ).post(url, {
+        name,
+        document,
+        phone,
+      })
+      if (response.status === 200) {
+        return { data: response.data, success: true }
+      } else {
+        return {
+          error: response.data.message,
+          success: false,
+        }
+      }
+    } catch (error: any) {
+      if (error.response.data.error)
+        return {
+          error: error.response.data.error,
+          success: false,
+        }
+      return {
+        error: 'Erro ao editar Perfil',
+        success: false,
+      }
+    }
+  }
+
   static async getAxiosInstance() {
     const jwt = await Local.get('JWT')
 

@@ -1,12 +1,18 @@
 import { motion } from 'framer-motion'
 import { type FC, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useProfile } from '../../../../hooks'
 import { cardVariants } from '../../../../animations'
 import type { State } from '../../../../redux/store/configureStore'
 import { Input, Button, toastSuccess, toastError } from '../../../../components'
+import { Local } from '../../../../services/Local'
+import { setUser } from '../../../../redux/actions/user'
+import type { User } from '../../../../types'
+import { useNavigate } from 'react-router-dom'
 
 export const Security: FC = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { user } = useSelector((state: State) => state.user)
   const { updateEmail, updatePassword } = useProfile()
 
@@ -53,6 +59,7 @@ export const Security: FC = () => {
 
           setNewEmail('')
           setCurrentEmailPassword('')
+          handleLogout()
         }
       } catch (error) {
         setIsEditingPassword(false)
@@ -63,6 +70,12 @@ export const Security: FC = () => {
         setCurrentEmailPassword('')
       }
     }
+  }
+
+  const handleLogout = () => {
+    Local.logout()
+    dispatch(setUser({} as User))
+    navigate('/login')
   }
 
   const handlePasswordSubmit = async () => {
@@ -81,6 +94,7 @@ export const Security: FC = () => {
           setNewPassword('')
           setCurrentPassword('')
           setConfirmPassword('')
+          handleLogout()
         }
 
         // Pode adicionar uma notificação de sucesso aqui

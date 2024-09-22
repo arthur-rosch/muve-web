@@ -22,9 +22,9 @@ export class AuthService {
         }
       }
     } catch (error: any) {
-      console.log(error)
+      console.log(error.response?.data?.message)
       const errorMessage =
-        error.response?.data?.error || 'Erro ao logar usuário'
+        error.response?.data?.message || 'Erro ao logar usuário'
       return {
         error: errorMessage,
         success: false,
@@ -57,7 +57,7 @@ export class AuthService {
   }
 
   static async checkEmailExistence(email: string) {
-    const url = `${host()}/auth/check/email`
+    const url = `${host()}/check/email`
 
     try {
       const response = await axios.post(url, {

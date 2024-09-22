@@ -4,7 +4,7 @@ import { useAuth } from '../../../hooks'
 import { useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input } from '../../../components'
+import { Button, Input, toastError } from '../../../components'
 
 const loginFormSchema = z.object({
   email: z.string().email('O e-mail fornecido não é válido.'),
@@ -28,13 +28,26 @@ export const Login: FC = () => {
 
   const handleLogin = async ({ email, password }: loginFormInputs) => {
     console.log(email, password)
-    const { success } = await signIn({ email, password })
+    const { success, Erro } = await signIn({ email, password })
     if (success) {
       navigate('/dashboard')
     } else {
-      setError('password', {
-        message: 'E-mail e/ou senha inválidos',
-      })
+      if (
+        Erro === 'Subscription cancelled, Subscribe to a plan to gain access'
+      ) {
+        toastError({
+          text: 'Assinatura cancelada. Assine um plano para obter acesso',
+        })
+      }
+      if (Erro === 'Late Subscription. Renew your plan to gain access') {
+        toastError({
+          text: 'Assinatura atrasada. Renove seu plano para ter acesso',
+        })
+      } else {
+        setError('password', {
+          message: 'E-mail e/ou senha inválidos',
+        })
+      }
     }
   }
 

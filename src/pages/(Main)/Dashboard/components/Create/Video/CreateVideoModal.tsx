@@ -178,7 +178,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
     <CustomModal.Root
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      styles={'h-auto w-[50rem] flex flex-col mt-auto'}
+      styles={'h-auto w-[50rem] flex flex-col'}
     >
       <CustomModal.Title
         title="+ Novo video"

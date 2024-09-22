@@ -21,12 +21,13 @@ interface Invoice {
 export const MyInvoices: FC = () => {
   const { getAllSignaturesByUserId } = useSignature()
   const { data: signatures } = getAllSignaturesByUserId
+  console.log(signatures)
 
   // Dados da tabela - Mapeia as assinaturas para o formato de Invoice
   const data = useMemo<Invoice[]>(
     () =>
       signatures?.map((signature) => ({
-        name: signature.kirvano_type,
+        name: signature.plan,
         date: new Date(signature.created_at).toLocaleDateString(),
         status: signature.status,
         valueInvested: signature.price,

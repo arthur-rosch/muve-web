@@ -5,7 +5,7 @@ import { Button } from '../Ui/button'
 import type { Folder, User } from '../../types'
 import { useDispatch } from 'react-redux'
 import { type FC, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom' // Import useLocation
 import { listItensDelay } from '../../animations'
 import {
   Gear,
@@ -18,12 +18,14 @@ import {
   ArrowUUpLeft,
   CaretDoubleLeft,
   ProjectorScreenChart,
+  Info,
 } from '@phosphor-icons/react'
 import { Local } from '../../services/Local'
 import { setUser } from '../../redux/actions/user'
 
 export const Sidebar: FC = () => {
   const navigate = useNavigate()
+  const location = useLocation() // Hook to get the current location
   const dispatch = useDispatch()
 
   const { getAllFolderByUserId } = useFolder()
@@ -46,6 +48,11 @@ export const Sidebar: FC = () => {
   const otherItems = [
     { id: 'profile', icon: <Gear size={20} />, label: 'Configurações' },
     { id: 'logout', icon: <ArrowUUpLeft size={20} />, label: 'Sair da conta' },
+    {
+      id: 'https://ajuda.muveplayer.com/',
+      icon: <Info size={20} />,
+      label: 'Ajuda',
+    },
   ]
 
   const handleLogout = () => {
@@ -73,6 +80,8 @@ export const Sidebar: FC = () => {
         <span className="text-sm text-[#909090] mb-6">Menu</span>
         <div className="flex flex-col gap-3">
           {menuItems.map((item) => {
+            const isActive = location.pathname === `/${item.id}` // Check if the current route matches the item ID
+
             if (item.id === 'folders') {
               return (
                 <div key={item.id}>
@@ -81,7 +90,7 @@ export const Sidebar: FC = () => {
                     variant="link"
                     key={item.id}
                     onClick={() => setIsFoldersOpen(!isFoldersOpen)}
-                    className={`w-full p-4 flex gap-4 items-center justify-start h-12`}
+                    className={`w-full p-4 flex gap-4 items-center justify-start h-12 ${isActive ? 'bg-[#333333] text-white' : ''}`}
                   >
                     <div className="flex gap-4 items-center">
                       {item.icon}
@@ -125,7 +134,9 @@ export const Sidebar: FC = () => {
                 type="button"
                 variant="link"
                 key={item.id}
-                className={`w-full p-4 flex gap-4 items-center justify-start h-12`}
+                className={`w-full p-4 flex gap-4 items-center justify-start h-12 ${
+                  isActive ? 'bg-[#333333] text-white' : ''
+                }`}
                 onClick={() => {
                   navigate(`/${item.id}`)
                 }}
@@ -141,18 +152,27 @@ export const Sidebar: FC = () => {
       <div className="w-full h-full my-6 flex flex-col">
         <span className="text-sm text-[#909090] mb-6">Outros</span>
         <div className="flex flex-col gap-3">
-          {otherItems.map((item) => (
-            <div
-              key={item.id}
-              className={`w-full p-4 flex gap-4 rounded items-center justify-start h-12 text-sm text-[#909090] hover:bg-[#343434] hover:text-white transaction-all cursor-pointer`}
-              onClick={() => {
-                item.id !== 'logout' ? navigate(`/${item.id}`) : handleLogout()
-              }}
-            >
-              {item.icon}
-              {item.label}
-            </div>
-          ))}
+          {otherItems.map((item) => {
+            const isActive = location.pathname === `/${item.id}`
+            return (
+              <div
+                key={item.id}
+                className={`w-full p-4 flex gap-4 rounded items-center justify-start h-12 text-sm text-[#909090] ${isActive ? 'bg-[#333333] text-white' : ''} transaction-all cursor-pointer`}
+                onClick={() => {
+                  if (item.id === 'logout') {
+                    handleLogout()
+                  } else if (item.id === 'https://ajuda.muveplayer.com/') {
+                    window.location.href = item.id // Redirect to the help URL
+                  } else {
+                    navigate(`/${item.id}`)
+                  }
+                }}
+              >
+                {item.icon}
+                {item.label}
+              </div>
+            )
+          })}
         </div>
       </div>
     </aside>
