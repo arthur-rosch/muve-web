@@ -178,7 +178,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
     <CustomModal.Root
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      styles={'h-auto w-[50rem] flex flex-col'}
+      styles={'h-auto w-[50rem] flex flex-col m-auto'}
     >
       <CustomModal.Title
         title="+ Novo video"
@@ -228,7 +228,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                         checked={selectedType === 'Vsl'}
                         onCheckedChange={() => handleTypeChange('Vsl')}
                       />
-                      <span className="text-white">Vsl</span>
+                      <span className="text-white">vsl</span>
                     </footer>
                   </div>
 

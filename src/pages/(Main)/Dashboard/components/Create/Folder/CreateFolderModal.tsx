@@ -12,6 +12,7 @@ import {
   Button,
   CheckBox,
   CustomModal,
+  toastError,
 } from '../../../../../../components'
 
 const schema = z.object({
@@ -87,6 +88,10 @@ export const CreateFolderModal: FC<CreateFolderModalProps> = ({
       setLoading(!loading)
       setCreatedSuccess(!createdSuccess)
       await getAllFolderByUserId.refetch()
+    } else {
+      toastError({
+        text: 'Ops... Algo deu errado',
+      })
     }
   }
 
@@ -94,7 +99,7 @@ export const CreateFolderModal: FC<CreateFolderModalProps> = ({
     <CustomModal.Root
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      styles={'h-auto w-[50rem] flex flex-col'}
+      styles={'h-auto w-[50rem] flex flex-col m-auto'}
     >
       <CustomModal.Title
         title="+ Nova pasta"
@@ -111,7 +116,10 @@ export const CreateFolderModal: FC<CreateFolderModalProps> = ({
               animation={true}
               variants={cardVariants}
               className="w-full flex items-center justify-center py-3 px-4 h-10"
-              onClick={() => setIsModalOpen(false)}
+              onClick={() => {
+                setIsModalOpen(false)
+                setCreatedSuccess(false)
+              }}
             >
               Confirmar
             </Button>
@@ -212,7 +220,7 @@ export const CreateFolderModal: FC<CreateFolderModalProps> = ({
                       <img
                         className="w-28 h-14 rounded"
                         alt="thumbnail video"
-                        src="https://s2-techtudo.glbimg.com/SSAPhiaAy_zLTOu3Tr3ZKu2H5vg=/0x0:1024x609/888x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_08fbf48bc0524877943fe86e43087e7a/internal_photos/bs/2022/c/u/15eppqSmeTdHkoAKM0Uw/dall-e-2.jpg"
+                        src={video.thumbnail}
                       />
                       <div className="flex flex-col items-start justify-center gap-2">
                         <span className="text-white text-sm font-semibold">

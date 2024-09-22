@@ -9,7 +9,6 @@ import { useNavigate, useLocation } from 'react-router-dom' // Import useLocatio
 import { listItensDelay } from '../../animations'
 import {
   Gear,
-  Users,
   CaretUp,
   CaretDown,
   Newspaper,
@@ -18,7 +17,6 @@ import {
   ArrowUUpLeft,
   CaretDoubleLeft,
   ProjectorScreenChart,
-  Info,
 } from '@phosphor-icons/react'
 import { Local } from '../../services/Local'
 import { setUser } from '../../redux/actions/user'
@@ -41,18 +39,16 @@ export const Sidebar: FC = () => {
       icon: <ProjectorScreenChart size={20} />,
       label: 'Análise',
     },
-    { id: 'news', icon: <Newspaper size={20} />, label: 'Novidades' },
-    { id: 'affiliation', icon: <Users size={20} />, label: 'Afiliação' },
+    {
+      id: 'https://ajuda.muveplayer.com/novidades/novidades-no-muve',
+      icon: <Newspaper size={20} />,
+      label: 'Novidades',
+    },
   ]
 
   const otherItems = [
     { id: 'profile', icon: <Gear size={20} />, label: 'Configurações' },
     { id: 'logout', icon: <ArrowUUpLeft size={20} />, label: 'Sair da conta' },
-    {
-      id: 'https://ajuda.muveplayer.com/',
-      icon: <Info size={20} />,
-      label: 'Ajuda',
-    },
   ]
 
   const handleLogout = () => {
@@ -66,7 +62,7 @@ export const Sidebar: FC = () => {
   }
 
   return (
-    <aside className="h-screen w-72 rounded-xl flex flex-col items-start justify-start p-4 m-2 bg-[#1D1D1D]">
+    <aside className="h-screen w-80 rounded-xl flex flex-col items-start justify-start p-4 m-2 bg-[#1D1D1D]">
       <div className="w-full flex items-center justify-between border-b-[1px] border-[#333333] border-solid pb-6">
         <div className="flex items-center justify-center gap-4 text-white">
           <img src={logo} alt="Muve Logo" className="w-32 h-w-32" />
@@ -138,7 +134,14 @@ export const Sidebar: FC = () => {
                   isActive ? 'bg-[#333333] text-white' : ''
                 }`}
                 onClick={() => {
-                  navigate(`/${item.id}`)
+                  if (
+                    item.id ===
+                    'https://ajuda.muveplayer.com/novidades/novidades-no-muve'
+                  ) {
+                    window.location.href = item.id
+                  } else {
+                    navigate(`/${item.id}`)
+                  }
                 }}
               >
                 {item.icon}
