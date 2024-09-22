@@ -6,10 +6,20 @@ import { useState, useEffect, type FC } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import type { Video, VideoMetrics } from '../../../types'
 import { ArrowLeft, FolderDashed } from '@phosphor-icons/react'
-import { Card, HeaderFolder, Input, InputSelect } from '../../../components'
+import {
+  Button,
+  Card,
+  HeaderFolder,
+  Input,
+  InputSelect,
+} from '../../../components'
 import { calculateVideoMetrics, convertDurationToSeconds } from '../../../utils'
+import type { State } from '../../../redux/store/configureStore'
+import { useSelector } from 'react-redux'
 
 export const Analytics: FC = () => {
+  const { user } = useSelector((state: State) => state.user)
+
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -77,9 +87,7 @@ export const Analytics: FC = () => {
 
   const availableCharts = (plan: string) => {
     switch (plan) {
-      case 'Free':
       case 'ESSENTIAL':
-        return ['retencao']
       case 'UNLIMITED':
       case 'PROFESSIONAL':
         return ['retencao', 'pais', 'dispositivos']
@@ -90,8 +98,6 @@ export const Analytics: FC = () => {
 
   const isPlanVisible = (label: string) => {
     switch (userPlan) {
-      case 'FREE':
-        return label === 'Plays' || label === 'Views'
       case 'ESSENTIAL':
         return (
           label === 'Plays' ||
@@ -107,11 +113,28 @@ export const Analytics: FC = () => {
     }
   }
 
+  const handleRedirectToPayment = () => {
+    const baseUrl =
+      'https://pay.kirvano.com/7c915a99-e9c3-4520-aa51-1721d914071b'
+
+    const params = new URLSearchParams({
+      'customer.name': user.name,
+      'customer.email': user.email,
+      'customer.document': user.document,
+      'customer.phone': user.phone,
+    }).toString()
+
+    const fullUrl = `${baseUrl}?${params}`
+
+    // Redireciona para a URL com os parâmetros
+    window.location.href = fullUrl
+  }
+
   return (
-    <section className="w-full h-[95vh] mx-8 overflow-auto pr-4">
+    <section className="w-full h-auto mx-8 overflow-auto pr-4">
       <HeaderFolder name={'Análise'} />
 
-      <div className="w-full h-full flex flex-col items-start justify-between mt-10">
+      <div className="w-full h-full flex flex-col mt-10">
         <motion.header
           className="flex flex-col"
           initial="hidden"
@@ -168,16 +191,33 @@ export const Analytics: FC = () => {
                       : 'w-44 h-32 flex flex-col justify-between px-5 py-6 rounded-lg bg-transparent'
 
                     return (
-                      <Card
-                        key={label}
-                        variant="secondary"
-                        className={cardClassName}
-                      >
-                        <span className="text-[#909090] text-sm">{label}</span>
-                        <span className="text-white text-3xl">
-                          {!isVisible ? '********' : value}
-                        </span>
-                      </Card>
+                      <div className="relative" key={label}>
+                        <Card
+                          key={label}
+                          variant="secondary"
+                          className={cardClassName}
+                        >
+                          <span className="text-[#909090] text-sm">
+                            {label}
+                          </span>
+                          <span
+                            className={`text-white text-3xl ${!isVisible ? 'filter blur-sm' : ''}`}
+                          >
+                            {!isVisible ? '********' : value}
+                          </span>
+                        </Card>
+
+                        {!isVisible && (
+                          <Button
+                            type="button"
+                            variant="primary"
+                            className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm"
+                            onClick={handleRedirectToPayment}
+                          >
+                            Upgrade
+                          </Button>
+                        )}
+                      </div>
                     )
                   })}
                 </div>

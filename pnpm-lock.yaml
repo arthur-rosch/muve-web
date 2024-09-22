@@ -80,6 +80,9 @@ importers:
       react-hook-form:
         specifier: ^7.52.1
         version: 7.52.1(react@18.3.1)
+      react-input-mask:
+        specifier: ^2.0.4
+        version: 2.0.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-ipgeolocation:
         specifier: ^1.4.0
         version: 1.4.0
@@ -129,6 +132,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.7
         version: 18.3.0
+      '@types/react-input-mask':
+        specifier: ^3.0.5
+        version: 3.0.5
       '@types/react-modal':
         specifier: ^3.16.3
         version: 3.16.3
@@ -1313,6 +1319,9 @@ packages:
 
   '@types/react-dom@18.3.0':
     resolution: {integrity: sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==}
+
+  '@types/react-input-mask@3.0.5':
+    resolution: {integrity: sha512-vQ1x6ykwjDrDrJZq1zw5/uQ+nqGHUV6bWscsVZJ/qsNwNXWxZm7KRBHLJ5k6TQt3MHjhpoYHzPH6FwjVSZODHA==}
 
   '@types/react-modal@3.16.3':
     resolution: {integrity: sha512-xXuGavyEGaFQDgBv4UVm8/ZsG+qxeQ7f77yNrW3n+1J6XAstUy5rYHeIHPh1KzsGc6IkCIdu6lQ2xWzu1jBTLg==}
@@ -2764,6 +2773,12 @@ packages:
     engines: {node: '>=12.22.0'}
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
+
+  react-input-mask@2.0.4:
+    resolution: {integrity: sha512-1hwzMr/aO9tXfiroiVCx5EtKohKwLk/NT8QlJXHQ4N+yJJFyUuMT+zfTpLBwX/lK3PkuMlievIffncpMZ3HGRQ==}
+    peerDependencies:
+      react: '>=0.14.0'
+      react-dom: '>=0.14.0'
 
   react-ipgeolocation@1.4.0:
     resolution: {integrity: sha512-pZ+/wxDVsHW3lHoPRkyu8NDXuNhz7d+vgp4vILJxpkktM46A90c4l6AxeU5P0jxDVv6b92lWphX30ahZZJapvg==}
@@ -4506,6 +4521,10 @@ snapshots:
     dependencies:
       '@types/react': 18.3.3
 
+  '@types/react-input-mask@3.0.5':
+    dependencies:
+      '@types/react': 18.3.3
+
   '@types/react-modal@3.16.3':
     dependencies:
       '@types/react': 18.3.3
@@ -6118,6 +6137,13 @@ snapshots:
   react-hook-form@7.52.1(react@18.3.1):
     dependencies:
       react: 18.3.1
+
+  react-input-mask@2.0.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      invariant: 2.2.4
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      warning: 4.0.3
 
   react-ipgeolocation@1.4.0: {}
 

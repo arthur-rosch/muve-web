@@ -39,8 +39,29 @@ export const useProfile = () => {
     },
   )
 
+  const updateProfile = useMutation(
+    async ({
+      phone,
+      document,
+      name,
+    }: {
+      name: string
+      phone: string
+      document: string
+    }) => {
+      const { data, success, error } = await ProfileService.updateProfile(
+        name,
+        document,
+        phone,
+      )
+
+      return { data, success, error }
+    },
+  )
+
   return {
     updateEmail,
+    updateProfile,
     updatePassword,
   }
 }

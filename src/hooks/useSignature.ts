@@ -10,7 +10,7 @@ export const useSignature = () => {
         await SignatureService.getAllSignaturesByUserId()
       console.log(success, data, error)
       if (success) {
-        return data.folders
+        return data
       }
 
       throw error

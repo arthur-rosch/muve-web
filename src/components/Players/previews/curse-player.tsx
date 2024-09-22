@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import type { Video } from '../../../types'
-import { getYoutubeVideoId } from '../../../utils'
 import { VideoLayout } from '../layouts/videoLayout'
 import {
   Poster,
@@ -63,7 +62,7 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
       <MediaProvider>
         <Poster
           alt="Poster image"
-          src={`https://img.youtube.com/vi/${getYoutubeVideoId(video.url)}/maxresdefault.jpg`}
+          src={video.thumbnail}
           className="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 object-cover"
         />
       </MediaProvider>
