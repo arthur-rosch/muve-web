@@ -11,8 +11,9 @@ import { Header } from '../../../components'
 
 export const Dashboard: FC = () => {
   const { getAllFolderByUserId } = useFolder()
-  const { getManyVideosNotFolderId } = useVideo()
+  const { getManyVideosNotFolderId, getAllVideosByUserId } = useVideo()
 
+  const { data: allVideos } = getAllVideosByUserId
   const { data: videosNotFolderId } = getManyVideosNotFolderId
   const { data: folders, isLoading, isSuccess } = getAllFolderByUserId
 
@@ -20,14 +21,14 @@ export const Dashboard: FC = () => {
     return <div>Carregando...</div>
   }
 
-  if (isSuccess && videosNotFolderId) {
+  if (isSuccess && videosNotFolderId && allVideos) {
     const { topVideos, totalHoursWatched, totalMinutesWatched, totalVideos } =
       calculateDashboardMetrics(folders)
 
     return (
       <section className="w-full h-full mx-8">
         <Header />
-        <div className="w-full h-full flex items-start justify-between mt-10">
+        <div className="w-full h-screen flex items-start justify-between mt-10 overflow-auto">
           <section className="h-full w-[75%] px-8">
             <div className="w-full flex items-start justify-start gap-4">
               <CardCreateFolder videosNotFolderId={videosNotFolderId} />
@@ -39,6 +40,7 @@ export const Dashboard: FC = () => {
             />
           </section>
           <VideoPerformance
+            videos={allVideos}
             topVideos={topVideos}
             totalVideos={totalVideos}
             totalHoursWatched={totalHoursWatched}

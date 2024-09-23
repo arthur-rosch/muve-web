@@ -19,13 +19,15 @@ const schema = z.object({
   folderName: z.string().min(1, 'Nome da pasta é obrigatório'),
   coverUrl: z
     .string()
-    .url('URL da capa deve ser um link válido')
-    .min(1, 'URL da capa é obrigatória')
-    .refine((url) => /\.(jpeg|jpg|png|gif|bmp|webp|svg)$/i.test(url), {
-      message:
-        'A URL deve terminar com uma extensão de arquivo de imagem válida (jpeg, jpg, png, gif, bmp, webp, svg)',
-    })
-    .optional(),
+    .optional()
+    .refine(
+      (url) =>
+        !url || /^https?:\/\/.+\.(jpeg|jpg|png|gif|bmp|webp|svg)$/i.test(url),
+      {
+        message:
+          'A URL deve ser um link válido e terminar com uma extensão de arquivo de imagem válida (jpeg, jpg, png, gif, bmp, webp, svg)',
+      },
+    ),
   videoIds: z.array(z.string()).optional(),
 })
 
