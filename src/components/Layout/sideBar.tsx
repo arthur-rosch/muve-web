@@ -138,7 +138,7 @@ export const Sidebar: FC = () => {
                     item.id ===
                     'https://ajuda.muveplayer.com/novidades/novidades-no-muve'
                   ) {
-                    window.location.href = item.id
+                    window.open(item.id)
                   } else {
                     navigate(`/${item.id}`)
                   }

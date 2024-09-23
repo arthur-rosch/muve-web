@@ -158,6 +158,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
       colorProgress: data.color,
       name: data.name,
       chapters: data.chapters,
+      fictitiousProgress: data.fictitiousProgress,
     })
 
     console.log(error)
@@ -207,13 +208,13 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
       ) : (
         <>
           <motion.div
-            className="w-full max-h-[80%] p-6"
+            className="w-full max-h-[25rem] overflow-auto *:p-6"
             initial="hidden"
             animate="visible"
             variants={cardVariants}
           >
             <div className="w-full flex flex-col gap-6">
-              <motion.div className="max-h-[35rem] overflow-auto">
+              <motion.div>
                 <span className="text-white">Tipo de vídeo</span>
 
                 <div className="flex gap-6 mt-8 items-center justify-center">

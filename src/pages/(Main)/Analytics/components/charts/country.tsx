@@ -127,7 +127,7 @@ export const ChartCountry: FC<ChartProps> = ({ analytics, selectedVideo }) => {
   )
 
   return (
-    <div className="max-h-[500px] overflow-auto">
+    <>
       <AreaChart
         data={chartData}
         index="date"
@@ -158,6 +158,6 @@ export const ChartCountry: FC<ChartProps> = ({ analytics, selectedVideo }) => {
           </TableBody>
         </Table>
       </div>
-    </div>
+    </>
   )
 }

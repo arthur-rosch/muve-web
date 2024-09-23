@@ -23,7 +23,6 @@ export async function getGeolocation(ip: string): Promise<GeolocationData> {
     }
 
     const data = response.data
-    console.log('Dados de geolocalização:', data)
     return {
       country: data.country || '',
       region: data.state || '',

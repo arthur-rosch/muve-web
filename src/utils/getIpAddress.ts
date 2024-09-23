@@ -9,7 +9,6 @@ export async function getIPAddress(): Promise<string> {
     const response = await axios.get<{ ip: string }>(
       'https://api.ipify.org?format=json',
     )
-    console.log('IP capturado:', response.data.ip)
     return response.data.ip
   } catch (error) {
     console.error('Erro ao obter o IP:', error)

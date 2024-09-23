@@ -1,20 +1,14 @@
-export const limitPlan = (plan: string, chargeFrequency?: string) => {
+export const limitPlan = (plan: string) => {
   let videoLimit
   switch (plan) {
-    case 'FREE':
-      videoLimit = 1
-      break
     case 'ESSENTIAL':
-      videoLimit = chargeFrequency === 'MONTHLY' ? 25 : 30
+      videoLimit = 10
       break
     case 'PROFESSIONAL':
-      videoLimit = chargeFrequency === 'MONTHLY' ? 75 : 100
+      videoLimit = 25
       break
     case 'UNLIMITED':
-      videoLimit = Infinity
-      break
-    default:
-      videoLimit = 1
+      videoLimit = 250
       break
   }
 
