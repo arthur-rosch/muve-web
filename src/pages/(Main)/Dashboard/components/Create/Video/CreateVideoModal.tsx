@@ -17,10 +17,18 @@ import {
 } from '../../../../../../components'
 
 const createVideoSchema = z.object({
-  name: z.string(),
-  url: z.string().url('URL inválida'),
+  name: z.string({
+    message: 'Nome do vídeo é obrigatório',
+  }),
+  url: z
+    .string({
+      message: 'URL do vídeo é obrigatório',
+    })
+    .url('URL inválida'),
   duration: z
-    .string()
+    .string({
+      message: 'Duração do vídeo é obrigatório',
+    })
     .regex(/^\d{2}:\d{2}$/, 'Duração deve estar no formato mm:ss'),
   folderId: z.string().optional(),
   type: z.enum(['Vsl', 'Curso'], {
@@ -73,14 +81,22 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
     endTime: '',
   })
 
-  const { register, reset, handleSubmit, watch, setValue, control, getValues } =
-    useForm<CreateVideoFormValues>({
-      resolver: zodResolver(createVideoSchema),
-      defaultValues: {
-        fictitiousProgress: false,
-        chapters: [],
-      },
-    })
+  const {
+    register,
+    reset,
+    handleSubmit,
+    watch,
+    setValue,
+    control,
+    getValues,
+    formState: { errors },
+  } = useForm<CreateVideoFormValues>({
+    resolver: zodResolver(createVideoSchema),
+    defaultValues: {
+      fictitiousProgress: false,
+      chapters: [],
+    },
+  })
 
   const fictitiousProgress = watch('fictitiousProgress')
 
@@ -248,6 +264,11 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                     </footer>
                   </div>
                 </div>
+                {errors.type && (
+                  <span className="text-red-500 text-xs">
+                    {errors.type.message}
+                  </span>
+                )}
 
                 <div className="flex gap-4 mt-6 border-b-[1px] border-solid border-[#333333] pb-6">
                   <>
@@ -266,6 +287,11 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                     <span className="text-[#909090] text-sm">Formato 16/9</span>
                   </>
                 </div>
+                {errors.format && (
+                  <span className="text-red-500 text-xs">
+                    {errors.format.message}
+                  </span>
+                )}
 
                 {selectedType === 'Vsl' && (
                   <div className="flex flex-col mt-6">
@@ -317,6 +343,11 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                         />
                       )}
                     />
+                    {errors.url && (
+                      <span className="text-red-500 text-xs">
+                        {errors.url.message}
+                      </span>
+                    )}
                   </div>
                   <div className="flex flex-col w-full">
                     <label htmlFor="url" className="text-white text-sm">
@@ -335,6 +366,11 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                         />
                       )}
                     />
+                    {errors.name && (
+                      <span className="text-red-500 text-xs">
+                        {errors.name.message}
+                      </span>
+                    )}
                   </div>
                 </div>
 
@@ -356,6 +392,11 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                         />
                       )}
                     />
+                    {errors.duration && (
+                      <span className="text-red-500 text-xs">
+                        {errors.duration.message}
+                      </span>
+                    )}
                   </div>
                   <div className="flex flex-col w-full">
                     <label htmlFor="folderId" className="text-white text-sm">

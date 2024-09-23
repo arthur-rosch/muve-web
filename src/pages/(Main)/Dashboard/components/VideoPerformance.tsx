@@ -7,6 +7,7 @@ import { ChartLine } from '@phosphor-icons/react'
 import { cardVariants, listItensDelay } from '../../../../animations'
 
 interface VideoPerformanceProps {
+  videos: Video[]
   topVideos: Video[]
   totalVideos: number
   totalHoursWatched: number
@@ -15,7 +16,7 @@ interface VideoPerformanceProps {
 
 export const VideoPerformance: FC<VideoPerformanceProps> = ({
   topVideos,
-  totalVideos,
+  videos,
   totalHoursWatched,
   totalMinutesWatched,
 }) => {
@@ -54,7 +55,7 @@ export const VideoPerformance: FC<VideoPerformanceProps> = ({
             Qtd. de videos
           </span>
           <span className="text-white text-2xl font-semibold">
-            {totalVideos}
+            {videos.length}
           </span>
         </Card>
         <Card

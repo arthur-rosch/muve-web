@@ -23,12 +23,13 @@ import { setUser } from '../../redux/actions/user'
 
 export const Sidebar: FC = () => {
   const navigate = useNavigate()
-  const location = useLocation() // Hook to get the current location
+  const location = useLocation()
   const dispatch = useDispatch()
 
   const { getAllFolderByUserId } = useFolder()
   const { data: folders } = getAllFolderByUserId
 
+  const [isSideBarOpen, setIsSideBarOpen] = useState(false)
   const [isFoldersOpen, setIsFoldersOpen] = useState<boolean>(false)
 
   const menuItems = [
@@ -62,18 +63,29 @@ export const Sidebar: FC = () => {
   }
 
   return (
-    <aside className="h-screen w-80 rounded-xl flex flex-col items-start justify-start p-4 m-2 bg-[#1D1D1D]">
+    <aside
+      className={`h-screen ${isSideBarOpen ? 'w-80' : 'w-20'} rounded-xl flex flex-col items-start justify-start p-4 m-2 bg-[#1D1D1D] transition-width duration-300`}
+    >
       <div className="w-full flex items-center justify-between border-b-[1px] border-[#333333] border-solid pb-6">
         <div className="flex items-center justify-center gap-4 text-white">
-          <img src={logo} alt="Muve Logo" className="w-32 h-w-32" />
+          {isSideBarOpen && (
+            <img src={logo} alt="Muve Logo" className="w-32 h-w-32" />
+          )}
         </div>
-        <button className="w-6 h-6 rounded flex items-center justify-center border-[1px] border-solid border-[#777777] text-[#777777] hover:bg-[#777777] hover:text-white transition-all">
+        <button
+          onClick={() => setIsSideBarOpen(!isSideBarOpen)}
+          className="w-6 h-6 rounded flex items-center justify-center border-[1px] border-solid border-[#777777] text-[#777777] hover:bg-[#777777] hover:text-white transition-all"
+        >
           <CaretDoubleLeft />
         </button>
       </div>
 
       <div className="w-full h-full my-6 flex flex-col">
-        <span className="text-sm text-[#909090] mb-6">Menu</span>
+        <span
+          className={`text-sm text-[#909090] mb-6 ${!isSideBarOpen ? 'hidden' : ''}`}
+        >
+          Menu
+        </span>
         <div className="flex flex-col gap-3">
           {menuItems.map((item) => {
             const isActive = location.pathname === `/${item.id}` // Check if the current route matches the item ID
@@ -85,20 +97,26 @@ export const Sidebar: FC = () => {
                     type="button"
                     variant="link"
                     key={item.id}
-                    onClick={() => setIsFoldersOpen(!isFoldersOpen)}
+                    onClick={() => {
+                      if (!isSideBarOpen) {
+                        setIsSideBarOpen(true) // Open sidebar if closed
+                      }
+                      setIsFoldersOpen(!isFoldersOpen)
+                    }}
                     className={`w-full p-4 flex gap-4 items-center justify-start h-12 ${isActive ? 'bg-[#333333] text-white' : ''}`}
                   >
                     <div className="flex gap-4 items-center">
                       {item.icon}
-                      {item.label}
+                      {isSideBarOpen && item.label}{' '}
+                      {/* Show label only if sidebar is open */}
                     </div>
-                    {isFoldersOpen ? (
+                    {isFoldersOpen && isSideBarOpen ? (
                       <CaretUp size={20} />
                     ) : (
                       <CaretDown size={20} />
                     )}
                   </Button>
-                  {isFoldersOpen && (
+                  {isFoldersOpen && isSideBarOpen && (
                     <motion.div
                       className="ml-8 mt-6 max-h-72 flex flex-col gap-2 overflow-x-auto"
                       initial="hidden"
@@ -145,7 +163,8 @@ export const Sidebar: FC = () => {
                 }}
               >
                 {item.icon}
-                {item.label}
+                {isSideBarOpen && item.label}{' '}
+                {/* Show label only if sidebar is open */}
               </Button>
             )
           })}
@@ -153,14 +172,18 @@ export const Sidebar: FC = () => {
       </div>
 
       <div className="w-full h-full my-6 flex flex-col">
-        <span className="text-sm text-[#909090] mb-6">Outros</span>
+        <span
+          className={`text-sm text-[#909090] mb-6 ${!isSideBarOpen ? 'hidden' : ''}`}
+        >
+          Outros
+        </span>
         <div className="flex flex-col gap-3">
           {otherItems.map((item) => {
             const isActive = location.pathname === `/${item.id}`
             return (
               <div
                 key={item.id}
-                className={`w-full p-4 flex gap-4 rounded items-center justify-start h-12 text-sm text-[#909090] ${isActive ? 'bg-[#333333] text-white' : ''} transaction-all cursor-pointer`}
+                className={`w-full p-4 flex gap-4 rounded items-center justify-start h-12 text-sm text-[#909090] ${isActive ? 'bg-[#333333] text-white' : ''} transition-all cursor-pointer`}
                 onClick={() => {
                   if (item.id === 'logout') {
                     handleLogout()
@@ -172,7 +195,8 @@ export const Sidebar: FC = () => {
                 }}
               >
                 {item.icon}
-                {item.label}
+                {isSideBarOpen && item.label}{' '}
+                {/* Show label only if sidebar is open */}
               </div>
             )
           })}

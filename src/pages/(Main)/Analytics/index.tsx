@@ -33,7 +33,7 @@ export const Analytics: FC = () => {
   const [loading, setLoading] = useState(true)
   const [userPlan, setUserPlan] = useState<string>('')
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null)
-  const [selectedTypeDataChart, setSelectedTypeDataChart] = useState('retencao')
+  const [selectedTypeDataChart, setSelectedTypeDataChart] = useState('retenção')
 
   const goBack = () => {
     navigate('/dashboard')
@@ -54,6 +54,7 @@ export const Analytics: FC = () => {
 
   useEffect(() => {
     if (selectedVideo) {
+      console.log(convertDurationToSeconds(selectedVideo.duration))
       const metrics = calculateVideoMetrics(
         convertDurationToSeconds(selectedVideo.duration),
         selectedVideo.analytics,

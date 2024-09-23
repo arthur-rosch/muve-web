@@ -25,12 +25,13 @@ export const calculateVideoMetrics = (
     )
     totalPlayTime += playDuration
   })
-
+  console.log(totalPlayTime, videoDurationSeconds)
   const engagement =
     uniquePlays > 0
       ? (totalPlayTime / (uniquePlays * videoDurationSeconds)) * 100
       : 0
 
+  console.log(engagement)
   const playRate = uniqueViews > 0 ? (uniquePlays / uniqueViews) * 100 : 0
 
   return {
