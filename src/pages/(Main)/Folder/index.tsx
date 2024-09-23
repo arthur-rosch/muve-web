@@ -31,7 +31,7 @@ export const Folder: FC = () => {
     <section className="w-full h-full mx-8">
       <HeaderFolder name={folder.name} />
 
-      <div className="w-full h-full flex flex-col items-start justify-between mt-10">
+      <div className="w-full h-full flex flex-col mt-10">
         <motion.header
           className="flex flex-col"
           initial="hidden"

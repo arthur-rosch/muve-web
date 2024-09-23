@@ -136,7 +136,7 @@ export const ChartRetention: FC<ChartProps> = ({
   }, [analytics, selectedVideo])
 
   return (
-    <div className="max-h-[500px] overflow-auto">
+    <>
       <AreaChart
         data={chartData}
         index="date"
@@ -189,6 +189,6 @@ export const ChartRetention: FC<ChartProps> = ({
           </TableBody>
         </Table>
       </div>
-    </div>
+    </>
   )
 }

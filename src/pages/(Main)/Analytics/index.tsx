@@ -58,6 +58,7 @@ export const Analytics: FC = () => {
         convertDurationToSeconds(selectedVideo.duration),
         selectedVideo.analytics,
       )
+      console.log(metrics)
       setMetrics(metrics)
     }
   }, [selectedVideo])
@@ -131,7 +132,7 @@ export const Analytics: FC = () => {
   }
 
   return (
-    <section className="w-full h-auto mx-8 overflow-auto pr-4">
+    <section className="w-full max-h-screen mx-8 overflow-auto pr-4  pb-28">
       <HeaderFolder name={'Análise'} />
 
       <div className="w-full h-full flex flex-col mt-10">
@@ -165,7 +166,7 @@ export const Analytics: FC = () => {
         />
 
         <motion.div
-          className="w-full overflow-auto p-6 bg-[#141414] border-[1px] border-solid border-[#333333] mt-8 pb-20"
+          className="w-full h-auto p-6 bg-[#141414] border-[1px] border-solid border-[#333333] mt-8"
           initial="hidden"
           animate="visible"
           variants={cardVariants}

@@ -14,7 +14,6 @@ export function ChapterMenu({ chapters }: ChapterMenuProps) {
     const newCurrentTime = convertDurationToSeconds(timeString)
     remote.seek(newCurrentTime)
   }
-  console.log(chapters)
   return (
     <Menu.Root className="chapter-menu">
       <Menu.Button className="vds-menu-button vds-button" aria-label="Chapters">

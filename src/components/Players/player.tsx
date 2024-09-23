@@ -5,7 +5,7 @@ import { ProgressBar } from './components'
 import { useAnalytics } from '../../hooks'
 import { VideoLayout } from './layouts/videoLayout'
 import type { PlayerDataVariables, Video } from '../../types'
-import { getYoutubeVideoId, getIPAddress, getGeolocation } from '../../utils'
+import { getIPAddress, getGeolocation } from '../../utils'
 
 import { useEffect, useRef, useState } from 'react'
 
@@ -32,7 +32,7 @@ export function Player({ video }: { video: Video }) {
 
   const [progress, setProgress] = useState(0)
   const [transitionDuration, setTransitionDuration] = useState(0)
-  const [playStartTime, setPlayStartTime] = useState<number | null>(null)
+  const [playStartTime, setPlayStartTime] = useState<number | null>(0)
   const [playerData, setPlayerData] = useState<PlayerDataVariables>()
 
   function onProviderChange(
@@ -54,9 +54,7 @@ export function Player({ video }: { video: Video }) {
   function onCanPlay(
     detail: MediaCanPlayDetail,
     nativeEvent: MediaCanPlayEvent,
-  ) {
-    console.log(detail, nativeEvent)
-  }
+  ) {}
 
   useEffect(() => {
     const view = async () => {
@@ -90,16 +88,17 @@ export function Player({ video }: { video: Video }) {
   useEffect(() => {
     if (video) {
       const handlePlay = () => {
-        setPlayStartTime(currentTime)
-        console.log('Play event triggered at:', currentTime)
+        const currentPlayTime = player.current?.currentTime || 0 // Pegue o tempo atual do player
+        setPlayStartTime(currentPlayTime)
       }
 
       const handlePause = async () => {
-        if (playStartTime) {
+        const currentPauseTime = player.current?.currentTime || 0 // Pegue o tempo atual do player
+        if (playStartTime !== null) {
           try {
             await addViewTimestamps.mutateAsync({
               ...playerData!,
-              endTimestamp: currentTime,
+              endTimestamp: currentPauseTime,
               startTimestamp: playStartTime,
               videoId: video.id,
             })
@@ -120,7 +119,7 @@ export function Player({ video }: { video: Video }) {
         }
       }
     }
-  }, [playStartTime, addViewTimestamps, playerData, video, currentTime])
+  }, [playStartTime, addViewTimestamps, playerData, video])
 
   useEffect(() => {
     if (video && !paused) {
@@ -139,7 +138,6 @@ export function Player({ video }: { video: Video }) {
       }
     }
   }, [currentTime, duration, paused, video])
-
   return (
     <>
       {video && (
@@ -159,9 +157,6 @@ export function Player({ video }: { video: Video }) {
           <MediaProvider>
             <Poster
               alt="Poster image"
-              // src={`https://img.youtube.com/vi/${getYoutubeVideoId(
-              //   video.url,
-              // )}/maxresdefault.jpg`}
               className="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 object-cover"
             />
           </MediaProvider>

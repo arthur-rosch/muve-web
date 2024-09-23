@@ -127,7 +127,7 @@ export const CreateFolderModal: FC<CreateFolderModalProps> = ({
         </>
       ) : (
         <>
-          <div className="w-full h-full p-6">
+          <div className="w-full max-h-[25rem] overflow-auto p-6">
             <div className="w-full flex flex-col gap-6">
               <div className="flex gap-4">
                 <motion.div
