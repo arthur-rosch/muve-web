@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import type { Video } from '../../../types'
 import { VideoLayout } from '../layouts/videoLayout'
 import {
@@ -44,7 +44,7 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
       }
     }
   }
-  console.log(video)
+
   return (
     <MediaPlayer
       crossorigin
