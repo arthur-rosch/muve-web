@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input, toastError } from '../../../components'
+import loginImg from '../../../assets/bg-login.png'
+import logo from '../../../assets/logo.svg'
 
 const loginFormSchema = z.object({
   email: z.string().email('O e-mail fornecido não é válido.'),
@@ -52,8 +54,9 @@ export const Login: FC = () => {
   }
 
   return (
-    <div className="w-full h-screen flex">
-      <div className="w-[50%] h-screen bg-[#121212] flex items-center justify-center flex-col">
+    <div className="w-full h-screen flex bg-[#121212]">
+      <div className="w-[50%] h-screen  flex items-center justify-center flex-col">
+        <img src={logo} alt="" className="mb-8" />
         <h1 className="text-white text-3xl font-bold mb-4">Login</h1>
         <p className="text-white text-1xl font-semibold mb-4">
           Entre com seu Email pra fazer login na sua conta
@@ -108,17 +111,11 @@ export const Login: FC = () => {
             variant="primary"
             text="Entrar"
           />
-
-          <Button
-            className="w-full h-12  mt-4 "
-            type="button"
-            variant="secondary"
-            text="Criar conta"
-            onClick={() => navigate('/register')}
-          />
         </form>
       </div>
-      <div className="w-[50%] h-screen bg-white"></div>
+      <div className="w-[50%] h-screen p-8">
+        <img src={loginImg} alt="" className="rounded-xl h-full w-full" />
+      </div>
     </div>
   )
 }
