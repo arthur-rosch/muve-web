@@ -1,11 +1,12 @@
-import { SubmenuButton } from './subMenuButtons'
 import { Menu, useVideoQualityOptions } from '@vidstack/react'
 import {
   RadioButtonIcon,
   RadioButtonSelectedIcon,
   SettingsMenuIcon,
 } from '@vidstack/react/icons'
+import { SubmenuButton } from './subMenuButtons'
 
+// Re-use styles across other submenus.
 const submenuClassName =
   'hidden w-full flex-col items-start justify-center outline-none data-[keyboard]:mt-[3px] data-[open]:inline-block'
 const radioClassName =
@@ -21,6 +22,7 @@ export function QualitySubmenu() {
     options.selectedValue !== 'auto' && currentQuality
       ? `${currentQuality}p`
       : `Auto${currentQuality ? ` (${currentQuality}p)` : ''}`
+
   return (
     <Menu.Root>
       <SubmenuButton
@@ -29,7 +31,7 @@ export function QualitySubmenu() {
         disabled={options.disabled}
         icon={SettingsMenuIcon}
       />
-      <Menu.Content className={submenuClassName}>
+      <Menu.Items className={submenuClassName}>
         <Menu.RadioGroup
           className="w-full flex flex-col"
           value={options.selectedValue}
@@ -52,7 +54,7 @@ export function QualitySubmenu() {
             </Menu.Radio>
           ))}
         </Menu.RadioGroup>
-      </Menu.Content>
+      </Menu.Items>
     </Menu.Root>
   )
 }

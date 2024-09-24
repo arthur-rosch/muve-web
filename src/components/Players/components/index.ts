@@ -3,6 +3,8 @@ export * from './time-group'
 
 export * from './buttons/play'
 export * from './buttons/mute'
+export * from './buttons/pip'
+export * from './buttons/seek'
 export * from './buttons/caption'
 export * from './buttons/fullscreen'
 
