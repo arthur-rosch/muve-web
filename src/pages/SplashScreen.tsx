@@ -15,7 +15,7 @@ export const SplashScreen: FC = () => {
     if (JWT) {
       const { success } = await checkJWT()
       if (success) {
-        navigate('/home')
+        navigate('/dashboard')
       } else {
         navigate('/login')
       }
