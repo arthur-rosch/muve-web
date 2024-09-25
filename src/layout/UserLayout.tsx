@@ -14,9 +14,7 @@ export function UserLayout() {
     await wait(2)
     if (JWT) {
       const { success } = await checkJWT()
-      if (success) {
-        navigate('/dashboard')
-      } else {
+      if (!success) {
         navigate('/login')
       }
     } else {
