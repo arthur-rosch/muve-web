@@ -92,7 +92,7 @@ export const Analytics: FC = () => {
       case 'ESSENTIAL':
       case 'UNLIMITED':
       case 'PROFESSIONAL':
-        return ['retencao', 'pais', 'dispositivos']
+        return ['retenção', 'pais', 'dispositivos']
       default:
         return []
     }
@@ -224,6 +224,7 @@ export const Analytics: FC = () => {
                   })}
                 </div>
                 <InputSelect
+                  defaultValue="retenção"
                   options={availableCharts(userPlan).map((chart) => ({
                     value: chart,
                     label: chart.charAt(0).toUpperCase() + chart.slice(1),

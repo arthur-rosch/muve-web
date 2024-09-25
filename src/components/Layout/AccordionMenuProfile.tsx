@@ -30,7 +30,9 @@ export const AccordionMenuProfile = () => {
   return (
     <div className="relative">
       <div className="flex items-center justify-center gap-4">
-        <button className="w-10 h-10 bg-[#1D1D1D] rounded-full text-[#777777] hover:text-white transactions-all"></button>
+        <button className="w-10 h-10 bg-[#1D1D1D] rounded-full text-[#777777] hover:text-white transactions-all">
+          {user.name[0]}
+        </button>
         <button
           className="text-white text-lg font-medium flex items-center justify-center gap-4"
           onClick={toggleMenu}
