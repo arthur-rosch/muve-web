@@ -15,6 +15,7 @@ import {
   FolderOpen,
   Speedometer,
   ArrowUUpLeft,
+  CaretDoubleRight,
   CaretDoubleLeft,
   ProjectorScreenChart,
 } from '@phosphor-icons/react'
@@ -76,7 +77,7 @@ export const Sidebar: FC = () => {
           onClick={() => setIsSideBarOpen(!isSideBarOpen)}
           className="w-6 h-6 rounded flex items-center justify-center border-[1px] border-solid border-[#777777] text-[#777777] hover:bg-[#777777] hover:text-white transition-all"
         >
-          <CaretDoubleLeft />
+          {!isSideBarOpen ? <CaretDoubleRight /> : <CaretDoubleLeft />}
         </button>
       </div>
 

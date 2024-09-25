@@ -10,9 +10,7 @@ import {
   Fullscreen,
   ChapterMenu,
   TimeChapter,
-  PIP,
   Seek,
-  QualitySubmenu,
 } from '../components'
 
 const popupOffset = 30
@@ -41,9 +39,7 @@ export function VideoLayout({ type, chapters }: VideoLayoutProps) {
               <ChapterTitle />
               <div className="flex-1" />
               <Seek />
-              <PIP tooltipOffset={popupOffset} />
               <ChapterMenu chapters={chapters!} />
-              <QualitySubmenu />
               <MenuPlayer />
               <Fullscreen tooltipAlign="end" tooltipOffset={popupOffset} />
             </Controls.Group>
