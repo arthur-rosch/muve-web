@@ -14,10 +14,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import type { State } from '../../../../redux/store/configureStore'
 import { useProfile } from '../../../../hooks'
-import { Local } from '../../../../services/Local'
 import { setUser } from '../../../../redux/actions/user'
-import type { User } from '../../../../types'
-import { useNavigate } from 'react-router-dom'
 
 const schema = z.object({
   name: z.string().min(1, 'Nome da pasta é obrigatório').optional(),
@@ -36,7 +33,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({
   isModalOpen,
   setIsModalOpen,
 }) => {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { updateProfile } = useProfile()
   const { user } = useSelector((state: State) => state.user)
@@ -59,29 +55,38 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({
   const onSubmit = async (data: FormValues) => {
     console.log(data)
 
+    // Tenta realizar a mutação para atualizar o perfil
     const { success } = await updateProfile.mutateAsync({
       document: data.document ? data.document : user.document!,
       name: data.name ? data.name : user.name!,
       phone: data.phone ? data.phone : user.phone!,
     })
 
+    // Verifica se a mutação foi bem-sucedida
     if (success) {
+      // Exibe um toast de sucesso
       toastSuccess({
         text: 'Perfil editado com sucesso',
       })
+
+      // Atualiza o estado do usuário no Redux com os novos dados
+      dispatch(
+        setUser({
+          ...user,
+          document: data.document ? data.document : user.document!,
+          name: data.name ? data.name : user.name!,
+          phone: data.phone ? data.phone : user.phone!,
+        }),
+      )
+
+      // Define o estado de sucesso como verdadeiro para exibir a tela de confirmação
       setCreatedSuccess(true)
     } else {
+      // Exibe um toast de erro caso a mutação falhe
       toastError({
         text: 'Ocorreu um erro ao editar o perfil',
       })
     }
-  }
-
-  const handleLogout = () => {
-    setIsModalOpen(false)
-    Local.logout()
-    dispatch(setUser({} as User))
-    navigate('/login')
   }
 
   return (
@@ -104,8 +109,8 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({
               variant="primary"
               animation={true}
               variants={cardVariants}
+              onClick={() => setIsModalOpen(false)}
               className="w-full flex items-center justify-center py-3 px-4 h-10"
-              onClick={handleLogout}
             >
               Confirmar
             </Button>

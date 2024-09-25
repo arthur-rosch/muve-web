@@ -6,7 +6,7 @@ import { cardVariants } from '../../../../animations'
 import type { State } from '../../../../redux/store/configureStore'
 import { Input, Button, toastSuccess, toastError } from '../../../../components'
 import { Local } from '../../../../services/Local'
-import { setUser } from '../../../../redux/actions/user'
+import { setUser, updateUserEmail } from '../../../../redux/actions/user'
 import type { User } from '../../../../types'
 import { useNavigate } from 'react-router-dom'
 
@@ -54,12 +54,15 @@ export const Security: FC = () => {
         if (success) {
           setIsEditingEmail(false)
           toastSuccess({
-            text: 'E-mail alterada com sucesso',
+            text: 'E-mail alterado com sucesso',
           })
 
+          // Atualiza o email no Redux
+          dispatch(updateUserEmail(newEmail))
+
+          // Limpa os campos de input
           setNewEmail('')
           setCurrentEmailPassword('')
-          handleLogout()
         }
       } catch (error) {
         setIsEditingPassword(false)
@@ -96,8 +99,6 @@ export const Security: FC = () => {
           setConfirmPassword('')
           handleLogout()
         }
-
-        // Pode adicionar uma notificação de sucesso aqui
       } catch (error) {
         setIsEditingPassword(false)
         toastError({
@@ -164,21 +165,23 @@ export const Security: FC = () => {
                 id="newEmail"
                 type="text"
                 value={newEmail}
+                onBlur={() => setIsEditingEmail(false)}
+                onFocus={() => setIsEditingEmail(true)} // Ativa modo de edição ao focar no input
                 onChange={(e) => setNewEmail(e.target.value)}
-                disabled={!isEditingEmail}
                 className="w-full mt-2 mb-2"
               />
             </div>
             <div className="w-full">
-              <label htmlFor="currentPassword" className="text-white text-sm">
+              <label htmlFor="" className="text-white text-sm">
                 Senha atual
               </label>
               <Input
                 id="currentPassword"
                 type="password"
                 value={currentEmailPassword}
+                onBlur={() => setIsEditingEmail(false)}
+                onFocus={() => setIsEditingEmail(true)} // Ativa modo de edição ao focar no input
                 onChange={(e) => setCurrentEmailPassword(e.target.value)}
-                disabled={!isEditingEmail}
                 className="w-full mt-2 mb-2"
               />
             </div>
@@ -235,6 +238,7 @@ export const Security: FC = () => {
             <Input
               type="password"
               value={currentPassword}
+              onFocus={() => setIsEditingPassword(true)} // Ativa modo de edição ao focar no input
               onChange={(e) => setCurrentPassword(e.target.value)}
               animation={true}
               className="w-full mt-2"
@@ -251,8 +255,8 @@ export const Security: FC = () => {
                 id="newPassword"
                 type="password"
                 value={newPassword}
+                onFocus={() => setIsEditingPassword(true)} // Ativa modo de edição ao focar no input
                 onChange={(e) => setNewPassword(e.target.value)}
-                disabled={!isEditingPassword}
                 className="w-full mt-2 mb-2"
               />
             </div>
@@ -264,8 +268,9 @@ export const Security: FC = () => {
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
+                onBlur={() => setIsEditingPassword(false)}
+                onFocus={() => setIsEditingPassword(true)} // Ativa modo de edição ao focar no input
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                disabled={!isEditingPassword}
                 className="w-full mt-2 mb-2"
               />
             </div>

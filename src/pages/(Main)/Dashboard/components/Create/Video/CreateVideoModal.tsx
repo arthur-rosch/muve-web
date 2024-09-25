@@ -165,6 +165,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
   }
 
   const onSubmit = async (data: CreateVideoFormValues) => {
+    console.log(data)
     const { success, error } = await createVideo.mutateAsync({
       duration: data.duration,
       format: data.format,

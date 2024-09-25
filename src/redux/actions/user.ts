@@ -1,5 +1,5 @@
 import type { User } from '../../types'
-import { SET_JWT, SET_USER } from '../constants'
+import { SET_JWT, SET_USER, UPDATE_USER_EMAIL } from '../constants'
 
 export function setUser(user: User) {
   return {
@@ -12,5 +12,27 @@ export function setJwt(jwt: string) {
   return {
     type: SET_JWT,
     payload: jwt,
+  }
+}
+
+export function updateUserEmail(newEmail: string) {
+  return {
+    type: UPDATE_USER_EMAIL,
+    payload: newEmail,
+  }
+}
+
+export function updateUserInfo({
+  name,
+  document,
+  phone,
+}: {
+  name?: string
+  document?: string
+  phone?: string
+}) {
+  return {
+    type: 'UPDATE_USER_INFO',
+    payload: { name, document, phone },
   }
 }
