@@ -21,14 +21,18 @@ const calculateTotalWatchedTime = (viewTimestamps: ViewTimestamp[]) => {
   }
 }
 
-// Função para calcular métricas de pasta e top 3 vídeos mais assistidos
-export const calculateDashboardMetrics = (folders: Folder[]) => {
+// Função para calcular métricas de pasta e vídeos que não estão em pastas
+export const calculateDashboardMetrics = (
+  folders: Folder[],
+  videosWithoutFolders: Video[],
+) => {
   console.log(folders)
   let totalVideos = 0
   let totalMinutesWatched = 0
   let totalHoursWatched = 0
   const videoWatchTimes: { video: Video; totalSeconds: number }[] = []
 
+  // Calcula para vídeos dentro das pastas
   folders.forEach((folder) => {
     totalVideos += folder.videos.length
 
@@ -45,6 +49,22 @@ export const calculateDashboardMetrics = (folders: Folder[]) => {
       // Adiciona o tempo assistido do vídeo à lista com o vídeo completo
       videoWatchTimes.push({ video, totalSeconds })
     })
+  })
+
+  // Calcula para vídeos que não estão em pastas
+  videosWithoutFolders.forEach((video) => {
+    const videoAnalytics = video.analytics
+    const { viewTimestamps } = videoAnalytics
+
+    const { totalMinutes, totalHours, totalSeconds } =
+      calculateTotalWatchedTime(viewTimestamps)
+
+    totalVideos += 1 // Incrementa total de vídeos
+    totalMinutesWatched += totalMinutes
+    totalHoursWatched += totalHours
+
+    // Adiciona o tempo assistido do vídeo à lista com o vídeo completo
+    videoWatchTimes.push({ video, totalSeconds })
   })
 
   // Ordena os vídeos pelo tempo assistido em ordem decrescente

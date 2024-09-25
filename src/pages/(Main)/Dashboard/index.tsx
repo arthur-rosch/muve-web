@@ -23,7 +23,7 @@ export const Dashboard: FC = () => {
 
   if (isSuccess && videosNotFolderId && allVideos) {
     const { topVideos, totalHoursWatched, totalMinutesWatched, totalVideos } =
-      calculateDashboardMetrics(folders)
+      calculateDashboardMetrics(folders, videosNotFolderId)
 
     return (
       <section className="w-full h-full mx-8">
