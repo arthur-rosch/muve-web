@@ -12,12 +12,11 @@ export const ListCharts: FC<ListChartsProps> = ({ typeChart, video }) => {
   const [userPlan, setUserPlan] = useState<string>('')
 
   useEffect(() => {
-    // Buscar o plano do localStorage
     const storedPlan = localStorage.getItem('@storage:plan')
     if (storedPlan) {
       try {
         const parsedPlan = JSON.parse(storedPlan)
-        setUserPlan(parsedPlan.plan) // Assumindo que o plano está neste formato
+        setUserPlan(parsedPlan.plan)
       } catch (error) {
         console.error(
           'Erro ao buscar o plano do usuário no localStorage:',
@@ -37,9 +36,9 @@ export const ListCharts: FC<ListChartsProps> = ({ typeChart, video }) => {
 
   return (
     <div
-      className={`w-full h-full mt-8 ${isBlurredChart(typeChart) ? 'filter blur-sm' : ''}`}
+      className={`w-full h-full mt-8 ${isBlurredChart(typeChart) ? 'filter blur-sm pointer-events-none' : ''}`}
     >
-      {typeChart === 'retencao' ? (
+      {typeChart === 'retenção' ? (
         <ChartRetention analytics={video.analytics} selectedVideo={video} />
       ) : typeChart === 'pais' ? (
         <ChartCountry analytics={video.analytics} selectedVideo={video} />

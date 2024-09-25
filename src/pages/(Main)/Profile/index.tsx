@@ -1,7 +1,7 @@
 import type { FC } from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
-import logo from '../../../assets/logo.svg'
+import bgProfile from '../../../assets/bg-profile.png'
 import { Button, HeaderFolder } from '../../../components'
 import {
   Security,
@@ -39,10 +39,12 @@ export const Profile: FC = () => {
         <HeaderFolder name={'Meu perfil'} />
 
         <div className="w-full flex flex-col mt-10">
-          <img alt="" src={logo} className="w-full h-36 rounded-lg mb-6" />
+          <img alt="" src={bgProfile} className="w-full h-36 rounded-lg mb-6" />
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-start gap-8 ml-16">
-              <button className="w-40 h-40 bg-[#1D1D1D] rounded-full text-[#777777] hover:text-white transactions-all mt-[-5rem]" />
+              <button className="w-40 h-40 bg-[#1D1D1D] rounded-full text-[#777777] hover:text-white transactions-all mt-[-5rem] text-5xl">
+                {user.name[0]}
+              </button>
               <div className="gap-4">
                 <span className="text-white text-lg flex items-start justify-start">
                   {user.name}

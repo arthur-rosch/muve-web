@@ -7,6 +7,7 @@ interface InputSelectProps {
   error?: string
   placeholder?: string
   className?: string
+  defaultValue?: string
   onChange?: ChangeEventHandler<HTMLSelectElement>
 }
 
@@ -16,16 +17,16 @@ export const InputSelect: FC<InputSelectProps> = ({
   error,
   className,
   onChange,
-  placeholder = 'Selecione uma opção',
+  defaultValue,
 }) => {
   return (
     <div>
       <select
         {...register}
         onChange={onChange}
+        defaultValue={defaultValue}
         className={`bg-[#141414] border-[1px] border-[#333333] border-solid bg-opacity-50 rounded text-white hover:border-[#187BF0] ${className}`}
       >
-        <option value="">{placeholder}</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
