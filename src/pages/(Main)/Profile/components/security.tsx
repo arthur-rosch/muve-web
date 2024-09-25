@@ -238,6 +238,7 @@ export const Security: FC = () => {
             <Input
               type="password"
               value={currentPassword}
+              onBlur={() => setIsEditingPassword(false)}
               onFocus={() => setIsEditingPassword(true)} // Ativa modo de edição ao focar no input
               onChange={(e) => setCurrentPassword(e.target.value)}
               animation={true}
