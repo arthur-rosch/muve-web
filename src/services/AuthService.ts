@@ -59,9 +59,19 @@ export class AuthService {
   static async generatePasswordResetToken(email: string) {
     const url = `${host()}/send/password`
     try {
-      const response = await axios.post(url, {
-        email,
-      })
+      const response = await axios.post(
+        url,
+        {
+          email,
+        },
+        {
+          headers: {
+            accept: '*/*',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        },
+      )
       console.log(response)
       if (response.status === 200) {
         return { data: response.data, success: true }
