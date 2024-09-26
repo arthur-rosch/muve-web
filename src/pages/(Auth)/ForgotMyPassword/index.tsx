@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { type FC } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input, toastError } from '../../../components'
@@ -26,10 +26,7 @@ type ResetPasswordInputs = z.infer<typeof resetPasswordSchema>
 
 export const ResetPassword: FC = () => {
   const navigate = useNavigate()
-  const location = useLocation()
-
-  const searchParams = new URLSearchParams(location.search)
-  const token = searchParams.get('token')
+  const { token } = useParams<{ token: string }>()
 
   const { forgotPassword } = useAuth()
 
