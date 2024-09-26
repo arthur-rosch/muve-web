@@ -22,7 +22,7 @@ export const ForgotPasswordModal: FC<ForgotPasswordModalProps> = ({
   isModalOpen,
   setIsModalOpen,
 }) => {
-  const { checkEmailExistence, generatePasswordResetToken } = useAuth()
+  const { generatePasswordResetToken } = useAuth()
   const [success, setSuccess] = useState(false)
 
   const {
@@ -37,25 +37,15 @@ export const ForgotPasswordModal: FC<ForgotPasswordModalProps> = ({
   })
 
   const onSubmit = async (data: FormValues) => {
-    const { success } = await checkEmailExistence.mutateAsync({
-      email: data.email,
-    })
-
-    if (!success) {
-      const { success: successSendEmail } =
-        await generatePasswordResetToken.mutateAsync({
-          email: data.email,
-        })
-      if (successSendEmail) {
-        setSuccess(true)
-      } else {
-        toastError({
-          text: 'Ops... Ocorreu um erro ao tentar enviar o e-mail',
-        })
-      }
+    const { success: successSendEmail } =
+      await generatePasswordResetToken.mutateAsync({
+        email: data.email,
+      })
+    if (successSendEmail) {
+      setSuccess(true)
     } else {
       toastError({
-        text: 'Ops... O e-mail não está cadastrado no nosso sistema',
+        text: 'Ops... Ocorreu um erro ao tentar enviar o e-mail',
       })
     }
   }
