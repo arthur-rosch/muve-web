@@ -56,8 +56,7 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
       onCanPlay={onCanPlay}
       crossOrigin="anonymous"
       onProviderChange={onProviderChange}
-      // src={video.url}
-      src="https://www.youtube-nocookie.com/embed/LXb3EKWsInQ?autoplay=0&controls=0&disablekb=1&playsinline=1&cc_load_policy=0&showinfo=0&modestbranding=0&rel=0&loop=0&enablejsapi=1"
+      src={video.url}
       className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
     >
       <MediaProvider>
