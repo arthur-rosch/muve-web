@@ -57,7 +57,7 @@ export class AuthService {
   }
 
   static async generatePasswordResetToken(email: string) {
-    const url = `${host()}/send//password`
+    const url = `${host()}/send/password`
     try {
       const response = await axios.post(url, {
         email,
