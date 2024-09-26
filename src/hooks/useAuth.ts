@@ -54,6 +54,40 @@ export const useAuth = () => {
     },
   )
 
+  const generatePasswordResetToken = useMutation(
+    async ({ email }: { email: string }) => {
+      const response = await AuthService.generatePasswordResetToken(email)
+      if (response.success) {
+        return { success: true }
+      }
+      return { success: false, Erro: response.error }
+    },
+  )
+
+  const forgotPassword = useMutation(
+    async ({
+      newPassword,
+      confirmNewPassword,
+      token,
+    }: {
+      newPassword: string
+      confirmNewPassword: string
+      token: string
+    }) => {
+      const response = await AuthService.forgotPassword(
+        newPassword,
+        confirmNewPassword,
+        token,
+      )
+
+      if (response.success) {
+        return { success: true }
+      }
+
+      return { success: false, Erro: response.error }
+    },
+  )
+
   const checkJWT = useCallback(async () => {
     const response = await AuthService.checkJWT()
 
@@ -68,6 +102,8 @@ export const useAuth = () => {
     signIn,
     signUp,
     checkJWT,
+    forgotPassword,
     checkEmailExistence,
+    generatePasswordResetToken,
   }
 }

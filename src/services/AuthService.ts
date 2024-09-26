@@ -56,6 +56,77 @@ export class AuthService {
     }
   }
 
+  static async generatePasswordResetToken(email: string) {
+    const url = `${host()}/send//password`
+    try {
+      const response = await axios.post(url, {
+        email,
+      })
+      console.log(response)
+      if (response.status === 200) {
+        return { data: response.data, success: true }
+      } else {
+        return {
+          error: response.data?.message || 'Erro desconhecido',
+          success: false,
+        }
+      }
+    } catch (error: any) {
+      console.log(error.response?.data?.message)
+      const errorMessage =
+        error.response?.data?.message || 'Erro ao logar usuário'
+      return {
+        error: errorMessage,
+        success: false,
+      }
+    }
+  }
+
+  static async forgotPassword(
+    newPassword: string,
+    confirmNewPassword: string,
+    token: string,
+  ) {
+    const url = `${host()}/forgot/password`
+
+    try {
+      const response = await axios.post(
+        url,
+        {
+          newPassword,
+          confirmNewPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: '*/*',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+          },
+        },
+      )
+
+      console.log(response)
+
+      if (response.status === 200) {
+        return { data: response.data, success: true }
+      } else {
+        return {
+          error: response.data?.message || 'Erro desconhecido',
+          success: false,
+        }
+      }
+    } catch (error: any) {
+      console.log(error.response?.data?.message)
+      const errorMessage =
+        error.response?.data?.message || 'Erro ao redefinir a senha'
+      return {
+        error: errorMessage,
+        success: false,
+      }
+    }
+  }
+
   static async checkEmailExistence(email: string) {
     const url = `${host()}/check/email`
 
