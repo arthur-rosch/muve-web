@@ -13,7 +13,7 @@ export function Router() {
       <Route path="/" element={<SplashScreen />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/reset/password/:token" element={<ResetPassword />} />
+      <Route path="/reset/password" element={<ResetPassword />} />
 
       <Route element={<UserLayout />}>
         <Route path="/folder" element={<Folder />} />
