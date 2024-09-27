@@ -37,10 +37,9 @@ export const ForgotPasswordModal: FC<ForgotPasswordModalProps> = ({
   })
 
   const onSubmit = async (data: FormValues) => {
-    const { success: successSendEmail } =
-      await generatePasswordResetToken.mutateAsync({
-        email: data.email,
-      })
+    const { success: successSendEmail } = await generatePasswordResetToken(
+      data.email,
+    )
     if (successSendEmail) {
       setSuccess(true)
     } else {
