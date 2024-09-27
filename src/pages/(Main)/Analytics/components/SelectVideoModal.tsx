@@ -9,7 +9,7 @@ interface CreateFolderModalProps {
   videos: Video[]
   isModalOpen: boolean
   setIsModalOpen: (value: boolean) => void
-  setSelectedVideo: (selectedVideo: Video | null) => void
+  setSelectedVideo: (selectedVideo: Video | undefined) => void
 }
 
 export const SelectVideoModal: FC<CreateFolderModalProps> = ({
@@ -19,7 +19,9 @@ export const SelectVideoModal: FC<CreateFolderModalProps> = ({
   setSelectedVideo,
 }) => {
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedVideo, setSelectedVideoState] = useState<Video | null>(null)
+  const [selectedVideo, setSelectedVideoState] = useState<Video | undefined>(
+    undefined,
+  )
 
   const filteredVideos = videos.filter((video) =>
     video.name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -29,7 +31,7 @@ export const SelectVideoModal: FC<CreateFolderModalProps> = ({
     if (checked) {
       setSelectedVideoState(video)
     } else {
-      setSelectedVideoState(null)
+      setSelectedVideoState(undefined)
     }
   }
 
