@@ -163,6 +163,16 @@ export const Analytics: FC = () => {
           animate="visible"
           variants={cardVariants}
         >
+          <Button
+            type="button"
+            variant="primary"
+            animation={true}
+            variants={cardVariants}
+            onClick={() => setIsModalOpen(!isModalOpen)}
+            className="w-48 flex items-center justify-center py-3 px-4 h-10"
+          >
+            Selecionar Video
+          </Button>
           <Input
             type="text"
             animation={true}
@@ -177,16 +187,6 @@ export const Analytics: FC = () => {
             }
             readOnly
           />
-          <Button
-            type="button"
-            variant="outline"
-            animation={true}
-            variants={cardVariants}
-            onClick={() => setIsModalOpen(!isModalOpen)}
-            className="w-48 flex items-center justify-center py-3 px-4 h-10"
-          >
-            Selecionar Video
-          </Button>
         </motion.div>
 
         <motion.div
