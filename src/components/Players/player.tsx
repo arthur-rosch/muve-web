@@ -5,9 +5,9 @@ import { ProgressBar } from './components'
 import { useAnalytics } from '../../hooks'
 import { VideoLayout } from './layouts/videoLayout'
 import type { PlayerDataVariables, Video } from '../../types'
-import { getIPAddress, getGeolocation } from '../../utils'
+import { getIPAddress, getGeolocation, getYoutubeVideoId } from '../../utils'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   Poster,
@@ -34,6 +34,14 @@ export function Player({ video }: { video: Video }) {
   const [transitionDuration, setTransitionDuration] = useState(0)
   const [playStartTime, setPlayStartTime] = useState<number | null>(0)
   const [playerData, setPlayerData] = useState<PlayerDataVariables>()
+
+  const urlVideo = useMemo(() => {
+    if (isYouTubeProvider(video.url)) {
+      const videoId = getYoutubeVideoId(video.url)
+      return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&controls=0&disablekb=1&playsinline=1&cc_load_policy=0&showinfo=0&modestbranding=0&rel=0&loop=0&enablejsapi=1`
+    }
+    return video.url
+  }, [video.url])
 
   function onProviderChange(
     provider: MediaProviderAdapter | null,
@@ -146,7 +154,7 @@ export function Player({ video }: { video: Video }) {
           playsInline
           ref={player}
           load="visible"
-          src={video.url}
+          src={urlVideo}
           posterLoad="visible"
           onCanPlay={onCanPlay}
           crossOrigin="anonymous"
