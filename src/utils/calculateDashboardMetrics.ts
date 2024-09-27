@@ -5,7 +5,7 @@ const convertSecondsToHours = (seconds: number) => seconds / 3600
 
 const calculateTotalWatchedTime = (viewTimestamps: ViewTimestamp[]) => {
   let totalSeconds = 0
-  console.log(viewTimestamps)
+
   viewTimestamps.forEach((timestamp) => {
     const { endTimestamp, startTimestamp } = timestamp
     totalSeconds += endTimestamp - startTimestamp
@@ -26,7 +26,6 @@ export const calculateDashboardMetrics = (
   folders: Folder[],
   videosWithoutFolders: Video[],
 ) => {
-  console.log(folders)
   let totalVideos = 0
   let totalMinutesWatched = 0
   let totalHoursWatched = 0
@@ -67,8 +66,18 @@ export const calculateDashboardMetrics = (
     videoWatchTimes.push({ video, totalSeconds })
   })
 
-  // Ordena os vídeos pelo tempo assistido em ordem decrescente
-  const topVideos = videoWatchTimes
+  // Remove vídeos duplicados baseando-se no videoId
+  const uniqueVideos = Array.from(
+    new Map(
+      videoWatchTimes.map(({ video, totalSeconds }) => [
+        video.id,
+        { video, totalSeconds },
+      ]),
+    ).values(),
+  )
+
+  // Ordena os vídeos pelo tempo assistido em ordem decrescente e pega os 3 mais assistidos
+  const topVideos = uniqueVideos
     .sort((a, b) => b.totalSeconds - a.totalSeconds)
     .slice(0, 3) // Pega os 3 vídeos mais assistidos
 

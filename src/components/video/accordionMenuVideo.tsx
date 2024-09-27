@@ -25,7 +25,7 @@ export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
 
   const handleAnalytics = () => {
     toggleMenu()
-    navigate('/analytics', { state: { videoUrl: video.url } })
+    navigate('/analytics', { state: { video } })
   }
 
   const handleDeleteVideo = async () => {

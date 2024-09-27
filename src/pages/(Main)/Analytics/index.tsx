@@ -1,11 +1,15 @@
 import { motion } from 'framer-motion'
 import { useVideo } from '../../../hooks'
+import { useSelector } from 'react-redux'
+import { SelectVideoModal } from './components'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { cardVariants } from '../../../animations'
 import { ListCharts } from './components/listCharts'
 import { useState, useEffect, type FC } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
 import type { Video, VideoMetrics } from '../../../types'
 import { ArrowLeft, FolderDashed } from '@phosphor-icons/react'
+import type { State } from '../../../redux/store/configureStore'
+import { calculateVideoMetrics, convertDurationToSeconds } from '../../../utils'
 import {
   Button,
   Card,
@@ -13,26 +17,22 @@ import {
   Input,
   InputSelect,
 } from '../../../components'
-import { calculateVideoMetrics, convertDurationToSeconds } from '../../../utils'
-import type { State } from '../../../redux/store/configureStore'
-import { useSelector } from 'react-redux'
 
 export const Analytics: FC = () => {
-  const { user } = useSelector((state: State) => state.user)
-
   const navigate = useNavigate()
   const location = useLocation()
+  const { user } = useSelector((state: State) => state.user)
 
   const { getAllVideosByUserId } = useVideo()
   const { data: videos } = getAllVideosByUserId
 
-  const [metrics, setMetrics] = useState<VideoMetrics | null>(null)
-  const [selectedVideoUrl, setSelectedVideoUrl] = useState<string>(
-    location.state?.videoUrl || '',
-  )
   const [loading, setLoading] = useState(true)
   const [userPlan, setUserPlan] = useState<string>('')
-  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [metrics, setMetrics] = useState<VideoMetrics | null>(null)
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(
+    location.state.video ? location.state.video : null,
+  )
   const [selectedTypeDataChart, setSelectedTypeDataChart] = useState('retenção')
 
   const goBack = () => {
@@ -40,17 +40,17 @@ export const Analytics: FC = () => {
   }
 
   useEffect(() => {
-    setLoading(true) // Inicia o loading quando a URL do vídeo muda
-    if (selectedVideoUrl && videos) {
+    setLoading(true) // Inicia o loading quando os vídeos mudam
+    if (selectedVideo && videos) {
       const foundVideo = videos.find(
-        (video: Video) => video.url === selectedVideoUrl,
+        (video: Video) => video.url === selectedVideo.url,
       )
       setSelectedVideo(foundVideo || null)
       setLoading(false)
     } else {
       setLoading(false)
     }
-  }, [selectedVideoUrl, videos])
+  }, [selectedVideo, videos])
 
   useEffect(() => {
     if (selectedVideo) {
@@ -156,15 +156,37 @@ export const Analytics: FC = () => {
           </span>
         </motion.header>
 
-        <Input
-          type="text"
-          animation={true}
-          className="w-full mt-8"
+        <motion.div
+          className="flex mt-8 gap-2"
+          initial="hidden"
+          animate="visible"
           variants={cardVariants}
-          placeholder="Insira o link do vídeo"
-          value={selectedVideoUrl || ''}
-          onChange={(e) => setSelectedVideoUrl(e.target.value)}
-        />
+        >
+          <Input
+            type="text"
+            animation={true}
+            className="w-[75vw] mr-8 brightness-75"
+            variants={cardVariants}
+            placeholder="Insira o link do vídeo"
+            disabled={true}
+            value={
+              selectedVideo
+                ? `${selectedVideo.name} | ${selectedVideo.url}`
+                : ''
+            }
+            readOnly
+          />
+          <Button
+            type="button"
+            variant="outline"
+            animation={true}
+            variants={cardVariants}
+            onClick={() => setIsModalOpen(!isModalOpen)}
+            className="w-48 flex items-center justify-center py-3 px-4 h-10"
+          >
+            Selecionar Video
+          </Button>
+        </motion.div>
 
         <motion.div
           className="w-full h-auto p-6 bg-[#141414] border-[1px] border-solid border-[#333333] mt-8"
@@ -243,7 +265,7 @@ export const Analytics: FC = () => {
                 />
               </motion.div>
             </div>
-          ) : selectedVideoUrl && !selectedVideo ? (
+          ) : selectedVideo && !selectedVideo ? (
             <motion.div
               initial="hidden"
               animate="visible"
@@ -260,16 +282,22 @@ export const Analytics: FC = () => {
               initial="hidden"
               animate="visible"
               variants={cardVariants}
-              className="w-full h-full flex flex-col items-center justify-center mt-12 gap-4"
+              className="w-full h-full flex flex-col items-center justify-center mt-12 gap-4 pb-8"
             >
               <FolderDashed size={64} color="white" />
               <span className="text-white text-sm">
-                Por favor, adicione a URL do vídeo
+                Nenhum vídeo selecionado
               </span>
             </motion.div>
           )}
         </motion.div>
       </div>
+      <SelectVideoModal
+        videos={videos!}
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        setSelectedVideo={setSelectedVideo}
+      />
     </section>
   )
 }
