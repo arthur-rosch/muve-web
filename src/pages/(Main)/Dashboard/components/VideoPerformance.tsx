@@ -88,7 +88,7 @@ export const VideoPerformance: FC<VideoPerformanceProps> = ({
             variants={listItensDelay}
           >
             <img
-              className="w-28 h-14 rounded"
+              className="w-28 h-14 rounded object-cover"
               alt="thumbnail video"
               src={video.thumbnail ? video.thumbnail : logo}
             />
