@@ -1,4 +1,4 @@
-import logo from '../../../../../assets/logo.svg'
+import folderImg from '../../../../../assets/pastamuve.png'
 import type { FC } from 'react'
 import { motion } from 'framer-motion'
 import { Heart } from '@phosphor-icons/react'
@@ -48,7 +48,7 @@ export const Folder: FC<FolderProps> = ({ folder }: FolderProps) => {
           alt=""
           onClick={goToFolderPage}
           className="w-56 h-32 rounded cursor-pointer"
-          src={folder.coverUrl ? folder.coverUrl : logo}
+          src={folder.coverUrl ? folder.coverUrl : folderImg}
         />
         <div className="absolute top-2 right-2 cursor-pointer text-white">
           <AccordionMenuFolder folder={folder} />
