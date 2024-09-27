@@ -1,7 +1,7 @@
 import { PlayIcon } from 'lucide-react'
 import type { Video } from '../../../types'
 import { ProgressBar } from '../components'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import { VideoLayout } from '../layouts/videoLayout'
 
 import {
@@ -71,6 +71,15 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
     }
   }
 
+  // Define a variável urlVideo com base no tipo de vídeo
+  const urlVideo = useMemo(() => {
+    if (isYouTubeProvider(video.url)) {
+      const videoId = getYoutubeVideoId(video.url)
+      return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&controls=0&disablekb=1&playsinline=1&cc_load_policy=0&showinfo=0&modestbranding=0&rel=0&loop=0&enablejsapi=1`
+    }
+    return video.url // Retorna a URL original para outros tipos de vídeo
+  }, [video.url])
+
   return (
     <MediaPlayer
       ref={playerRef}
@@ -82,7 +91,7 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
       onCanPlay={onCanPlay}
       crossOrigin="anonymous"
       onProviderChange={onProviderChange}
-      src={video.url}
+      src={urlVideo} // Use a variável urlVideo aqui
       className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
     >
       <MediaProvider>

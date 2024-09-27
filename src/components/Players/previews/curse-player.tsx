@@ -1,6 +1,7 @@
-import { useRef } from 'react'
+import { useRef, useMemo } from 'react'
 import type { Video } from '../../../types'
 import { VideoLayout } from '../layouts/videoLayout'
+import { getYoutubeVideoId } from '../../../utils'
 import {
   Poster,
   MediaPlayer,
@@ -23,6 +24,14 @@ interface PreviewPlayerProps {
 
 export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
   const playerRef = useRef(null)
+
+  const urlVideo = useMemo(() => {
+    if (isYouTubeProvider(video.url)) {
+      const videoId = getYoutubeVideoId(video.url)
+      return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&controls=0&disablekb=1&playsinline=1&cc_load_policy=0&showinfo=0&modestbranding=0&rel=0&loop=0&enablejsapi=1`
+    }
+    return video.url
+  }, [video.url])
 
   function onCanPlay(
     detail: MediaCanPlayDetail,
@@ -56,7 +65,7 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
       onCanPlay={onCanPlay}
       crossOrigin="anonymous"
       onProviderChange={onProviderChange}
-      src={video.url}
+      src={urlVideo} // Use a variável urlVideo aqui
       className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
     >
       <MediaProvider>
