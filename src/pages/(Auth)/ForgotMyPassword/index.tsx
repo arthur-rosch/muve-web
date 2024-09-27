@@ -73,77 +73,83 @@ export const ResetPassword: FC = () => {
     <>
       <div className="w-full h-screen flex bg-[#121212]">
         <div className="w-[50%] h-screen  flex items-center justify-center flex-col">
-          <img src={logo} alt="" className="mb-8" />
-          <h1 className="text-white text-3xl font-bold mb-4">
-            Redefinir Senha
-          </h1>
-          <p className="text-white text-1xl font-semibold mb-4">
-            Defina sua nova senha
-          </p>
-          <form
-            className="w-[50%] flex flex-col"
-            onSubmit={handleSubmit(handlePasswordReset)}
-          >
-            <label
-              className="text-white mb-2 font-semibold"
-              htmlFor="newPassword"
+          <div className="flex items-start justify-center flex-col">
+            <img src={logo} alt="" className="mb-8 w-36 h-w-36 text-start" />
+            <h1 className="text-white text-3xl font-bold mb-4">
+              Redefinir Senha
+            </h1>
+            <p className="text-white text-sm font-semibold mb-4">
+              Defina sua nova senha
+            </p>
+            <form
+              className="w-[150%] flex flex-col"
+              onSubmit={handleSubmit(handlePasswordReset)}
             >
-              Nova Senha
-            </label>
-            <Controller
-              name="newPassword"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  className="w-full h-12 p-2 mb-2"
-                  type="password"
-                  id="newPassword"
-                  placeholder="Digite sua nova senha"
-                />
+              <label
+                className="text-white mb-2 font-semibold"
+                htmlFor="newPassword"
+              >
+                Nova Senha
+              </label>
+              <Controller
+                name="newPassword"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    className="w-full h-12 p-2 mb-2"
+                    type="password"
+                    id="newPassword"
+                    placeholder="Digite sua nova senha"
+                  />
+                )}
+              />
+              {errors.newPassword && (
+                <p className="text-red-500 text-sm mb-4">
+                  {errors.newPassword.message}
+                </p>
               )}
-            />
-            {errors.newPassword && (
-              <p className="text-red-500 text-sm mb-4">
-                {errors.newPassword.message}
-              </p>
-            )}
 
-            <label
-              className="text-white mb-2 font-semibold"
-              htmlFor="confirmNewPassword"
-            >
-              Confirmar Nova Senha
-            </label>
-            <Controller
-              name="confirmNewPassword"
-              control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  className="w-full h-12 p-2 mb-2"
-                  type="password"
-                  id="confirmNewPassword"
-                  placeholder="Confirme sua nova senha"
-                />
+              <label
+                className="text-white mb-2 font-semibold"
+                htmlFor="confirmNewPassword"
+              >
+                Confirmar Nova Senha
+              </label>
+              <Controller
+                name="confirmNewPassword"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    className="w-full h-12 p-2 mb-2"
+                    type="password"
+                    id="confirmNewPassword"
+                    placeholder="Confirme sua nova senha"
+                  />
+                )}
+              />
+              {errors.confirmNewPassword && (
+                <p className="text-red-500 text-sm mb-4">
+                  {errors.confirmNewPassword.message}
+                </p>
               )}
-            />
-            {errors.confirmNewPassword && (
-              <p className="text-red-500 text-sm mb-4">
-                {errors.confirmNewPassword.message}
-              </p>
-            )}
 
-            <Button
-              className="w-full h-12  mt-4"
-              type="submit"
-              variant="primary"
-              text="Redefinir Senha"
-            />
-          </form>
+              <Button
+                className="w-full h-12  mt-4"
+                type="submit"
+                variant="primary"
+                text="Redefinir Senha"
+              />
+            </form>
+          </div>
         </div>
         <div className="w-[50%] h-screen p-8">
-          <img src={loginImg} alt="" className="rounded-xl h-full w-full" />
+          <img
+            src={loginImg}
+            alt=""
+            className="rounded-xl h-full w-full object-contain"
+          />
         </div>
       </div>
     </>
