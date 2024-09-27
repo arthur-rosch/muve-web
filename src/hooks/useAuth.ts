@@ -44,19 +44,17 @@ export const useAuth = () => {
     return { success: false, Erro: response.error }
   }, [])
 
+  const generatePasswordResetToken = useCallback(async (email: string) => {
+    const response = await AuthService.generatePasswordResetToken(email)
+    if (response.success) {
+      return { success: true }
+    }
+    return { success: false, Erro: response.error }
+  }, [])
+
   const checkEmailExistence = useMutation(
     async ({ email }: { email: string }) => {
       const response = await AuthService.checkEmailExistence(email)
-      if (response.success) {
-        return { success: true }
-      }
-      return { success: false, Erro: response.error }
-    },
-  )
-
-  const generatePasswordResetToken = useMutation(
-    async ({ email }: { email: string }) => {
-      const response = await AuthService.generatePasswordResetToken(email)
       if (response.success) {
         return { success: true }
       }
