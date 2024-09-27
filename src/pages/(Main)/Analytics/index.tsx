@@ -30,9 +30,10 @@ export const Analytics: FC = () => {
   const [userPlan, setUserPlan] = useState<string>('')
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [metrics, setMetrics] = useState<VideoMetrics | null>(null)
-  const [selectedVideo, setSelectedVideo] = useState<Video | null>(
-    location.state.video ? location.state.video : null,
+  const [selectedVideo, setSelectedVideo] = useState<Video | undefined>(
+    location.state?.video ? location.state.video : undefined,
   )
+
   const [selectedTypeDataChart, setSelectedTypeDataChart] = useState('retenção')
 
   const goBack = () => {
@@ -45,7 +46,7 @@ export const Analytics: FC = () => {
       const foundVideo = videos.find(
         (video: Video) => video.url === selectedVideo.url,
       )
-      setSelectedVideo(foundVideo || null)
+      setSelectedVideo(foundVideo || undefined)
       setLoading(false)
     } else {
       setLoading(false)
