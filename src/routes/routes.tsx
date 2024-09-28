@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 
-import { Login, Register, ResetPassword } from '../pages/(Auth)'
+import { Login, Register, ResetPassword, FirstAccess } from '../pages/(Auth)'
 import { Profile } from '../pages/(Main)/Profile'
 import { UserLayout } from '../layout/UserLayout'
 import { SplashScreen } from '../pages/SplashScreen'
@@ -14,6 +14,8 @@ export function Router() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/reset/password" element={<ResetPassword />} />
+
+      <Route path="/access" element={<FirstAccess />} />
 
       <Route element={<UserLayout />}>
         <Route path="/folder" element={<Folder />} />

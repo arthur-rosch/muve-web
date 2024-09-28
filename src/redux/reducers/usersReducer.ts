@@ -4,6 +4,7 @@ import {
   SET_JWT,
   UPDATE_USER_EMAIL,
   UPDATE_USER_INFO,
+  UPDATE_INFO_FIRST_ACCESS,
 } from '../constants'
 
 type UserReducerType = {
@@ -49,6 +50,23 @@ export const userReducer = (
           ...(action.payload.name && { name: action.payload.name }),
           ...(action.payload.document && { document: action.payload.document }),
           ...(action.payload.phone && { phone: action.payload.phone }),
+        },
+      }
+
+    case UPDATE_INFO_FIRST_ACCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...(action.payload.accountType && {
+            accountType: action.payload.accountType,
+          }),
+          ...(action.payload.memberArea && {
+            memberArea: action.payload.memberArea,
+          }),
+          ...(action.payload.videoHosting && {
+            videoHosting: action.payload.videoHosting,
+          }),
         },
       }
     default:

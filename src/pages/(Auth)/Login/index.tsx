@@ -33,9 +33,16 @@ export const Login: FC = () => {
 
   const handleLogin = async ({ email, password }: loginFormInputs) => {
     console.log(email, password)
-    const { success, Erro } = await signIn({ email, password })
+    const { success, Erro, data } = await signIn({ email, password })
+
     if (success) {
-      navigate('/dashboard')
+      const { accountType, memberArea, videoHosting } = data
+
+      if (!accountType || !memberArea || !videoHosting) {
+        navigate('/access')
+      } else {
+        navigate('/dashboard')
+      }
     } else {
       if (
         Erro === 'Subscription cancelled, Subscribe to a plan to gain access'
@@ -43,8 +50,7 @@ export const Login: FC = () => {
         toastError({
           text: 'Assinatura cancelada. Assine um plano para obter acesso',
         })
-      }
-      if (Erro === 'Late Subscription. Renew your plan to gain access') {
+      } else if (Erro === 'Late Subscription. Renew your plan to gain access') {
         toastError({
           text: 'Assinatura atrasada. Renove seu plano para ter acesso',
         })

@@ -178,6 +178,39 @@ export class AuthService {
     }
   }
 
+  static async addInfoFirstAccess(
+    accountType: string,
+    memberArea: string,
+    videoHosting: string,
+  ) {
+    const url = `/first/access`
+    try {
+      const response = await (
+        await this.getAxiosInstance()
+      ).post(url, {
+        accountType,
+        memberArea,
+        videoHosting,
+      })
+
+      if (response.status === 200) {
+        return { data: response.data, success: true }
+      } else {
+        return {
+          error: response.data?.message || 'Erro desconhecido',
+          success: false,
+        }
+      }
+    } catch (error: any) {
+      console.log(error)
+      const errorMessage = error.response?.data?.error || 'Erro ao Add Info'
+      return {
+        error: errorMessage,
+        success: false,
+      }
+    }
+  }
+
   static async getAxiosInstance() {
     const jwt = await Local.get('JWT')
 
