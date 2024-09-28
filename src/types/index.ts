@@ -22,6 +22,9 @@ export interface User {
   phone: string
   document: string
   password_hash: string
+  accountType: string
+  memberArea: string
+  videoHosting: string
   role: Role
   created_at: Date
 }

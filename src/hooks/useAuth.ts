@@ -28,7 +28,11 @@ export const useAuth = () => {
           await Local.setPlan('FREE', '00/00/0000', '')
         }
 
-        return { success: true, Message: 'Usuário fez login com sucesso!' }
+        return {
+          success: true,
+          Message: 'Usuário fez login com sucesso!',
+          data: response.data.user,
+        }
       }
       return { success: false, Erro: response.error }
     },
@@ -96,12 +100,38 @@ export const useAuth = () => {
     return { success: false }
   }, [])
 
+  const addInfoFirstAccess = useCallback(
+    async ({
+      accountType,
+      memberArea,
+      videoHosting,
+    }: {
+      accountType: string
+      memberArea: string
+      videoHosting: string
+    }) => {
+      const response = await AuthService.addInfoFirstAccess(
+        accountType,
+        memberArea,
+        videoHosting,
+      )
+
+      if (response.success) {
+        return { success: true }
+      }
+
+      return { success: false, Erro: response.error }
+    },
+    [],
+  )
+
   return {
     signIn,
     signUp,
     checkJWT,
     forgotPassword,
     checkEmailExistence,
+    addInfoFirstAccess,
     generatePasswordResetToken,
   }
 }
