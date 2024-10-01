@@ -24,7 +24,7 @@ export const Analytics: FC = () => {
   const { user } = useSelector((state: State) => state.user)
 
   const { getAllVideosByUserId } = useVideo()
-  const { data: videos } = getAllVideosByUserId
+  const { data: videos, isLoading } = getAllVideosByUserId
 
   const [loading, setLoading] = useState(true)
   const [userPlan, setUserPlan] = useState<string>('')
@@ -131,6 +131,10 @@ export const Analytics: FC = () => {
 
     // Redireciona para a URL com os parâmetros
     window.location.href = fullUrl
+  }
+
+  if (isLoading || !videos) {
+    return null // Pode retornar um spinner ou vazio
   }
 
   return (
