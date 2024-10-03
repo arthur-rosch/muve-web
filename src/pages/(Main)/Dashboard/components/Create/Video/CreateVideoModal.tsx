@@ -339,7 +339,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                           {...field}
                           id="url"
                           type="text"
-                          placeholder="https://imagem.com"
+                          placeholder="seuvideo.com"
                           className="w-full h-10 mt-2 mb-2"
                         />
                       )}
@@ -352,7 +352,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                   </div>
                   <div className="flex flex-col w-full">
                     <label htmlFor="url" className="text-white text-sm">
-                      Nome
+                      Titulo do seu video
                     </label>
                     <Controller
                       name="name"
@@ -362,7 +362,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                           {...field}
                           id="url"
                           type="text"
-                          placeholder="Video Teste"
+                          placeholder="Titulo do seu video"
                           className="w-full h-10 mt-2 mb-2"
                         />
                       )}
@@ -401,7 +401,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                   </div>
                   <div className="flex flex-col w-full">
                     <label htmlFor="folderId" className="text-white text-sm">
-                      Selecionar vídeo
+                      Selecionar pasta
                     </label>
                     <InputSelect
                       options={folders!.map((folder) => ({
