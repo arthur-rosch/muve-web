@@ -2,15 +2,15 @@ import { useEffect, useState, type FC } from 'react'
 import type { ChartProps } from '../../../../../types'
 import { convertDurationToSeconds, dataFormatter } from '../../../../../utils'
 import {
-  Table,
-  TableRow,
-  TableBody,
+  // Table,
+  // TableRow,
+  // TableBody,
   AreaChart,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  Badge,
-  ProgressBar,
+  // TableCell,
+  // TableHead,
+  // TableHeaderCell,
+  // Badge,
+  // ProgressBar,
 } from '@tremor/react'
 
 interface RetentionMetrics {
@@ -31,21 +31,21 @@ export const ChartRetention: FC<ChartProps> = ({
   const [retentionMetrics, setRetentionMetrics] = useState<RetentionMetrics[]>(
     [],
   )
-
-  const getBadgeColor = (status: string) => {
-    switch (status) {
-      case 'Bom':
-        return 'emerald'
-      case 'Mais ou Menos':
-        return 'yellow'
-      case 'Ruim':
-        return 'orange'
-      case 'Pior':
-        return 'red'
-      default:
-        return 'gray'
-    }
-  }
+  console.log(retentionMetrics)
+  // const getBadgeColor = (status: string) => {
+  //   switch (status) {
+  //     case 'Bom':
+  //       return 'emerald'
+  //     case 'Mais ou Menos':
+  //       return 'yellow'
+  //     case 'Ruim':
+  //       return 'orange'
+  //     case 'Pior':
+  //       return 'red'
+  //     default:
+  //       return 'gray'
+  //   }
+  // }
 
   useEffect(() => {
     const interval = 60
@@ -148,7 +148,7 @@ export const ChartRetention: FC<ChartProps> = ({
         onValueChange={(v) => console.log(v)}
         noDataText="Nenhum dado disponível"
       />
-      <div className="mt-8">
+      {/* <div className="mt-8">
         <Table>
           <TableHead>
             <TableRow>
@@ -188,7 +188,7 @@ export const ChartRetention: FC<ChartProps> = ({
             ))}
           </TableBody>
         </Table>
-      </div>
+      </div> */}
     </>
   )
 }
