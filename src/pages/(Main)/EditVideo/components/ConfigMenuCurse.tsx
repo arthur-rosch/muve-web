@@ -667,7 +667,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     <span className="text-[#909090] text-sm">Ativo</span>
                   </div>
                   <div className="max-h-[20%] overflow-auto">
-                    {video.Chapter.length > 0 &&
+                    {video.Chapter &&
                       video.Chapter.map((chapter) => {
                         return (
                           <div
