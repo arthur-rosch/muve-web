@@ -2,7 +2,7 @@
 import axios from 'axios'
 import { Local } from './Local'
 import host from '../utils/host'
-import type { CreateVideoVariables } from '../types'
+import type { CreateVideoVariables, EditPlayerVideoProps } from '../types'
 
 export class VideoService {
   static async createVideo(data: CreateVideoVariables) {
@@ -134,6 +134,33 @@ export class VideoService {
         }
       return {
         error: 'Erro ao buscar o video',
+        success: false,
+      }
+    }
+  }
+
+  static async editPlayerVideo(videoId: string, data: EditPlayerVideoProps) {
+    const url = `${host()}/edit/player/video/${videoId}`
+
+    try {
+      const response = await (await this.getAxiosInstance()).post(url, data)
+      console.log(response, url)
+      if (response.status === 200) {
+        return { data: response.data, success: true }
+      } else {
+        return {
+          error: response.data.message,
+          success: false,
+        }
+      }
+    } catch (error: any) {
+      if (error.response.data.error)
+        return {
+          error: error.response.data.error,
+          success: false,
+        }
+      return {
+        error: 'Erro ao editar player do video',
         success: false,
       }
     }

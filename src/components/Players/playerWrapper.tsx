@@ -3,6 +3,7 @@ import type { Video } from '../../types'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useLocation } from 'react-router-dom'
+import { PlayerVsl } from './playerVsl'
 
 export function PlayerWrapper() {
   const location = useLocation()
@@ -19,7 +20,7 @@ export function PlayerWrapper() {
     try {
       if (videoId) {
         const response = await axios.get(
-          `https://api.muveplayer.com/api/video/${videoId}`,
+          `http://localhost:3333/api/video/${videoId}`,
         )
         const video = response.data.video
         if (video) {
@@ -44,5 +45,13 @@ export function PlayerWrapper() {
     return <div>Loading...</div> // Loading indicator or placeholder
   }
 
-  return video ? <Player video={video} /> : <div>Video not found</div>
+  return video ? (
+    video.type === 'Vsl' ? (
+      <PlayerVsl video={video} />
+    ) : (
+      <Player video={video} />
+    )
+  ) : (
+    <div>Video not found</div>
+  )
 }

@@ -1,9 +1,10 @@
 import '@vidstack/react/player/styles/base.css'
 
 import { PlayIcon } from 'lucide-react'
-import { ContinueWatching } from './components'
+import { ProgressBar } from './components'
 import { useAnalytics } from '../../hooks'
 import { VideoLayout } from './layouts/videoLayout'
+import { SpeakerSimpleSlash } from '@phosphor-icons/react'
 import type { PlayerDataVariables, Video } from '../../types'
 import { getIPAddress, getGeolocation, getYoutubeVideoId } from '../../utils'
 
@@ -19,32 +20,24 @@ import {
   isYouTubeProvider,
   type MediaCanPlayEvent,
   type MediaCanPlayDetail,
-  type MediaPlayerInstance,
   type MediaProviderAdapter,
   type MediaProviderChangeEvent,
+  MediaPlayerInstance,
 } from '@vidstack/react'
 
-const setVideoTimeCookie = (videoId: string, time: number) => {
-  document.cookie = `video-${videoId}-time=${time}; path=/;`
-}
-
-const getVideoTimeFromCookie = (videoId: string): number | null => {
-  const match = document.cookie.match(
-    new RegExp(`(^| )video-${videoId}-time=([^;]+)`),
-  )
-  return match ? Number(match[2]) : null
-}
-
-export function Player({ video }: { video: Video }) {
+export function PlayerVsl({ video }: { video: Video }) {
   const player = useRef<MediaPlayerInstance>(null)
 
-  const { paused } = useMediaStore(player)
+  const { currentTime, duration, paused } = useMediaStore(player)
   const { addViewTimestamps, addViewUnique } = useAnalytics()
 
-  const [showResumeMenu, setShowResumeMenu] = useState(false)
-  const [lastTime, setLastTime] = useState<number | null>(null)
+  const [progress, setProgress] = useState(0)
+  const [transitionDuration, setTransitionDuration] = useState(0)
   const [playStartTime, setPlayStartTime] = useState<number | null>(0)
   const [playerData, setPlayerData] = useState<PlayerDataVariables>()
+
+  const [overlayVisible, setOverlayVisible] = useState(!!video.smartAutoPlay)
+  const [smartAutoPlay, setSmartAutoPlay] = useState(false)
 
   const urlVideo = useMemo(() => {
     if (isYouTubeProvider(video.url)) {
@@ -75,29 +68,15 @@ export function Player({ video }: { video: Video }) {
     nativeEvent: MediaCanPlayEvent,
   ) {}
 
-  function onPause() {
+  function handlePlay() {
     const playerRef = player.current
     if (playerRef) {
-      const currentTime = playerRef.currentTime
-      setVideoTimeCookie(video.id, currentTime)
-    }
-  }
-
-  function handleResume() {
-    const playerRef = player.current
-    if (playerRef && lastTime) {
-      playerRef.currentTime = lastTime
+      playerRef.muted = false
+      if (overlayVisible) {
+        playerRef.currentTime = 0
+      }
       playerRef.play()
-      setShowResumeMenu(false)
-    }
-  }
-
-  function handleRestart() {
-    const playerRef = player.current
-    if (playerRef) {
-      playerRef.currentTime = 0
-      playerRef.play()
-      setShowResumeMenu(false)
+      setOverlayVisible(false)
     }
   }
 
@@ -118,23 +97,34 @@ export function Player({ video }: { video: Video }) {
 
         setPlayerData(playerData)
 
-        await addViewUnique.mutateAsync({
-          ...playerData,
-          videoId: video.id,
-        })
+        // Só registra a visualização única quando o usuário clicar no play
+        if (!smartAutoPlay) {
+          await addViewUnique.mutateAsync({
+            ...playerData,
+            videoId: video.id,
+          })
+        }
       } catch (error) {
         console.error('Erro ao adicionar visualização única:', error)
       }
     }
 
     view()
-  }, [video.id])
+  }, [video.id, smartAutoPlay])
 
   useEffect(() => {
     if (video) {
       const handlePlay = () => {
         const currentPlayTime = player.current?.currentTime || 0 // Pegue o tempo atual do player
         setPlayStartTime(currentPlayTime)
+
+        // Registra a visualização única aqui, somente após o usuário clicar no play
+        if (smartAutoPlay && !overlayVisible) {
+          addViewUnique.mutateAsync({
+            ...playerData!,
+            videoId: video.id,
+          })
+        }
       }
 
       const handlePause = async () => {
@@ -164,30 +154,61 @@ export function Player({ video }: { video: Video }) {
         }
       }
     }
-  }, [playStartTime, addViewTimestamps, playerData, video])
+  }, [
+    playStartTime,
+    addViewTimestamps,
+    playerData,
+    video,
+    smartAutoPlay,
+    overlayVisible,
+    addViewUnique,
+  ])
 
   useEffect(() => {
-    const savedTime = getVideoTimeFromCookie(video.id)
-    if (savedTime) {
-      setLastTime(savedTime)
-      setShowResumeMenu(true)
+    if (video && !paused) {
+      if (currentTime <= 1) {
+        const newProgress = Math.min((currentTime / 1) * 40, 40)
+        setProgress(newProgress)
+        setTransitionDuration(300)
+      } else if (duration > 1) {
+        const remainingTime = duration - 1
+        const timeElapsedSinceFastStart = currentTime - 1
+        const additionalProgress =
+          (timeElapsedSinceFastStart / remainingTime) * 60
+        const newProgress = Math.min(40 + additionalProgress, 100)
+        setProgress(newProgress)
+        setTransitionDuration(1000)
+      }
     }
-  }, [video.id])
+  }, [currentTime, duration, paused, video])
+
+  useEffect(() => {
+    if (video.smartAutoPlay) {
+      setSmartAutoPlay(true)
+      const playerRef = player.current
+      if (playerRef) {
+        playerRef.muted = true
+        playerRef.play()
+        setOverlayVisible(true)
+      }
+    }
+  }, [video.smartAutoPlay])
+
   return (
     <>
       {video && (
         <MediaPlayer
+          ref={player}
           crossorigin
           playsInline
-          ref={player}
           load="visible"
-          src={urlVideo}
-          onPause={onPause}
+          aspectRatio={video.format}
           posterLoad="visible"
           onCanPlay={onCanPlay}
           crossOrigin="anonymous"
-          aspectRatio={video.format}
           onProviderChange={onProviderChange}
+          src={urlVideo}
+          muted={overlayVisible}
           className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
         >
           <MediaProvider>
@@ -197,23 +218,56 @@ export function Player({ video }: { video: Video }) {
             />
           </MediaProvider>
 
-          {video.type === 'Vsl' && video.fictitiousProgress && paused && (
-            <PlayButton>
-              <div className="absolute inset-0 flex items-center justify-center z-10 cursor-pointer">
-                <div
+          {paused && !overlayVisible && (
+            <div
+              className="absolute inset-0 flex items-center justify-center z-10 cursor-pointer"
+              onClick={handlePlay}
+            >
+              {video.ImageVideoPause ? (
+                <div className="relative">
+                  <img
+                    src={video.UrlCoverImageVideoPause}
+                    alt=""
+                    className="w-full h-auto rounded-md"
+                  />
+                  <PlayButton
+                    className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
+                    style={video.color ? { backgroundColor: video.color } : {}}
+                  >
+                    <PlayIcon className="w-12 h-12 translate-x-px" />
+                  </PlayButton>
+                </div>
+              ) : (
+                <PlayButton
                   className={`flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
                   style={video.color ? { backgroundColor: video.color } : {}}
                 >
                   <PlayIcon className="w-12 h-12 translate-x-px" />
-                </div>
-              </div>
-            </PlayButton>
+                </PlayButton>
+              )}
+            </div>
           )}
 
-          {showResumeMenu && (
-            <ContinueWatching
-              handleRestart={handleRestart}
-              handleResume={handleResume}
+          {smartAutoPlay && overlayVisible && (
+            <div className="absolute inset-0 flex  items-center justify-center z-10 bg-black bg-opacity-60">
+              <div
+                onClick={handlePlay}
+                className="p-4 flex  items-center justify-center bg-[#187BF0] text-white gap-12 rounded"
+              >
+                <SpeakerSimpleSlash size={64} />
+                <div>
+                  <p className=" text-lg">{video.TextTopSmartAutoPlay}</p>
+                  <p className=" text-lg">{video.TextButtonSmartAutoPlay}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {video.type === 'Vsl' && video.fictitiousProgress && (
+            <ProgressBar
+              progress={progress}
+              transitionDuration={transitionDuration}
+              color={video.color ? video.color : 'rgb(59 130 246)'}
             />
           )}
 
