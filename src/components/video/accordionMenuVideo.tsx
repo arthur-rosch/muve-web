@@ -28,6 +28,11 @@ export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
     navigate('/analytics', { state: { video } })
   }
 
+  const handleEdit = () => {
+    toggleMenu()
+    navigate('/edit/video', { state: { video } })
+  }
+
   const handleDeleteVideo = async () => {
     const { success } = await deleteVideo.mutateAsync(video.id)
 
@@ -87,6 +92,14 @@ export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
                 variants={itemVariants}
               >
                 Analytics
+              </motion.li>
+
+              <motion.li
+                onClick={handleEdit}
+                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm"
+                variants={itemVariants}
+              >
+                Editar
               </motion.li>
             </ul>
           </motion.div>

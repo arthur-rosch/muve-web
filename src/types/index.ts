@@ -158,6 +158,30 @@ export interface Video {
   fictitiousProgress?: boolean
   created_at: Date
 
+  colorSmartPlayers?: string
+  playAndPause?: boolean
+  progressBar?: boolean
+  timeTraveled?: boolean
+  videoDuration?: boolean
+  volumeButton?: boolean
+  volumeBar?: boolean
+  speed?: boolean
+  fullscreen?: boolean
+  smartAutoPlay?: boolean
+  UrlCoverSmartAutoPlay?: string
+  TextTopSmartAutoPlay?: string
+  TextButtonSmartAutoPlay?: string
+  continueWatching?: boolean
+  watchingNow?: boolean
+  watchingNowFontSize?: string
+  watchingNowBgColor?: string
+  watchingNowTextColor?: string
+  ImageVideoPause?: boolean
+  UrlCoverImageVideoPause?: string
+  ImageOfFinished?: boolean
+  UrlCoverImageOfFinished?: string
+  chapterMenu?: boolean
+
   analytics: VideoAnalytics
 }
 
@@ -206,4 +230,31 @@ export interface Signature {
   kirvano_checkout_id: string
   next_charge_date: string
   created_at: Date
+}
+
+export interface EditPlayerVideoProps {
+  colorSmartPlayers?: string
+  playAndPause?: boolean
+  progressBar?: boolean
+  timeTraveled?: boolean
+  videoDuration?: boolean
+  volumeButton?: boolean
+  volumeBar?: boolean
+  speed?: boolean
+  fullscreen?: boolean
+  smartAutoPlay?: boolean
+  UrlCoverSmartAutoPlay?: string
+  TextTopSmartAutoPlay?: string
+  TextButtonSmartAutoPlay?: string
+  continueWatching?: boolean
+  watchingNow?: boolean
+  watchingNowFontSize?: string
+  watchingNowBgColor?: string
+  watchingNowTextColor?: string
+  ImageVideoPause?: boolean
+  UrlCoverImageVideoPause?: string
+  ImageOfFinished?: boolean
+  UrlCoverImageOfFinished?: string
+  chapterMenu?: boolean
+  Chapter?: Chapters[]
 }

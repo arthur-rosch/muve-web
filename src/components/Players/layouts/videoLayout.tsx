@@ -1,4 +1,4 @@
-import type { Chapters } from '../../../types'
+import type { Chapters, Video } from '../../../types'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { ChapterTitle, Controls, Gesture } from '@vidstack/react'
 import {
@@ -16,15 +16,15 @@ import {
 const popupOffset = 30
 
 interface VideoLayoutProps {
-  type: 'Vsl' | 'Curso'
+  video: Video
   chapters?: Chapters[]
 }
 
-export function VideoLayout({ type, chapters }: VideoLayoutProps) {
+export function VideoLayout({ video, chapters }: VideoLayoutProps) {
   return (
     <>
       <Gestures />
-      {type === 'Curso' && (
+      {video.type === 'Curso' && (
         <Controls.Root className="media-controls:opacity-100 absolute inset-0 z-10 flex h-auto w-full flex-col bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity">
           <Tooltip.Provider>
             <div className="flex-1" />
@@ -32,16 +32,25 @@ export function VideoLayout({ type, chapters }: VideoLayoutProps) {
               <TimeChapter />
             </Controls.Group>
             <Controls.Group className="-mt-0.5 flex w-full items-center px-2 pb-2">
-              <Play tooltipAlign="start" tooltipOffset={popupOffset} />
-              <Mute tooltipOffset={popupOffset} />
-              <Volume />
-              <TimeGroup />
+              {video.playAndPause && (
+                <Play tooltipAlign="start" tooltipOffset={popupOffset} />
+              )}
+              {video.volumeButton && <Mute tooltipOffset={popupOffset} />}
+
+              {video.volumeBar && <Volume />}
+
+              <TimeGroup
+                timeCurrent={video.timeTraveled}
+                timeDuration={video.videoDuration}
+              />
               <ChapterTitle />
               <div className="flex-1" />
               <Seek />
-              <ChapterMenu chapters={chapters!} />
-              <MenuPlayer />
-              <Fullscreen tooltipAlign="end" tooltipOffset={popupOffset} />
+              {video.chapterMenu && <ChapterMenu chapters={chapters!} />}
+              <MenuPlayer menuSpeed={video.speed} />
+              {video.fullscreen && (
+                <Fullscreen tooltipAlign="end" tooltipOffset={popupOffset} />
+              )}
             </Controls.Group>
           </Tooltip.Provider>
         </Controls.Root>

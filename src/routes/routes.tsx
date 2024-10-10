@@ -5,7 +5,7 @@ import { Profile } from '../pages/(Main)/Profile'
 import { UserLayout } from '../layout/UserLayout'
 import { SplashScreen } from '../pages/SplashScreen'
 import { PlayerWrapper } from '../components/Players/playerWrapper'
-import { Analytics, Dashboard, Folder } from '../pages/(Main)'
+import { Analytics, Dashboard, EditVideo, Folder } from '../pages/(Main)'
 
 export function Router() {
   return (
@@ -22,6 +22,7 @@ export function Router() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/edit/video" element={<EditVideo />} />
       </Route>
 
       <Route path="/player" element={<PlayerWrapper />} />
