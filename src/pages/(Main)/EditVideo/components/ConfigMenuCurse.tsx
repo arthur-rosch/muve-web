@@ -667,34 +667,35 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     <span className="text-[#909090] text-sm">Ativo</span>
                   </div>
                   <div className="max-h-[20%] overflow-auto">
-                    {video.Chapter.map((chapter) => {
-                      return (
-                        <div
-                          className="flex gap-2 my-4 flex-col bg-[#141414] rounded"
-                          key={chapter.startTime}
-                        >
-                          <div className="w-full p-4 flex justify-between">
-                            <div className="flex flex-col">
-                              <span className="text-white text-sm font-medium">
-                                {chapter.title}
-                              </span>
-                              <span className="text-[#909090] text-sm font-normal">
-                                {chapter.startTime} | {chapter.endTime}
-                              </span>
+                    {video.Chapter.length > 0 &&
+                      video.Chapter.map((chapter) => {
+                        return (
+                          <div
+                            className="flex gap-2 my-4 flex-col bg-[#141414] rounded"
+                            key={chapter.startTime}
+                          >
+                            <div className="w-full p-4 flex justify-between">
+                              <div className="flex flex-col">
+                                <span className="text-white text-sm font-medium">
+                                  {chapter.title}
+                                </span>
+                                <span className="text-[#909090] text-sm font-normal">
+                                  {chapter.startTime} | {chapter.endTime}
+                                </span>
+                              </div>
+                              <button
+                                className="text-white cursor-pointer"
+                                type="button"
+                              >
+                                <DotsThreeOutlineVertical
+                                  weight="fill"
+                                  size={24}
+                                />
+                              </button>
                             </div>
-                            <button
-                              className="text-white cursor-pointer"
-                              type="button"
-                            >
-                              <DotsThreeOutlineVertical
-                                weight="fill"
-                                size={24}
-                              />
-                            </button>
                           </div>
-                        </div>
-                      )
-                    })}
+                        )
+                      })}
                   </div>
 
                   <Button
