@@ -9,9 +9,10 @@ export function WatchingNow({ video }: WatchingNowProps) {
     <div className="w-full h-full z-50">
       <div className="relative w-full h-14">
         <div
-          className={`absolute top-0 left-0 h-full`}
+          // className={`absolute top-0 left-0 h-full`}
           style={{
             width: `100%`,
+            height: `100%`,
             background: `${video.watchingNowBgColor}`,
             color: `${video.watchingNowTextColor}`,
             fontSize: `${video.watchingNowFontSize}`,
