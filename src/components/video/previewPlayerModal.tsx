@@ -21,7 +21,7 @@ export const PreviewPlayerModal: FC<PreviewPlayerModalProps> = ({
   setIsModalOpen,
 }) => {
   const [copied, setCopied] = useState(false)
-  const iframeCode = `<iframe style="max-width:100%;width:745px;display:block;aspect-ratio:1.767;margin:auto" src="https://web.muveplayer.com/player?videoId=${video.id}" allow="autoplay; gyroscope; picture-in-picture;" allowfullscreen="" frameBorder="0"></iframe>`
+  const iframeCode = `<iframe style="max-width:100%;width:745px;display:block;margin:auto" src="https://web.muveplayer.com/player?videoId=${video.id}" allow="autoplay; gyroscope; picture-in-picture;" allowfullscreen="" frameBorder="0"></iframe>`
 
   const handleCopy = () => {
     navigator.clipboard

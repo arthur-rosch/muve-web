@@ -32,11 +32,14 @@ export function ChapterMenu({ chapters }: ChapterMenuProps) {
               onClick={() => handleSeek(chapter.startTime)}
             >
               <div className="text-white text-lg">{chapter.title}</div>
-              <div className="bg-opacity-50 backdrop-filter backdrop-blur-lg text-white text-sm px-2 py-1 rounded w-12">
-                {chapter.startTime}
+              <div className="bg-opacity-50 backdrop-filter backdrop-blur-lg text-white text-sm pr-2 py-1 rounded w-auto">
+                <span>{chapter.startTime} | </span>{' '}
+                <span>{chapter.endTime}</span>
               </div>
               <div className="text-gray-500 text-xs">
-                {parseInt(chapter.endTime) - parseInt(chapter.startTime)} sec
+                {convertDurationToSeconds(chapter.endTime) -
+                  convertDurationToSeconds(chapter.startTime)}{' '}
+                sec
               </div>
             </div>
           ))

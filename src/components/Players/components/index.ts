@@ -1,5 +1,6 @@
 export * from './title'
 export * from './time-group'
+export * from './watchingNow'
 export * from './continueWatching'
 
 export * from './buttons/play'

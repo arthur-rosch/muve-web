@@ -50,6 +50,7 @@ export const ChartRetention: FC<ChartProps> = ({
   useEffect(() => {
     const interval = 60
     const totalDuration = convertDurationToSeconds(selectedVideo.duration)
+    console.log(totalDuration)
     const numIntervals = Math.ceil(totalDuration / interval)
 
     let maxEndTime = 0
@@ -87,9 +88,10 @@ export const ChartRetention: FC<ChartProps> = ({
     const retentionPercentages = retentionArray
       .slice(0, maxEndTime + 1)
       .map((count, index) => {
-        const minutes = Math.floor(index / 60)
+        const hours = Math.floor(index / 3600)
+        const minutes = Math.floor((index % 3600) / 60)
         const seconds = index % 60
-        const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+        const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 
         return {
           date: formattedTime,
@@ -105,8 +107,16 @@ export const ChartRetention: FC<ChartProps> = ({
         const startSeconds = index * interval
         const endSeconds = Math.min((index + 1) * interval, totalDuration)
 
-        const startTime = `${String(Math.floor(startSeconds / 60)).padStart(2, '0')}:${String(startSeconds % 60).padStart(2, '0')}`
-        const endTime = `${String(Math.floor(endSeconds / 60)).padStart(2, '0')}:${String(endSeconds % 60).padStart(2, '0')}`
+        const startHours = Math.floor(startSeconds / 3600)
+        const startMinutes = Math.floor((startSeconds % 3600) / 60)
+        const startSecondsMod = startSeconds % 60
+
+        const endHours = Math.floor(endSeconds / 3600)
+        const endMinutes = Math.floor((endSeconds % 3600) / 60)
+        const endSecondsMod = endSeconds % 60
+
+        const startTime = `${String(startHours).padStart(2, '0')}:${String(startMinutes).padStart(2, '0')}:${String(startSecondsMod).padStart(2, '0')}`
+        const endTime = `${String(endHours).padStart(2, '0')}:${String(endMinutes).padStart(2, '0')}:${String(endSecondsMod).padStart(2, '0')}`
 
         const playsInInterval = filteredViews.filter((play) => {
           return (

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 import type { Video } from '../../../types'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeft } from '@phosphor-icons/react'
 import { cardVariants } from '../../../animations'
 import { ConfigMenuVsl, ConfigMenuCurse } from './components'
@@ -14,6 +14,15 @@ import {
 
 export const EditVideo = () => {
   const location = useLocation()
+  const navigate = useNavigate()
+
+  const goBack = () => {
+    navigate('/dashboard')
+  }
+
+  const handleAnalytics = () => {
+    navigate('/analytics', { state: { video } })
+  }
 
   const [video, setVideo] = useState<Video>(location.state.video)
 
@@ -31,8 +40,12 @@ export const EditVideo = () => {
           >
             <div>
               <span className="text-white text-lg flex items-start justify-start">
-                <ArrowLeft size={24} className="mr-4 cursor-pointer" />
-                Nome do vídeo
+                <ArrowLeft
+                  size={24}
+                  className="mr-4 cursor-pointer"
+                  onClick={goBack}
+                />
+                {video.name}
               </span>
               <span className="text-[#909090] text-sm mt-8">
                 Edite aqui os detalhes do vídeo.
@@ -43,6 +56,7 @@ export const EditVideo = () => {
               variant="danger"
               animation={true}
               variants={cardVariants}
+              onClick={handleAnalytics}
               className="w-48 flex items-center justify-center py-3 px-4 h-10"
             >
               Analisar

@@ -20,7 +20,7 @@ export function PlayerWrapper() {
     try {
       if (videoId) {
         const response = await axios.get(
-          `https://api.muveplayer.com/api/video/${videoId}`,
+          `http://localhost:3333/api/video/${videoId}`,
         )
         const video = response.data.video
         if (video) {

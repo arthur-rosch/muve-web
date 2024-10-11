@@ -352,7 +352,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                     )}
                   </div>
                   <div className="flex flex-col w-full">
-                    <label htmlFor="url" className="text-white text-sm">
+                    <label htmlFor="name" className="text-white text-sm">
                       Titulo do seu video
                     </label>
                     <Controller
@@ -361,10 +361,8 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                       render={({ field }) => (
                         <Input
                           {...field}
-                          id="url"
+                          id="name"
                           type="text"
-                          mask="hh:mm:ss"
-                          isMask={true}
                           placeholder="Titulo do seu video"
                           className="w-full h-10 mt-2 mb-2"
                         />

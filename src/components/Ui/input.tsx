@@ -54,7 +54,12 @@ export const Input: FC<InputProps> = ({
     )
 
   return animation ? (
-    <motion.div initial="hidden" animate="visible" variants={variants}>
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={variants}
+      className="w-full"
+    >
       {InputComponent}
     </motion.div>
   ) : (

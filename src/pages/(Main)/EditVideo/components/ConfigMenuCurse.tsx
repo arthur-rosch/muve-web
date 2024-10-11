@@ -1,5 +1,7 @@
 import { z } from 'zod'
 import { motion } from 'framer-motion'
+import { AddChapterModal } from './AddChapterModal'
+import { AccordionMenuChapter } from './AccordionMenuChapter'
 import { useEffect, useState, type FC } from 'react'
 import { useVideo } from '../../../../hooks'
 import { filterObject } from '../../../../utils'
@@ -15,14 +17,9 @@ import {
   CheckBox,
   toastError,
   toastSuccess,
+  InputSelect,
 } from '../../../../components'
-import {
-  Info,
-  FilmStrip,
-  IntersectThree,
-  DotsThreeOutlineVertical,
-} from '@phosphor-icons/react'
-import { AddChapterModal } from './AddChapterModal'
+import { Info, FilmStrip, IntersectThree } from '@phosphor-icons/react'
 
 interface ConfigMenuProps {
   video: Video
@@ -63,10 +60,16 @@ const schema = z.object({
         title: z.string().nonempty('Título do capítulo é obrigatório'),
         startTime: z
           .string()
-          .regex(/^\d{2}:\d{2}$/, 'Início deve estar no formato mm:ss'),
+          .regex(
+            /^\d{1,2}:\d{2}:\d{2}$/,
+            'Duração deve estar no formato hh:mm:ss',
+          ),
         endTime: z
           .string()
-          .regex(/^\d{2}:\d{2}$/, 'Fim deve estar no formato mm:ss'),
+          .regex(
+            /^\d{1,2}:\d{2}:\d{2}$/,
+            'Duração deve estar no formato hh:mm:ss',
+          ),
       }),
     )
     .optional(),
@@ -94,7 +97,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
     endTime: '',
   })
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'Chapter',
   })
@@ -103,38 +106,43 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
     const { title, startTime, endTime } = chapterData
 
     if (title && startTime && endTime) {
-      const convertToMinutes = (time: string) => {
-        const [minutes, seconds] = time.split(':').map(Number)
-        return minutes * 60 + seconds
+      const convertToSeconds = (time: string) => {
+        const [hours, minutes, seconds] = time.split(':').map(Number)
+        return hours * 3600 + minutes * 60 + seconds
       }
-      const newDuration = convertToMinutes(video.duration)
-      const newStartTime = convertToMinutes(startTime)
-      const newEndTime = convertToMinutes(endTime)
+
+      const newDuration = convertToSeconds(video.duration)
+      const newStartTime = convertToSeconds(startTime)
+      const newEndTime = convertToSeconds(endTime)
+
+      console.log(newStartTime, newEndTime)
+
+      if (newStartTime >= newEndTime) {
+        return 'O horário de início não pode ser maior ou igual ao horário de término.'
+      }
 
       if (newEndTime > newDuration) {
-        toastError({
-          text: `Não é possível adicionar um capítulo que ultrapassa a duração do video`,
-        })
-        return
+        return 'Não é possível adicionar um capítulo que ultrapassa a duração do vídeo.'
       }
 
       const isOverlapping = fields.some((chapter) => {
-        const chapterStartTime = convertToMinutes(chapter.startTime)
-        const chapterEndTime = convertToMinutes(chapter.endTime)
+        const chapterStartTime = convertToSeconds(chapter.startTime)
+        const chapterEndTime = convertToSeconds(chapter.endTime)
         return newStartTime < chapterEndTime && newEndTime > chapterStartTime
       })
 
       if (isOverlapping) {
-        toastError({
-          text: `Não é possível adicionar um capítulo que sobreponha um intervalo existente.`,
-        })
-        return
+        return 'Não é possível adicionar um capítulo que sobreponha um intervalo existente.'
       }
 
       append({ title, startTime, endTime })
       console.log(chapterData)
       setChapterData({ title: '', startTime: '', endTime: '' })
+
+      return 'success'
     }
+
+    return 'error'
   }
 
   const onSubmit = async (data: FormValues) => {
@@ -186,7 +194,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-[40%] border-l-[1px] border-l-solid border-[#333333] p-6 ml-4"
+        className="w-[55%] border-l-[1px] border-l-solid border-[#333333] p-6 ml-4"
       >
         <span className="text-white text-lg flex items-start justify-start">
           Detalhes da apresentação
@@ -303,7 +311,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
             </Accordion.Item>
 
             {/* Aparência */}
-            <Accordion.Item
+            {/* <Accordion.Item
               value="aparencia"
               className="bg-[#1D1D1D] text-white rounded-lg py-5 px-4"
             >
@@ -325,41 +333,33 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                   <label htmlFor="color" className="text-white text-sm">
                     Cor principal:
                   </label>
-                  <div className="flex items-start justify-start gap-2">
+                  <div className="flex items-start justify-start gap-2 my-2">
                     <Controller
                       control={control}
                       name="color"
                       render={({ field }) => (
                         <Input
                           type="color"
-                          className="w-20 h-10 ml-2"
+                          className="h-10 outline-none border-none"
                           {...field}
                         />
                       )}
                     />
-                  </div>
-                  <label
-                    htmlFor="colorSmartPlayers"
-                    className="text-white text-sm"
-                  >
-                    Cor do Smart AutoPlay:
-                  </label>
-                  <div className="flex items-start justify-start gap-2">
                     <Controller
                       control={control}
-                      name="colorSmartPlayers"
+                      name="color"
                       render={({ field }) => (
                         <Input
-                          type="color"
-                          className="w-20 h-10 ml-2"
                           {...field}
+                          type="text"
+                          className="w-full h-10 ml-2"
                         />
                       )}
                     />
                   </div>
                 </motion.div>
               </Accordion.Content>
-            </Accordion.Item>
+            </Accordion.Item> */}
 
             {/* Controles */}
             <Accordion.Item
@@ -394,21 +394,6 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     />
                     <span className="text-[#909090] text-sm">
                       Botão de Play e Pause
-                    </span>
-                  </div>
-                  <div className="flex gap-2 my-2">
-                    <Controller
-                      control={control}
-                      name="progressBar"
-                      render={({ field }) => (
-                        <CheckBox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      )}
-                    />
-                    <span className="text-[#909090] text-sm">
-                      Barra de progresso
                     </span>
                   </div>
                   <div className="flex gap-2 my-2">
@@ -582,15 +567,23 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                   <Controller
                     control={control}
                     name="watchingNowFontSize"
-                    render={({ field }) => (
-                      <Input
-                        type="text"
+                    render={({ field, fieldState: { error } }) => (
+                      <InputSelect
+                        {...field}
+                        options={[
+                          { value: '12px', label: '12px' },
+                          { value: '14px', label: '14px' },
+                          { value: '16px', label: '16px' },
+                          { value: '18px', label: '18px' },
+                          { value: '20px', label: '20px' },
+                        ]}
                         className="w-full h-10 mt-4 mb-4"
                         placeholder="Tamanho da fonte"
-                        {...field}
+                        error={error?.message}
                       />
                     )}
                   />
+
                   <div className="flex items-start justify-start flex-col">
                     <label
                       htmlFor="watchingNowBgColor"
@@ -598,17 +591,31 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     >
                       Cor de fundo:
                     </label>
-                    <Controller
-                      control={control}
-                      name="watchingNowBgColor"
-                      render={({ field }) => (
-                        <Input
-                          type="color"
-                          className="w-20 h-10 ml-2"
-                          {...field}
-                        />
-                      )}
-                    />
+
+                    <div className="flex items-start justify-start gap-2 my-2">
+                      <Controller
+                        control={control}
+                        name="watchingNowBgColor"
+                        render={({ field }) => (
+                          <Input
+                            type="color"
+                            className="h-10 outline-none border-none"
+                            {...field}
+                          />
+                        )}
+                      />
+                      <Controller
+                        control={control}
+                        name="watchingNowBgColor"
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            type="text"
+                            className="w-full h-10 ml-2"
+                          />
+                        )}
+                      />
+                    </div>
                   </div>
                   <div className="flex items-start justify-start flex-col">
                     <label
@@ -617,17 +624,30 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     >
                       Cor do texto:
                     </label>
-                    <Controller
-                      control={control}
-                      name="watchingNowTextColor"
-                      render={({ field }) => (
-                        <Input
-                          type="color"
-                          className="w-20 h-10 ml-2"
-                          {...field}
-                        />
-                      )}
-                    />
+                    <div className="flex items-start justify-start gap-2 my-2">
+                      <Controller
+                        control={control}
+                        name="watchingNowTextColor"
+                        render={({ field }) => (
+                          <Input
+                            type="color"
+                            className="h-10 outline-none border-none"
+                            {...field}
+                          />
+                        )}
+                      />
+                      <Controller
+                        control={control}
+                        name="watchingNowTextColor"
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            type="text"
+                            className="w-full h-10 ml-2"
+                          />
+                        )}
+                      />
+                    </div>
                   </div>
                 </motion.div>
               </Accordion.Content>
@@ -666,13 +686,13 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     />
                     <span className="text-[#909090] text-sm">Ativo</span>
                   </div>
-                  <div className="max-h-[20%] overflow-auto">
+                  <div className="max-h-[28%] h-full overflow-auto">
                     {video.Chapter &&
-                      video.Chapter.map((chapter) => {
+                      video.Chapter.map((chapter, index) => {
                         return (
                           <div
                             className="flex gap-2 my-4 flex-col bg-[#141414] rounded"
-                            key={chapter.startTime}
+                            key={index}
                           >
                             <div className="w-full p-4 flex justify-between">
                               <div className="flex flex-col">
@@ -683,15 +703,10 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                                   {chapter.startTime} | {chapter.endTime}
                                 </span>
                               </div>
-                              <button
-                                className="text-white cursor-pointer"
-                                type="button"
-                              >
-                                <DotsThreeOutlineVertical
-                                  weight="fill"
-                                  size={24}
-                                />
-                              </button>
+                              <AccordionMenuChapter
+                                handleDeleted={remove}
+                                index={index}
+                              />
                             </div>
                           </div>
                         )
@@ -720,6 +735,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
       </form>
       <AddChapterModal
         video={video}
+        chapterData={chapterData}
         isModalOpen={isModalOpen}
         setChapterData={setChapterData}
         setIsModalOpen={setIsModalOpen}

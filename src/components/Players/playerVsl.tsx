@@ -1,7 +1,7 @@
 import '@vidstack/react/player/styles/base.css'
 
 import { PlayIcon } from 'lucide-react'
-import { ProgressBar } from './components'
+import { ProgressBar, WatchingNow } from './components'
 import { useAnalytics } from '../../hooks'
 import { VideoLayout } from './layouts/videoLayout'
 import { SpeakerSimpleSlash } from '@phosphor-icons/react'
@@ -28,7 +28,7 @@ import {
 export function PlayerVsl({ video }: { video: Video }) {
   const player = useRef<MediaPlayerInstance>(null)
 
-  const { currentTime, duration, paused } = useMediaStore(player)
+  const { currentTime, duration, paused, ended } = useMediaStore(player)
   const { addViewTimestamps, addViewUnique } = useAnalytics()
 
   const [progress, setProgress] = useState(0)
@@ -197,82 +197,127 @@ export function PlayerVsl({ video }: { video: Video }) {
   return (
     <>
       {video && (
-        <MediaPlayer
-          ref={player}
-          crossorigin
-          playsInline
-          load="visible"
-          aspectRatio={video.format}
-          posterLoad="visible"
-          onCanPlay={onCanPlay}
-          crossOrigin="anonymous"
-          onProviderChange={onProviderChange}
-          src={urlVideo}
-          muted={overlayVisible}
-          className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
-        >
-          <MediaProvider>
-            <Poster
-              alt="Poster image"
-              className="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 object-cover"
-            />
-          </MediaProvider>
+        <div className="relative w-full h-full z-0">
+          <MediaPlayer
+            ref={player}
+            crossorigin
+            playsInline
+            load="visible"
+            aspectRatio={video.format}
+            posterLoad="visible"
+            onCanPlay={onCanPlay}
+            crossOrigin="anonymous"
+            controls={false}
+            onProviderChange={onProviderChange}
+            src={urlVideo}
+            muted={overlayVisible}
+            autoPlay={video.smartAutoPlay}
+            className="w-full h-[95%] relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
+          >
+            <MediaProvider>
+              <Poster
+                alt="Poster image"
+                className="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 object-cover"
+              />
+            </MediaProvider>
 
-          {paused && !overlayVisible && (
-            <div
-              className="absolute inset-0 flex items-center justify-center z-10 cursor-pointer"
-              onClick={handlePlay}
-            >
-              {video.ImageVideoPause ? (
-                <div className="relative">
-                  <img
-                    src={video.UrlCoverImageVideoPause}
-                    alt=""
-                    className="w-full h-auto rounded-md"
-                  />
+            {paused && !overlayVisible && (
+              <div
+                className="absolute inset-0 flex items-center justify-center z-10 cursor-pointer"
+                onClick={handlePlay}
+              >
+                {video.ImageVideoPause && video.UrlCoverImageVideoPause ? (
+                  <div className="relative">
+                    <img
+                      src={video.UrlCoverImageVideoPause}
+                      alt=""
+                      className="w-full h-auto rounded-md" // Estilos opcionais para a imagem
+                    />
+                    <PlayButton
+                      className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
+                      style={
+                        video.color ? { backgroundColor: video.color } : {}
+                      }
+                    >
+                      <PlayIcon className="w-12 h-12 translate-x-px" />
+                    </PlayButton>
+                  </div>
+                ) : (
                   <PlayButton
-                    className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
+                    className={`flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
                     style={video.color ? { backgroundColor: video.color } : {}}
                   >
                     <PlayIcon className="w-12 h-12 translate-x-px" />
                   </PlayButton>
-                </div>
-              ) : (
-                <PlayButton
-                  className={`flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
-                  style={video.color ? { backgroundColor: video.color } : {}}
-                >
-                  <PlayIcon className="w-12 h-12 translate-x-px" />
-                </PlayButton>
-              )}
-            </div>
-          )}
+                )}
+              </div>
+            )}
 
-          {smartAutoPlay && overlayVisible && (
-            <div className="absolute inset-0 flex  items-center justify-center z-10 bg-black bg-opacity-60">
+            {ended && !overlayVisible && (
               <div
+                className="absolute inset-0 flex items-center justify-center z-10 cursor-pointer"
                 onClick={handlePlay}
-                className="p-4 flex  items-center justify-center bg-[#187BF0] text-white gap-12 rounded"
               >
-                <SpeakerSimpleSlash size={64} />
-                <div>
-                  <p className=" text-lg">{video.TextTopSmartAutoPlay}</p>
-                  <p className=" text-lg">{video.TextButtonSmartAutoPlay}</p>
+                {video.ImageOfFinished && video.UrlCoverImageOfFinished ? (
+                  <div className="relative">
+                    <img
+                      src={video.UrlCoverImageOfFinished}
+                      alt=""
+                      className="w-full h-auto rounded-md" // Estilos opcionais para a imagem
+                    />
+
+                    <PlayButton
+                      className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
+                      style={
+                        video.color ? { backgroundColor: video.color } : {}
+                      }
+                    >
+                      <PlayIcon className="w-12 h-12 translate-x-px" />
+                    </PlayButton>
+                  </div>
+                ) : (
+                  <PlayButton
+                    className={`flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
+                    style={video.color ? { backgroundColor: video.color } : {}}
+                  >
+                    <PlayIcon className="w-12 h-12 translate-x-px" />
+                  </PlayButton>
+                )}
+              </div>
+            )}
+
+            {smartAutoPlay && overlayVisible && (
+              <div className="absolute inset-0 flex  items-center justify-center z-10 bg-black bg-opacity-60">
+                <div
+                  onClick={handlePlay}
+                  style={
+                    video.colorSmartPlayers
+                      ? { backgroundColor: video.colorSmartPlayers }
+                      : {}
+                  }
+                  className={`p-4 flex  items-center justify-center bg-[#187BF0] text-white gap-12 rounded`}
+                >
+                  <SpeakerSimpleSlash size={64} />
+                  <div>
+                    <p className=" text-lg">{video.TextTopSmartAutoPlay}</p>
+                    <p className=" text-lg">{video.TextButtonSmartAutoPlay}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {video.type === 'Vsl' && video.fictitiousProgress && (
-            <ProgressBar
-              progress={progress}
-              transitionDuration={transitionDuration}
-              color={video.color ? video.color : 'rgb(59 130 246)'}
-            />
-          )}
+            {video.fictitiousProgress && !overlayVisible && (
+              <ProgressBar
+                progress={progress}
+                transitionDuration={transitionDuration}
+                color={video.color ? video.color : 'rgb(59 130 246)'}
+              />
+            )}
 
-          <VideoLayout video={video} chapters={video.Chapter} />
-        </MediaPlayer>
+            <VideoLayout video={video} chapters={video.Chapter} />
+          </MediaPlayer>
+          {video.watchingNow && <WatchingNow video={video} />}
+        </div>
       )}
     </>
   )

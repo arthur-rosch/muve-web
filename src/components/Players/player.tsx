@@ -1,7 +1,6 @@
 import '@vidstack/react/player/styles/base.css'
 
-import { PlayIcon } from 'lucide-react'
-import { ContinueWatching } from './components'
+import { ContinueWatching, WatchingNow } from './components'
 import { useAnalytics } from '../../hooks'
 import { VideoLayout } from './layouts/videoLayout'
 import type { PlayerDataVariables, Video } from '../../types'
@@ -11,11 +10,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   Poster,
-  PlayButton,
   MediaPlayer,
   isHLSProvider,
   MediaProvider,
-  useMediaStore,
   isYouTubeProvider,
   type MediaCanPlayEvent,
   type MediaCanPlayDetail,
@@ -38,7 +35,6 @@ const getVideoTimeFromCookie = (videoId: string): number | null => {
 export function Player({ video }: { video: Video }) {
   const player = useRef<MediaPlayerInstance>(null)
 
-  const { paused } = useMediaStore(player)
   const { addViewTimestamps, addViewUnique } = useAnalytics()
 
   const [showResumeMenu, setShowResumeMenu] = useState(false)
@@ -176,49 +172,40 @@ export function Player({ video }: { video: Video }) {
   return (
     <>
       {video && (
-        <MediaPlayer
-          crossorigin
-          playsInline
-          ref={player}
-          load="visible"
-          src={urlVideo}
-          onPause={onPause}
-          posterLoad="visible"
-          onCanPlay={onCanPlay}
-          crossOrigin="anonymous"
-          aspectRatio={video.format}
-          onProviderChange={onProviderChange}
-          className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
-        >
-          <MediaProvider>
-            <Poster
-              alt="Poster image"
-              className="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 object-cover"
-            />
-          </MediaProvider>
+        <div className="relative w-full h-full z-0">
+          <MediaPlayer
+            crossorigin
+            playsInline
+            ref={player}
+            load="visible"
+            src={urlVideo}
+            onPause={onPause}
+            posterLoad="visible"
+            onCanPlay={onCanPlay}
+            controls={false}
+            crossOrigin="anonymous"
+            aspectRatio={video.format}
+            onProviderChange={onProviderChange}
+            className="w-full h-[95%] relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
+          >
+            <MediaProvider>
+              <Poster
+                alt="Poster image"
+                className="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 object-cover"
+              />
+            </MediaProvider>
 
-          {video.type === 'Vsl' && video.fictitiousProgress && paused && (
-            <PlayButton>
-              <div className="absolute inset-0 flex items-center justify-center z-10 cursor-pointer">
-                <div
-                  className={`flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
-                  style={video.color ? { backgroundColor: video.color } : {}}
-                >
-                  <PlayIcon className="w-12 h-12 translate-x-px" />
-                </div>
-              </div>
-            </PlayButton>
-          )}
+            {showResumeMenu && (
+              <ContinueWatching
+                handleRestart={handleRestart}
+                handleResume={handleResume}
+              />
+            )}
 
-          {showResumeMenu && (
-            <ContinueWatching
-              handleRestart={handleRestart}
-              handleResume={handleResume}
-            />
-          )}
-
-          <VideoLayout video={video} chapters={video.Chapter} />
-        </MediaPlayer>
+            <VideoLayout video={video} chapters={video.Chapter} />
+          </MediaPlayer>
+          {video.watchingNow && <WatchingNow video={video} />}
+        </div>
       )}
     </>
   )
