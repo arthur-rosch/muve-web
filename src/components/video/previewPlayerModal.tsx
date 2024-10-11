@@ -58,7 +58,7 @@ export const PreviewPlayerModal: FC<PreviewPlayerModalProps> = ({
             <CursePreviewPlayer video={video} key={video.id} />
           )}
         </div>
-        <div className="w-full flex items-center justify-between py-6 px-8 border-t-[1px] border-solid border-[#333333] gap-2">
+        <div className="w-full flex items-center justify-between py-6 px-8 border-t-[1px] border-solid border-[#333333] gap-2 mt-10 z-50">
           <Input
             id="coverUrl"
             type="text"
