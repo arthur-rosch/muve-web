@@ -182,7 +182,7 @@ export const Analytics: FC = () => {
             animation={true}
             className="w-[75vw] mr-8 brightness-75"
             variants={cardVariants}
-            placeholder="Insira o link do vídeo"
+            placeholder="Informações do seu vídeo"
             disabled={true}
             value={
               selectedVideo

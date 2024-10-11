@@ -29,7 +29,7 @@ export const ListFolders: FC<ListFoldersProps> = ({
   const favoritesFolder = folders.filter((folder) => folder.favorite)
 
   const buttons: ButtonData[] = [
-    { id: '1', label: 'Todas', count: folders.length },
+    { id: '1', label: 'Pastas', count: folders.length },
     { id: '2', label: 'Favoritos', count: favoritesFolder.length },
     { id: '3', label: 'Recentes', count: SevenDayRecentFolders.length },
     { id: '4', label: 'Vídeos', count: videosNotFolderId.length },

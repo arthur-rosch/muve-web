@@ -5,7 +5,13 @@ import { useState, type FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toastError, toastSuccess } from '../Ui/toast'
 import { PreviewPlayerModal } from './previewPlayerModal'
-import { DotsThreeOutlineVertical } from '@phosphor-icons/react'
+import {
+  ChartLine,
+  Code,
+  DotsThreeOutlineVertical,
+  PencilSimple,
+  Trash,
+} from '@phosphor-icons/react'
 import { itemVariants, menuVariants } from '../../animations'
 
 interface AccordionMenuVideoProps {
@@ -74,32 +80,33 @@ export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
                   setIsPreviewModalOpen(!isPreviewModalOpen)
                   toggleMenu()
                 }}
-                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm"
+                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm flex items-start justify-start gap-2"
                 variants={itemVariants}
               >
-                Preview
-              </motion.li>
-              <motion.li
-                onClick={handleDeleteVideo}
-                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm"
-                variants={itemVariants}
-              >
-                Delete
+                <Code size={22} color="#707070" /> Embed
               </motion.li>
               <motion.li
                 onClick={handleAnalytics}
-                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm"
+                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm flex items-start justify-start gap-2"
                 variants={itemVariants}
               >
-                Analytics
+                <ChartLine size={22} color="#707070" /> Analisar
               </motion.li>
 
               <motion.li
                 onClick={handleEdit}
-                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm"
+                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm flex items-start justify-start gap-2"
                 variants={itemVariants}
               >
+                <PencilSimple size={22} color="#707070" />
                 Editar
+              </motion.li>
+              <motion.li
+                onClick={handleDeleteVideo}
+                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm flex items-start justify-start gap-2"
+                variants={itemVariants}
+              >
+                <Trash size={22} color="red" /> Deletar
               </motion.li>
             </ul>
           </motion.div>
