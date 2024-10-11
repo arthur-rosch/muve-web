@@ -27,9 +27,10 @@ const createVideoSchema = z.object({
     .url('URL inválida'),
   duration: z
     .string({
-      message: 'Duração do vídeo é obrigatório',
+      message: 'Duração do vídeo é obrigatória',
     })
-    .regex(/^\d{2}:\d{2}$/, 'Duração deve estar no formato mm:ss'),
+    .regex(/^\d{1,2}:\d{2}:\d{2}$/, 'Duração deve estar no formato hh:mm:ss'),
+
   folderId: z.string().optional(),
   type: z.enum(['Vsl', 'Curso'], {
     errorMap: () => ({ message: 'Tipo de vídeo é obrigatório' }),
@@ -329,7 +330,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                 <div className="flex gap-4 mt-6 mr-4">
                   <div className="flex flex-col w-full">
                     <label htmlFor="url" className="text-white text-sm">
-                      Url
+                      url
                     </label>
                     <Controller
                       name="url"
@@ -339,7 +340,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                           {...field}
                           id="url"
                           type="text"
-                          placeholder="seuvideo.com"
+                          placeholder="https://www.youtube.com/watch"
                           className="w-full h-10 mt-2 mb-2"
                         />
                       )}
@@ -362,6 +363,8 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                           {...field}
                           id="url"
                           type="text"
+                          mask="hh:mm:ss"
+                          isMask={true}
                           placeholder="Titulo do seu video"
                           className="w-full h-10 mt-2 mb-2"
                         />
@@ -388,7 +391,9 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                           {...field}
                           id="duration"
                           type="text"
-                          placeholder="mm:ss"
+                          isMask={true}
+                          mask="99:99:99"
+                          placeholder="hh:mm:ss"
                           className="w-full h-10 mt-2 mb-2"
                         />
                       )}

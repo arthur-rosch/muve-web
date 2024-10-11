@@ -28,7 +28,7 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
     <CustomModal.Root
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      styles={'h-auto w-[50rem] flex items-center justify-center'}
+      styles={'h-auto w-[50rem] flex flex-col m-auto'}
     >
       <CustomModal.Title
         title={video.name}
@@ -36,8 +36,8 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
         subTitle={video.type}
       />
 
-      <div className="w-full h-full flex flex-col justify-between inse">
-        <div className="min-w-full max-w-full h-[35rem] p-6">
+      <>
+        <div className="min-w-full max-w-full max-h-[35rem] p-6">
           <div className="mr-4">
             <div className="mt-6">
               <label htmlFor="chapterTitle" className="text-white text-sm">
@@ -118,7 +118,7 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
             Adicionar
           </Button>
         </div>
-      </div>
+      </>
     </CustomModal.Root>
   )
 }

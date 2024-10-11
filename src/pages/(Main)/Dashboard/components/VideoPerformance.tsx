@@ -65,7 +65,7 @@ export const VideoPerformance: FC<VideoPerformanceProps> = ({
           className="w-full h-32 px-4 py-5 rounded-lg"
         >
           <span className="text-[#909090] text-base font-semibold flex items-center justify-start gap-4">
-            Horas
+            Horas assistidas
           </span>
           <span className="text-white text-2xl font-semibold">
             {totalHoursWatched.toFixed(2)}H
