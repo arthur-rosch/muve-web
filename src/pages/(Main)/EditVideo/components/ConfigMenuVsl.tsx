@@ -14,6 +14,7 @@ import {
   Button,
   CheckBox,
   Input,
+  InputSelect,
   toastError,
   toastSuccess,
 } from '../../../../components'
@@ -30,7 +31,7 @@ const schema = z.object({
   color: z.string().optional(),
   colorSmartPlayers: z.string().optional(),
   playAndPause: z.boolean().optional(),
-  progressBar: z.boolean().optional(),
+  fictitiousProgress: z.boolean().optional(),
   timeTraveled: z.boolean().optional(),
   videoDuration: z.boolean().optional(),
   volumeButton: z.boolean().optional(),
@@ -118,7 +119,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="w-[40%] border-l-[1px] border-l-solid border-[#333333] p-6 ml-4"
+      className="w-[55%] border-l-[1px] border-l-solid border-[#333333] p-6 ml-4"
     >
       <span className="text-white text-lg flex items-start justify-start">
         Detalhes da apresentação
@@ -179,7 +180,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     <Input
                       type="text"
                       className="w-full h-10 mt-4 mb-4"
-                      placeholder="Link da capa"
+                      placeholder="https://img.youtube.com/vi/hqdefault.jpg"
                       {...field}
                     />
                   )}
@@ -253,7 +254,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                 animate="visible"
                 variants={cardVariants}
               >
-                <label htmlFor="color" className="text-white text-sm">
+                {/* <label htmlFor="color" className="text-white text-sm">
                   Cor principal:
                 </label>
                 <div className="flex items-start justify-start gap-2">
@@ -268,22 +269,33 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                       />
                     )}
                   />
-                </div>
+                </div> */}
                 <label
                   htmlFor="colorSmartPlayers"
                   className="text-white text-sm"
                 >
                   Cor do Smart AutoPlay:
                 </label>
-                <div className="flex items-start justify-start gap-2">
+                <div className="flex items-start justify-start gap-2 my-2">
                   <Controller
                     control={control}
                     name="colorSmartPlayers"
                     render={({ field }) => (
                       <Input
                         type="color"
-                        className="w-20 h-10 ml-2"
+                        className="h-10 outline-none border-none"
                         {...field}
+                      />
+                    )}
+                  />
+                  <Controller
+                    control={control}
+                    name="colorSmartPlayers"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="text"
+                        className="w-full h-10 ml-2"
                       />
                     )}
                   />
@@ -336,15 +348,23 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                 <Controller
                   control={control}
                   name="watchingNowFontSize"
-                  render={({ field }) => (
-                    <Input
-                      type="text"
+                  render={({ field, fieldState: { error } }) => (
+                    <InputSelect
+                      {...field}
+                      options={[
+                        { value: '12px', label: '12px' },
+                        { value: '14px', label: '14px' },
+                        { value: '16px', label: '16px' },
+                        { value: '18px', label: '18px' },
+                        { value: '20px', label: '20px' },
+                      ]}
                       className="w-full h-10 mt-4 mb-4"
                       placeholder="Tamanho da fonte"
-                      {...field}
+                      error={error?.message}
                     />
                   )}
                 />
+
                 <div className="flex items-start justify-start flex-col">
                   <label
                     htmlFor="watchingNowBgColor"
@@ -352,17 +372,31 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                   >
                     Cor de fundo:
                   </label>
-                  <Controller
-                    control={control}
-                    name="watchingNowBgColor"
-                    render={({ field }) => (
-                      <Input
-                        type="color"
-                        className="w-20 h-10 ml-2"
-                        {...field}
-                      />
-                    )}
-                  />
+
+                  <div className="flex items-start justify-start gap-2 my-2">
+                    <Controller
+                      control={control}
+                      name="watchingNowBgColor"
+                      render={({ field }) => (
+                        <Input
+                          type="color"
+                          className="h-10 outline-none border-none"
+                          {...field}
+                        />
+                      )}
+                    />
+                    <Controller
+                      control={control}
+                      name="watchingNowBgColor"
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          type="text"
+                          className="w-full h-10 ml-2"
+                        />
+                      )}
+                    />
+                  </div>
                 </div>
                 <div className="flex items-start justify-start flex-col">
                   <label
@@ -371,17 +405,30 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                   >
                     Cor do texto:
                   </label>
-                  <Controller
-                    control={control}
-                    name="watchingNowTextColor"
-                    render={({ field }) => (
-                      <Input
-                        type="color"
-                        className="w-20 h-10 ml-2"
-                        {...field}
-                      />
-                    )}
-                  />
+                  <div className="flex items-start justify-start gap-2 my-2">
+                    <Controller
+                      control={control}
+                      name="watchingNowTextColor"
+                      render={({ field }) => (
+                        <Input
+                          type="color"
+                          className="h-10 outline-none border-none"
+                          {...field}
+                        />
+                      )}
+                    />
+                    <Controller
+                      control={control}
+                      name="watchingNowTextColor"
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          type="text"
+                          className="w-full h-10 ml-2"
+                        />
+                      )}
+                    />
+                  </div>
                 </div>
               </motion.div>
             </Accordion.Content>
@@ -433,7 +480,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                       {...field}
                       type="text"
                       className="w-full h-10 mt-4 mb-4"
-                      placeholder="Play"
+                      placeholder="Texto de cima do smart auto play"
                     />
                   )}
                 />
@@ -451,10 +498,73 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                       {...field}
                       type="text"
                       className="w-full h-10 mt-4 mb-4"
-                      placeholder="Continuar video"
+                      placeholder="Texto de baixo do smart auto play"
                     />
                   )}
                 />
+              </motion.div>
+            </Accordion.Content>
+          </Accordion.Item>
+
+          <Accordion.Item
+            value="progresso-fictício"
+            className="bg-[#1D1D1D] text-white rounded-lg py-5 px-4"
+          >
+            <Accordion.Header className="flex justify-between items-center">
+              <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
+                <IntersectThree size={20} />
+                Progresso fictício
+              </Accordion.Trigger>
+              <Accordion.Trigger className="flex items-center">
+                <ChevronDownIcon className="transition-transform duration-300 ease-in-out AccordionChevron" />
+              </Accordion.Trigger>
+            </Accordion.Header>
+            <Accordion.Content className="mt-2">
+              <motion.div
+                initial="hidden"
+                animate="visible"
+                variants={cardVariants}
+              >
+                <div className="flex gap-2 my-4">
+                  <Controller
+                    control={control}
+                    name="fictitiousProgress"
+                    render={({ field }) => (
+                      <CheckBox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    )}
+                  />
+                  <span className="text-[#909090] text-sm">Ativo</span>
+                </div>
+                <label htmlFor="color" className="text-white text-sm">
+                  Cor do Progresso:
+                </label>
+                <div className="flex items-start justify-start gap-2 my-2">
+                  <Controller
+                    control={control}
+                    name="color"
+                    render={({ field }) => (
+                      <Input
+                        type="color"
+                        className="h-10 outline-none border-none"
+                        {...field}
+                      />
+                    )}
+                  />
+                  <Controller
+                    control={control}
+                    name="color"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="text"
+                        className="w-full h-10 ml-2"
+                      />
+                    )}
+                  />
+                </div>
               </motion.div>
             </Accordion.Content>
           </Accordion.Item>
@@ -507,7 +617,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                       {...field}
                       type="text"
                       className="w-full h-10 mt-4 mb-4"
-                      placeholder="Link da imagem finalizada"
+                      placeholder="https://img.youtube.com/vi/hqdefault.jpg"
                     />
                   )}
                 />{' '}
@@ -540,7 +650,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                       {...field}
                       type="text"
                       className="w-full h-10 mt-4 mb-4"
-                      placeholder="Link da imagem finalizada"
+                      placeholder="https://img.youtube.com/vi/hqdefault.jpg"
                     />
                   )}
                 />

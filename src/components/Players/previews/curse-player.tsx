@@ -18,7 +18,7 @@ import '@vidstack/react/player/styles/base.css'
 import '@vidstack/react/player/styles/default/theme.css'
 import '@vidstack/react/player/styles/default/layouts/audio.css'
 import '@vidstack/react/player/styles/default/layouts/video.css'
-import { ContinueWatching } from '../components'
+import { ContinueWatching, WatchingNow } from '../components'
 
 interface PreviewPlayerProps {
   video: Video
@@ -131,7 +131,9 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
         <VideoLayout video={video} chapters={video.Chapter} />
       </MediaPlayer>
 
-      {showResumeMenu && (
+      {video.watchingNow && <WatchingNow video={video} />}
+
+      {video.continueWatching && showResumeMenu && (
         <ContinueWatching
           handleRestart={handleRestart}
           handleResume={handleResume}

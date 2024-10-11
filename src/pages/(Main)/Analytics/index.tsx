@@ -138,12 +138,12 @@ export const Analytics: FC = () => {
   }
 
   return (
-    <section className="w-full max-h-screen mx-8 overflow-auto pr-4  pb-28">
+    <section className="w-full max-h-screen mx-8 overflow-auto overflow-x-hidden pr-4  pb-28">
       <HeaderFolder name={'Análise'} />
 
       <div className="w-full h-full flex flex-col mt-10">
         <motion.header
-          className="flex flex-col"
+          className="flex flex-col w-full"
           initial="hidden"
           animate="visible"
           variants={cardVariants}
@@ -162,7 +162,7 @@ export const Analytics: FC = () => {
         </motion.header>
 
         <motion.div
-          className="flex mt-8 gap-2"
+          className="w-full flex mt-8 gap-2"
           initial="hidden"
           animate="visible"
           variants={cardVariants}
@@ -173,14 +173,14 @@ export const Analytics: FC = () => {
             animation={true}
             variants={cardVariants}
             onClick={() => setIsModalOpen(!isModalOpen)}
-            className="w-48 flex items-center justify-center py-3 px-4 h-10"
+            className="min-w-48 flex items-center justify-center py-3 px-4 h-10"
           >
             Selecionar Video
           </Button>
           <Input
             type="text"
             animation={true}
-            className="w-[75vw] mr-8 brightness-75"
+            className="w-full mr-8 brightness-75"
             variants={cardVariants}
             placeholder="Informações do seu vídeo"
             disabled={true}

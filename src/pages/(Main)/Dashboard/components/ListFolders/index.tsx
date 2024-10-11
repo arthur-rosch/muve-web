@@ -101,7 +101,7 @@ export const ListFolders: FC<ListFoldersProps> = ({
       />
 
       {displayedItems && displayedItems.length > 0 ? (
-        <div className="min-h-full max-h-[28rem] grid grid-cols-3 gap-6 mt-10 overflow-auto pb-20 pr-4">
+        <div className="min-h-full max-h-[28rem] grid grid-cols-3 gap-6 mt-10 overflow-auto pb-96 pr-4">
           {filterButton === '4'
             ? displayedItems.map((video) => (
                 <CardVideo
