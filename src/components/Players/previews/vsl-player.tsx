@@ -1,7 +1,12 @@
 import { SpeakerSimpleSlash } from '@phosphor-icons/react'
 import { PlayIcon } from 'lucide-react'
 import type { Video } from '../../../types'
-import { ProgressBar, WatchingNow } from '../components'
+import {
+  ProgressBar,
+  WatchingNow,
+  VideoButtonCtaBelow,
+  VideoButtonCtaInside,
+} from '../components'
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { VideoLayout } from '../layouts/videoLayout'
 
@@ -227,9 +232,27 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
           />
         )}
 
+        {video.buttonsActive && (
+          <VideoButtonCtaInside
+            key={video.id}
+            Buttons={video.VideoButtons}
+            currentTime={currentTime}
+            overlayVisible={overlayVisible}
+          />
+        )}
+
         <VideoLayout video={video} />
       </MediaPlayer>
       {video.watchingNow && <WatchingNow video={video} />}
+
+      {video.buttonsActive && (
+        <VideoButtonCtaBelow
+          key={video.id}
+          Buttons={video.VideoButtons}
+          currentTime={currentTime}
+          overlayVisible={overlayVisible}
+        />
+      )}
     </div>
   )
 }

@@ -6,7 +6,7 @@ interface WatchingNowProps {
 
 export function WatchingNow({ video }: WatchingNowProps) {
   return (
-    <div className="w-full h-full z-50">
+    <div className="w-full z-50">
       <div className="relative w-full h-14">
         <div
           // className={`absolute top-0 left-0 h-full`}

@@ -143,61 +143,6 @@ export interface Chapters {
   startTime: string
   endTime: string
 }
-export interface Video {
-  id: string
-  url: string
-  tags: string
-  name: string
-  duration: string
-  thumbnail: string
-  folderId?: string
-  format: '9/16' | '16/9'
-  type: 'Vsl' | 'Curso'
-  color?: string
-  Chapter: Chapters[] | []
-  fictitiousProgress?: boolean
-  created_at: Date
-
-  colorSmartPlayers?: string
-  playAndPause?: boolean
-  progressBar?: boolean
-  timeTraveled?: boolean
-  videoDuration?: boolean
-  volumeButton?: boolean
-  volumeBar?: boolean
-  speed?: boolean
-  fullscreen?: boolean
-  smartAutoPlay?: boolean
-  UrlCoverSmartAutoPlay?: string
-  TextTopSmartAutoPlay?: string
-  TextButtonSmartAutoPlay?: string
-  continueWatching?: boolean
-  watchingNow?: boolean
-  watchingNowFontSize?: string
-  watchingNowBgColor?: string
-  watchingNowTextColor?: string
-  ImageVideoPause?: boolean
-  UrlCoverImageVideoPause?: string
-  ImageOfFinished?: boolean
-  UrlCoverImageOfFinished?: string
-  chapterMenu?: boolean
-
-  analytics: VideoAnalytics
-}
-
-export interface ChartProps {
-  analytics: VideoAnalytics
-  selectedVideo: Video
-}
-export interface Folder {
-  id: string
-  name: string
-  coverUrl?: string
-  favorite: boolean
-  userId: string
-  created_at: Date
-  videos: Video[]
-}
 
 export enum StatusSignature {
   APPROVED = 'APPROVED',
@@ -232,6 +177,34 @@ export interface Signature {
   created_at: Date
 }
 
+// Define as posições do botão como tipos literais
+type ButtonPosition =
+  | 'top-left'
+  | 'top'
+  | 'top-right'
+  | 'left'
+  | 'center'
+  | 'right'
+  | 'bottom-left'
+  | 'bottom'
+  | 'bottom-right'
+
+// Define a interface para o botão
+export interface VideoButton {
+  buttonType: 'below' | 'inside'
+  buttonText: string
+  buttonSize: string
+  buttonLink: string
+  startTime: string
+  endTime: string
+  buttonAfterTheVideoEnds?: boolean
+  backgroundColor: string
+  textColor: string
+  hoverBackgroundColor: string
+  hoverTextColor: string
+  buttonPosition?: ButtonPosition
+}
+
 export interface EditPlayerVideoProps {
   colorSmartPlayers?: string
   playAndPause?: boolean
@@ -256,5 +229,65 @@ export interface EditPlayerVideoProps {
   ImageOfFinished?: boolean
   UrlCoverImageOfFinished?: string
   chapterMenu?: boolean
+  buttonsActive?: boolean
   Chapter?: Chapters[]
+  Buttons?: VideoButton[]
+}
+
+export interface Video {
+  id: string
+  url: string
+  tags: string
+  name: string
+  duration: string
+  thumbnail: string
+  folderId?: string
+  format: '9/16' | '16/9'
+  type: 'Vsl' | 'Curso'
+  color?: string
+  Chapter: Chapters[] | []
+  VideoButtons: VideoButton[] | []
+  fictitiousProgress?: boolean
+  created_at: Date
+
+  colorSmartPlayers?: string
+  playAndPause?: boolean
+  progressBar?: boolean
+  timeTraveled?: boolean
+  videoDuration?: boolean
+  volumeButton?: boolean
+  volumeBar?: boolean
+  speed?: boolean
+  fullscreen?: boolean
+  smartAutoPlay?: boolean
+  UrlCoverSmartAutoPlay?: string
+  TextTopSmartAutoPlay?: string
+  TextButtonSmartAutoPlay?: string
+  continueWatching?: boolean
+  watchingNow?: boolean
+  watchingNowFontSize?: string
+  watchingNowBgColor?: string
+  watchingNowTextColor?: string
+  ImageVideoPause?: boolean
+  UrlCoverImageVideoPause?: string
+  ImageOfFinished?: boolean
+  UrlCoverImageOfFinished?: string
+  chapterMenu?: boolean
+  buttonsActive?: boolean
+
+  analytics: VideoAnalytics
+}
+
+export interface ChartProps {
+  analytics: VideoAnalytics
+  selectedVideo: Video
+}
+export interface Folder {
+  id: string
+  name: string
+  coverUrl?: string
+  favorite: boolean
+  userId: string
+  created_at: Date
+  videos: Video[]
 }

@@ -2,6 +2,8 @@ export * from './title'
 export * from './time-group'
 export * from './watchingNow'
 export * from './continueWatching'
+export * from './videoButtonCtaBelow'
+export * from './videoButtonCtaInside'
 
 export * from './buttons/play'
 export * from './buttons/mute'

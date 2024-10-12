@@ -1,7 +1,12 @@
 import '@vidstack/react/player/styles/base.css'
 
 import { PlayIcon } from 'lucide-react'
-import { ProgressBar, WatchingNow } from './components'
+import {
+  ProgressBar,
+  VideoButtonCtaBelow,
+  VideoButtonCtaInside,
+  WatchingNow,
+} from './components'
 import { useAnalytics } from '../../hooks'
 import { VideoLayout } from './layouts/videoLayout'
 import { SpeakerSimpleSlash } from '@phosphor-icons/react'
@@ -314,9 +319,26 @@ export function PlayerVsl({ video }: { video: Video }) {
               />
             )}
 
+            {video.buttonsActive && (
+              <VideoButtonCtaInside
+                key={video.id}
+                Buttons={video.VideoButtons}
+                currentTime={currentTime}
+                overlayVisible={overlayVisible}
+              />
+            )}
+
             <VideoLayout video={video} chapters={video.Chapter} />
           </MediaPlayer>
           {video.watchingNow && <WatchingNow video={video} />}
+          {video.buttonsActive && (
+            <VideoButtonCtaBelow
+              key={video.id}
+              Buttons={video.VideoButtons}
+              currentTime={currentTime}
+              overlayVisible={overlayVisible}
+            />
+          )}
         </div>
       )}
     </>
