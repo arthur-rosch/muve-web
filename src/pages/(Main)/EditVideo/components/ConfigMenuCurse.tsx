@@ -310,57 +310,6 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
               </Accordion.Content>
             </Accordion.Item>
 
-            {/* Aparência */}
-            {/* <Accordion.Item
-              value="aparencia"
-              className="bg-[#1D1D1D] text-white rounded-lg py-5 px-4"
-            >
-              <Accordion.Header className="flex justify-between items-center">
-                <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
-                  <IntersectThree size={20} />
-                  Aparência
-                </Accordion.Trigger>
-                <Accordion.Trigger className="flex items-center">
-                  <ChevronDownIcon className="transition-transform duration-300 ease-in-out AccordionChevron" />
-                </Accordion.Trigger>
-              </Accordion.Header>
-              <Accordion.Content className="mt-2">
-                <motion.div
-                  initial="hidden"
-                  animate="visible"
-                  variants={cardVariants}
-                >
-                  <label htmlFor="color" className="text-white text-sm">
-                    Cor principal:
-                  </label>
-                  <div className="flex items-start justify-start gap-2 my-2">
-                    <Controller
-                      control={control}
-                      name="color"
-                      render={({ field }) => (
-                        <Input
-                          type="color"
-                          className="h-10 outline-none border-none"
-                          {...field}
-                        />
-                      )}
-                    />
-                    <Controller
-                      control={control}
-                      name="color"
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          type="text"
-                          className="w-full h-10 ml-2"
-                        />
-                      )}
-                    />
-                  </div>
-                </motion.div>
-              </Accordion.Content>
-            </Accordion.Item> */}
-
             {/* Controles */}
             <Accordion.Item
               value="controles"
