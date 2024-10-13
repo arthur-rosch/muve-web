@@ -274,7 +274,7 @@ export interface Video {
   UrlCoverImageOfFinished?: string
   chapterMenu?: boolean
   buttonsActive?: boolean
-
+  fictitiousProgressHeight?: string
   analytics: VideoAnalytics
 }
 

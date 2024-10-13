@@ -202,7 +202,7 @@ export const CreateFolderModal: FC<CreateFolderModalProps> = ({
                 <Input
                   type="text"
                   className="w-full h-10 mt-7"
-                  placeholder="Pesquisar video"
+                  placeholder="Pesquisar vídeo"
                 />
               </motion.div>
             </div>

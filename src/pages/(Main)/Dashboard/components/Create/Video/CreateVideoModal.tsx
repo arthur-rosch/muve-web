@@ -330,7 +330,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                 <div className="flex gap-4 mt-6 mr-4">
                   <div className="flex flex-col w-full">
                     <label htmlFor="url" className="text-white text-sm">
-                      url
+                      URL
                     </label>
                     <Controller
                       name="url"
@@ -353,7 +353,7 @@ export const CreateVideoModal: FC<CreateVideoModalProps> = ({
                   </div>
                   <div className="flex flex-col w-full">
                     <label htmlFor="name" className="text-white text-sm">
-                      Titulo do seu video
+                      Titulo do seu vídeo
                     </label>
                     <Controller
                       name="name"

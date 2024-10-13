@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useLocation } from 'react-router-dom'
 import { PlayerVsl } from './playerVsl'
+import host from '../../utils/host'
 
 export function PlayerWrapper() {
   const location = useLocation()
@@ -19,9 +20,7 @@ export function PlayerWrapper() {
     const videoId = getVideoIdFromQuery()
     try {
       if (videoId) {
-        const response = await axios.get(
-          `https://api.muveplayer.com/api/video/${videoId}`,
-        )
+        const response = await axios.get(`${host()}/video/${videoId}`)
         const video = response.data.video
         if (video) {
           setVideo(video)

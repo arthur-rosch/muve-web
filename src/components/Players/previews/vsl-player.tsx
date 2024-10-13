@@ -227,6 +227,7 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
         {video.fictitiousProgress && !overlayVisible && (
           <ProgressBar
             progress={progress}
+            size={video.fictitiousProgressHeight}
             transitionDuration={transitionDuration}
             color={video.color ? video.color : 'rgb(59 130 246)'}
           />
