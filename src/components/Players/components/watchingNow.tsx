@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import type { Video } from '../../../types'
 
 interface WatchingNowProps {
@@ -5,14 +6,21 @@ interface WatchingNowProps {
 }
 
 export function WatchingNow({ video }: WatchingNowProps) {
+  const [viewers, setViewers] = useState<number>(0)
+
+  useEffect(() => {
+    // Gera um número aleatório entre 100 e 200 para simular o número de pessoas assistindo
+    const randomViewers = Math.floor(Math.random() * (200 - 100 + 1)) + 100
+    setViewers(randomViewers)
+  }, [])
+
   return (
     <div className="w-full z-50">
       <div className="relative w-full h-14">
         <div
-          // className={`absolute top-0 left-0 h-full`}
           style={{
-            width: `100%`,
-            height: `100%`,
+            width: '100%',
+            height: '100%',
             background: `${video.watchingNowBgColor}`,
             color: `${video.watchingNowTextColor}`,
             fontSize: `${video.watchingNowFontSize}`,
@@ -21,7 +29,7 @@ export function WatchingNow({ video }: WatchingNowProps) {
             justifyContent: 'center',
           }}
         >
-          <p>155 pessoas estão assistindo esse video agora...</p>
+          <p>{viewers} pessoas estão assistindo esse vídeo agora...</p>
         </div>
       </div>
     </div>

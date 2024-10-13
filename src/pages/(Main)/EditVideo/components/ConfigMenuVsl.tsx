@@ -21,7 +21,15 @@ import {
   toastSuccess,
 } from '../../../../components'
 import * as Accordion from '@radix-ui/react-accordion'
-import { Info, IntersectThree } from '@phosphor-icons/react'
+import {
+  DotsThree,
+  GitCommit,
+  Info,
+  IntersectThree,
+  Link,
+  Play,
+  UsersThree,
+} from '@phosphor-icons/react'
 import { ChevronDownIcon } from 'lucide-react'
 
 interface ConfigMenuProps {
@@ -58,6 +66,7 @@ const schema = z.object({
   UrlCoverImageOfFinished: z.string().optional(),
   buttonsActive: z.boolean().optional(),
   VideoButtons: z.array(addButtonSchema).optional(),
+  fictitiousProgressHeight: z.string().optional(),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -139,7 +148,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-[55%] border-l-[1px] border-l-solid border-[#333333] p-6 ml-4"
+        className="w-[60%] border-l-[1px] border-l-solid border-[#333333] p-6 ml-4"
       >
         <span className="text-white text-lg flex items-start justify-start">
           Detalhes da apresentação
@@ -315,7 +324,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
             >
               <Accordion.Header className="flex justify-between items-center">
                 <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
-                  <IntersectThree size={20} />
+                  <UsersThree size={20} />
                   Assistindo agora
                 </Accordion.Trigger>
                 <Accordion.Trigger className="flex items-center">
@@ -445,7 +454,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
             >
               <Accordion.Header className="flex justify-between items-center">
                 <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
-                  <IntersectThree size={20} />
+                  <Play size={20} />
                   Smart AutoPlay
                 </Accordion.Trigger>
                 <Accordion.Trigger className="flex items-center">
@@ -518,7 +527,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
             >
               <Accordion.Header className="flex justify-between items-center">
                 <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
-                  <IntersectThree size={20} />
+                  <GitCommit size={20} />
                   Progresso fictício
                 </Accordion.Trigger>
                 <Accordion.Trigger className="flex items-center">
@@ -544,6 +553,41 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     />
                     <span className="text-[#909090] text-sm">Ativo</span>
                   </div>
+                  <label
+                    htmlFor="fictitiousProgressHeight"
+                    className="text-white text-sm"
+                  >
+                    Tamanho:
+                  </label>
+                  <Controller
+                    control={control}
+                    name="fictitiousProgressHeight"
+                    render={({ field, fieldState: { error } }) => (
+                      <InputSelect
+                        {...field}
+                        options={[
+                          { value: '12px', label: '12px' },
+                          { value: '14px', label: '14px' },
+                          { value: '16px', label: '16px' },
+                          { value: '18px', label: '18px' },
+                          { value: '20px', label: '20px' },
+                          { value: '24px', label: '24px' },
+                          { value: '26px', label: '26px' },
+                          { value: '28px', label: '28px' },
+                          { value: '30px', label: '30px' },
+                          { value: '32px', label: '32px' },
+                          { value: '34px', label: '34px' },
+                          { value: '36px', label: '36px' },
+                          { value: '38px', label: '38px' },
+                          { value: '40px', label: '40px' },
+                        ]}
+                        className="w-full h-10 mt-4 mb-4"
+                        placeholder="Tamanho da fonte"
+                        error={error?.message}
+                      />
+                    )}
+                  />
+
                   <label htmlFor="color" className="text-white text-sm">
                     Cor do Progresso:
                   </label>
@@ -582,7 +626,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
             >
               <Accordion.Header className="flex justify-between items-center">
                 <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
-                  <IntersectThree size={20} />
+                  <DotsThree size={20} />
                   Outros
                 </Accordion.Trigger>
                 <Accordion.Trigger className="flex items-center">
@@ -672,7 +716,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
             >
               <Accordion.Header className="flex justify-between items-center">
                 <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
-                  <IntersectThree size={20} />
+                  <Link size={20} />
                   Botão ( CTA )
                 </Accordion.Trigger>
                 <Accordion.Trigger className="flex items-center">
@@ -698,7 +742,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     />
                     <span className="text-[#909090] text-sm">Ativo</span>
                   </div>
-                  <div className="max-h-[28%] h-full overflow-auto">
+                  <div className="max-h-[28%] h-auto overflow-auto">
                     {video.VideoButtons &&
                       video.VideoButtons.map((button, index) => {
                         return (

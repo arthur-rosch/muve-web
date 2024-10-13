@@ -17,7 +17,7 @@ export const EditVideo = () => {
   const navigate = useNavigate()
 
   const goBack = () => {
-    navigate('/dashboard')
+    navigate(-1) // Volta para a página anterior
   }
 
   const handleAnalytics = () => {
@@ -30,7 +30,7 @@ export const EditVideo = () => {
     <section className="w-full max-h-screen mx-8 overflow-auto pr-4  pb-28">
       <HeaderFolder name="Teste" />
 
-      <div className="flex w-full">
+      <div className="flex w-full max-h-[40rem]">
         <div className="w-full">
           <motion.header
             className="w-full flex items-center justify-between mt-10"
@@ -64,7 +64,7 @@ export const EditVideo = () => {
           </motion.header>
 
           <motion.div
-            className="w-full h-[40rem] mt-8"
+            className="w-full max-h-[40rem] mt-8"
             initial="hidden"
             animate="visible"
             variants={cardVariants}

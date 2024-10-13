@@ -76,9 +76,8 @@ export const calculateDashboardMetrics = (
     ).values(),
   )
 
-  // Ordena os vídeos pelo tempo assistido em ordem decrescente e pega os 3 mais assistidos
   const topVideos = uniqueVideos
-    .sort((a, b) => b.totalSeconds - a.totalSeconds)
+    .sort((a, b) => b.video.analytics.totalViews - a.video.analytics.totalViews)
     .slice(0, 3) // Pega os 3 vídeos mais assistidos
 
   return {

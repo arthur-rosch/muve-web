@@ -19,7 +19,13 @@ import {
   toastSuccess,
   InputSelect,
 } from '../../../../components'
-import { Info, FilmStrip, IntersectThree } from '@phosphor-icons/react'
+import {
+  Info,
+  Video as VideoIcon,
+  ClockCounterClockwise,
+  UsersThree,
+  CardsThree,
+} from '@phosphor-icons/react'
 
 interface ConfigMenuProps {
   video: Video
@@ -54,6 +60,7 @@ const schema = z.object({
   ImageOfFinished: z.boolean().optional(),
   UrlCoverImageOfFinished: z.string().optional(),
   chapterMenu: z.boolean().optional(),
+  fictitiousProgressHeight: z.string().optional(),
   Chapter: z
     .array(
       z.object({
@@ -194,7 +201,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-[55%] border-l-[1px] border-l-solid border-[#333333] p-6 ml-4"
+        className="w-[60%] border-l-[1px] border-l-solid border-[#333333] p-6 ml-4 max-h-full"
       >
         <span className="text-white text-lg flex items-start justify-start">
           Detalhes da apresentação
@@ -317,7 +324,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
             >
               <Accordion.Header className="flex justify-between items-center">
                 <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
-                  <FilmStrip size={20} />
+                  <VideoIcon size={20} />
                   Controles
                 </Accordion.Trigger>
                 <Accordion.Trigger className="flex items-center">
@@ -442,7 +449,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
             >
               <Accordion.Header className="flex justify-between items-center">
                 <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
-                  <IntersectThree size={20} />
+                  <ClockCounterClockwise size={20} />
                   Continue Assistindo
                 </Accordion.Trigger>
                 <Accordion.Trigger className="flex items-center">
@@ -479,7 +486,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
             >
               <Accordion.Header className="flex justify-between items-center">
                 <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
-                  <IntersectThree size={20} />
+                  <UsersThree size={20} />
                   Assistindo agora
                 </Accordion.Trigger>
                 <Accordion.Trigger className="flex items-center">
@@ -609,7 +616,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
             >
               <Accordion.Header className="flex justify-between items-center">
                 <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
-                  <IntersectThree size={20} />
+                  <CardsThree size={20} />
                   Capítulos
                 </Accordion.Trigger>
                 <Accordion.Trigger className="flex items-center">
@@ -635,7 +642,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     />
                     <span className="text-[#909090] text-sm">Ativo</span>
                   </div>
-                  <div className="max-h-[28%] h-full overflow-auto">
+                  <div className="max-h-[28%] h-auto overflow-auto">
                     {video.Chapter &&
                       video.Chapter.map((chapter, index) => {
                         return (
