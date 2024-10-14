@@ -1,6 +1,6 @@
 import '@vidstack/react/player/styles/base.css'
 
-import { ContinueWatching, WatchingNow } from './components'
+import { ContinueWatching } from './components'
 import { useAnalytics } from '../../hooks'
 import { VideoLayout } from './layouts/videoLayout'
 import type { PlayerDataVariables, Video } from '../../types'
@@ -204,7 +204,7 @@ export function Player({ video }: { video: Video }) {
 
             <VideoLayout video={video} chapters={video.Chapter} />
           </MediaPlayer>
-          {video.watchingNow && <WatchingNow video={video} />}
+          {/* {video.watchingNow && <WatchingNow video={video} />} */}
         </div>
       )}
     </>
