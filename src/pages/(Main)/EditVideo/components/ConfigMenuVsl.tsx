@@ -619,96 +619,6 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
               </Accordion.Content>
             </Accordion.Item>
 
-            {/* Outros */}
-            <Accordion.Item
-              value="Outros"
-              className="bg-[#1D1D1D] text-white rounded-lg py-5 px-4"
-            >
-              <Accordion.Header className="flex justify-between items-center">
-                <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
-                  <DotsThree size={20} />
-                  Outros
-                </Accordion.Trigger>
-                <Accordion.Trigger className="flex items-center">
-                  <ChevronDownIcon className="transition-transform duration-300 ease-in-out AccordionChevron" />
-                </Accordion.Trigger>
-              </Accordion.Header>
-              <Accordion.Content className="mt-2">
-                <motion.div
-                  initial="hidden"
-                  animate="visible"
-                  variants={cardVariants}
-                >
-                  <div className="flex gap-2 my-4">
-                    <Controller
-                      control={control}
-                      name="ImageVideoPause"
-                      render={({ field }) => (
-                        <CheckBox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      )}
-                    />
-                    <span className="text-[#909090] text-sm">
-                      Exibir imagem assim que o vídeo for pausado
-                    </span>
-                  </div>
-                  <label
-                    htmlFor="UrlCoverImageVideoPause"
-                    className="text-white text-sm"
-                  >
-                    Url de imagem para mostrar ao vídeo ser pausado:
-                  </label>
-                  <Controller
-                    control={control}
-                    name="UrlCoverImageVideoPause"
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        type="text"
-                        className="w-full h-10 mt-4 mb-4"
-                        placeholder="https://img.youtube.com/vi/hqdefault.jpg"
-                      />
-                    )}
-                  />{' '}
-                  <div className="flex gap-2 my-4">
-                    <Controller
-                      control={control}
-                      name="ImageOfFinished"
-                      render={({ field }) => (
-                        <CheckBox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      )}
-                    />
-                    <span className="text-[#909090] text-sm">
-                      Exibir imagem assim que o vídeo finalizar
-                    </span>
-                  </div>
-                  <label
-                    htmlFor="UrlCoverImageVideoPause"
-                    className="text-white text-sm"
-                  >
-                    Url de imagem para mostrar ao vídeo ser finalizado:
-                  </label>
-                  <Controller
-                    control={control}
-                    name="UrlCoverImageOfFinished"
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        type="text"
-                        className="w-full h-10 mt-4 mb-4"
-                        placeholder="https://img.youtube.com/vi/hqdefault.jpg"
-                      />
-                    )}
-                  />
-                </motion.div>
-              </Accordion.Content>
-            </Accordion.Item>
-
             {/* CTA */}
             <Accordion.Item
               value="cta"
@@ -778,13 +688,113 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                 </motion.div>
               </Accordion.Content>
             </Accordion.Item>
+
+            {/* Outros */}
+            <Accordion.Item
+              value="Outros"
+              className="bg-[#1D1D1D] text-white rounded-lg py-5 px-4"
+            >
+              <Accordion.Header className="flex justify-between items-center">
+                <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
+                  <DotsThree size={20} />
+                  Outros
+                </Accordion.Trigger>
+                <Accordion.Trigger className="flex items-center">
+                  <ChevronDownIcon className="transition-transform duration-300 ease-in-out AccordionChevron" />
+                </Accordion.Trigger>
+              </Accordion.Header>
+              <Accordion.Content className="mt-2">
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={cardVariants}
+                >
+                  <div className="flex gap-2 my-4">
+                    <Controller
+                      control={control}
+                      name="ImageVideoPause"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">
+                      Exibir imagem assim que o vídeo for pausado
+                    </span>
+                  </div>
+                  <label
+                    htmlFor="UrlCoverImageVideoPause"
+                    className="text-white text-sm"
+                  >
+                    Url de imagem para mostrar ao vídeo ser pausado:
+                  </label>
+                  <Controller
+                    control={control}
+                    name="UrlCoverImageVideoPause"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="text"
+                        className="w-full h-10 mt-4 mb-4"
+                        placeholder="https://img.youtube.com/vi/hqdefault.jpg"
+                      />
+                    )}
+                  />
+
+                  <p className="text-[#909090] text-sm">
+                    Indicamos hospedar as imagens no{' '}
+                    <a
+                      href="https://postimages.org"
+                      className="text-[#187BF0]"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      postimages.org
+                    </a>
+                  </p>
+
+                  <div className="flex gap-2 my-4">
+                    <Controller
+                      control={control}
+                      name="ImageOfFinished"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">
+                      Exibir imagem assim que o vídeo finalizar
+                    </span>
+                  </div>
+                  <label
+                    htmlFor="UrlCoverImageVideoPause"
+                    className="text-white text-sm"
+                  >
+                    Url de imagem para mostrar ao vídeo ser finalizado:
+                  </label>
+                  <Controller
+                    control={control}
+                    name="UrlCoverImageOfFinished"
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        type="text"
+                        className="w-full h-10 mt-4 mb-4"
+                        placeholder="https://img.youtube.com/vi/hqdefault.jpg"
+                      />
+                    )}
+                  />
+                </motion.div>
+              </Accordion.Content>
+            </Accordion.Item>
           </Accordion.Root>
         </div>
 
-        <Button
-          type="submit"
-          className="mt-8 w-full h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
-        >
+        <Button type="submit" variant="primary" className="mt-8 w-full h-10 ">
           Salvar configurações
         </Button>
       </form>

@@ -45,7 +45,7 @@ export const CardVideo: FC<CardVideoProps> = ({
     <>
       {animation ? (
         <motion.div
-          className="w-auto h-60 relative mb-12"
+          className="w-auto h-60 relative my-12"
           initial="hidden"
           animate="visible"
           variants={variant}
