@@ -17,13 +17,11 @@ import {
   CheckBox,
   toastError,
   toastSuccess,
-  InputSelect,
 } from '../../../../components'
 import {
   Info,
   Video as VideoIcon,
   ClockCounterClockwise,
-  UsersThree,
   CardsThree,
 } from '@phosphor-icons/react'
 
@@ -480,7 +478,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
             </Accordion.Item>
 
             {/* Assistindo agora */}
-            <Accordion.Item
+            {/* <Accordion.Item
               value="assistindo-agora"
               className="bg-[#1D1D1D] text-white rounded-lg py-5 px-4"
             >
@@ -607,7 +605,7 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                   </div>
                 </motion.div>
               </Accordion.Content>
-            </Accordion.Item>
+            </Accordion.Item> */}
 
             {/* Capítulos  */}
             <Accordion.Item

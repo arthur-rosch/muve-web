@@ -1,7 +1,8 @@
-import { useState, type FC } from 'react'
 import type { Video } from '../../types'
+import { useState, type FC } from 'react'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { solarizedlight } from 'react-syntax-highlighter/dist/esm/styles/prism' // Você pode escolher outro tema
 import {
-  Input,
   CustomModal,
   VslPreviewPlayer,
   CursePreviewPlayer,
@@ -20,21 +21,50 @@ export const PreviewPlayerModal: FC<PreviewPlayerModalProps> = ({
   isModalOpen,
   setIsModalOpen,
 }) => {
-  const [copied, setCopied] = useState(false)
-  const iframeCode = `<iframe style="max-width:100%;width:100%;height:100%;margin:auto" src="https://web.muveplayer.com/player?videoId=${video.id}" allow="autoplay; gyroscope; picture-in-picture;" allowfullscreen="" frameBorder="0"></iframe>`
+  const [copiedIframe, setCopiedIframe] = useState(false)
+  const [copiedLink, setCopiedLink] = useState(false)
 
-  const handleCopy = () => {
+  const iframeCode = `
+<div style="position: relative; width: 100%; max-height: 40rem; margin-top: 8px; aspect-ratio: ${video.format};">
+  <iframe 
+    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
+    src="https://web.muveplayer.com/player?videoId=${video.id}" 
+    allow="autoplay; gyroscope; picture-in-picture;" 
+    allowfullscreen 
+    frameBorder="0">
+  </iframe>
+</div>
+`
+
+  const videoLink = `https://web.muveplayer.com/player?videoId=${video.id}`
+
+  const handleCopyIframe = () => {
     navigator.clipboard
       .writeText(iframeCode)
       .then(() => {
-        setCopied(true)
+        setCopiedIframe(true)
         toastSuccess({
           text: 'Iframe copiado com sucesso',
         })
-        setTimeout(() => setCopied(false), 2000)
+        setTimeout(() => setCopiedIframe(false), 2000)
       })
       .catch((err) => {
-        console.error('Failed to copy: ', err)
+        console.error('Falha ao copiar: ', err)
+      })
+  }
+
+  const handleCopyLink = () => {
+    navigator.clipboard
+      .writeText(videoLink)
+      .then(() => {
+        setCopiedLink(true)
+        toastSuccess({
+          text: 'Link copiado com sucesso',
+        })
+        setTimeout(() => setCopiedLink(false), 2000)
+      })
+      .catch((err) => {
+        console.error('Falha ao copiar: ', err)
       })
   }
 
@@ -58,18 +88,46 @@ export const PreviewPlayerModal: FC<PreviewPlayerModalProps> = ({
             <CursePreviewPlayer video={video} key={video.id} />
           )}
         </div>
-        <div className="w-full flex items-center justify-between py-6 px-8 border-t-[1px] border-solid border-[#333333] gap-2 mt-10 z-50">
-          <Input
-            id="coverUrl"
-            type="text"
-            disabled={true}
-            placeholder={`<iframe style="max-width:100%;width:745px;display:block;aspect-ratio:1.767;margin:auto" src="${iframeCode}" allow="autoplay; gyroscope; picture-in-picture;" allowfullscreen="" frameBorder="0"></iframe>`}
-            className="w-full h-10"
-          />
+
+        <div className="w-full flex items-center justify-between py-4 px-6 border rounded-md bg-[#1e1e1e] border-none">
+          <SyntaxHighlighter
+            language="html"
+            style={solarizedlight}
+            customStyle={{
+              borderRadius: '5px',
+              padding: '10px',
+              width: '100%',
+              overflow: 'hidden',
+              background: 'rgb(40, 44, 52)',
+            }}
+          >
+            {iframeCode}
+          </SyntaxHighlighter>
           <Copy
             size={32}
-            onClick={handleCopy}
-            className={` cursor-pointer hover:text-[#187BF0] ${copied ? 'text-[#187BF0]' : 'text-white'} transition-color duration-300`}
+            onClick={handleCopyIframe}
+            className={`cursor-pointer hover:text-[#187BF0] ${copiedIframe ? 'text-[#187BF0]' : 'text-white'} transition-color duration-300 ml-4`}
+          />
+        </div>
+
+        <div className="w-full flex items-center justify-between py-4 px-6 border rounded-md bg-[#1e1e1e] border-none">
+          <SyntaxHighlighter
+            language="text"
+            style={solarizedlight}
+            customStyle={{
+              borderRadius: '5px',
+              padding: '10px',
+              width: '100%',
+              overflow: 'hidden',
+              background: 'rgb(40, 44, 52)',
+            }}
+          >
+            {videoLink}
+          </SyntaxHighlighter>
+          <Copy
+            size={32}
+            onClick={handleCopyLink}
+            className={`cursor-pointer hover:text-[#187BF0] ${copiedLink ? 'text-[#187BF0]' : 'text-white'} transition-color duration-300 ml-4`}
           />
         </div>
       </div>

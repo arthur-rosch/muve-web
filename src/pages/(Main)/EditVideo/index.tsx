@@ -64,9 +64,10 @@ export const EditVideo = () => {
           </motion.header>
 
           <motion.div
-            className="w-full max-h-[40rem] mt-8"
+            className={`w-full max-h-[40rem] mt-8`}
             initial="hidden"
             animate="visible"
+            style={{ aspectRatio: video.format }}
             variants={cardVariants}
           >
             {video.type === 'Curso' ? (

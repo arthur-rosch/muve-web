@@ -82,9 +82,9 @@ export const Analytics: FC = () => {
         { label: 'Plays', value: metrics.plays },
         { label: 'Views', value: metrics.views },
         { label: 'Play Rate', value: `${metrics.playRate}%` },
-        { label: 'Engagement', value: `${metrics.engagement}%` },
-        { label: 'Unique Plays', value: metrics.uniquePlays },
-        { label: 'Unique Views', value: metrics.uniqueViews },
+        { label: 'Engajamento', value: `${metrics.engagement}%` },
+        { label: 'Plays únicos', value: metrics.uniquePlays },
+        { label: 'Views únicos ', value: metrics.uniqueViews },
       ]
     : []
 
@@ -105,8 +105,8 @@ export const Analytics: FC = () => {
         return (
           label === 'Plays' ||
           label === 'Views' ||
-          label === 'Unique Plays' ||
-          label === 'Unique Views'
+          label === 'Plays únicos' ||
+          label === 'Views únicos'
         )
       case 'UNLIMITED':
       case 'PROFESSIONAL':
