@@ -217,7 +217,7 @@ export function PlayerVsl({ video }: { video: Video }) {
             src={urlVideo}
             muted={overlayVisible}
             autoPlay={video.smartAutoPlay}
-            className="w-full h-[95%] relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
+            className="w-full h-[85%] relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
           >
             <MediaProvider>
               <Poster
@@ -332,6 +332,7 @@ export function PlayerVsl({ video }: { video: Video }) {
             <VideoLayout video={video} chapters={video.Chapter} />
           </MediaPlayer>
           {video.watchingNow && <WatchingNow video={video} />}
+
           {video.buttonsActive && (
             <VideoButtonCtaBelow
               key={video.id}
