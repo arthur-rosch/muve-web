@@ -24,18 +24,7 @@ export const PreviewPlayerModal: FC<PreviewPlayerModalProps> = ({
   const [copiedIframe, setCopiedIframe] = useState(false)
   const [copiedLink, setCopiedLink] = useState(false)
 
-  const iframeCode = `
-<div style="position: relative; width: 100%; max-height: 40rem; margin-top: 8px; aspect-ratio: ${video.format};">
-  <iframe 
-    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
-    src="https://web.muveplayer.com/player?videoId=${video.id}" 
-    allow="autoplay; gyroscope; picture-in-picture;" 
-    allowfullscreen 
-    frameBorder="0">
-  </iframe>
-</div>
-`
-
+  const iframeCode = `<div style="position: relative; width: 100%; max-height: 40rem; margin-top: 8px; aspect-ratio: ${video.format};"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="https://web.muveplayer.com/player?videoId=${video.id}" allow="autoplay; gyroscope; picture-in-picture;" allowfullscreen frameBorder="0"></iframe></div>`
   const videoLink = `https://web.muveplayer.com/player?videoId=${video.id}`
 
   const handleCopyIframe = () => {
