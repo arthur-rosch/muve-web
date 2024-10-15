@@ -174,6 +174,7 @@ export function Player({ video }: { video: Video }) {
 
   useEffect(() => {
     const handleEnded = async () => {
+      console.log(ended)
       if (ended && playStartTime !== null && playerData) {
         const currentTime = player.current?.currentTime || 0
         const duration = player.current?.duration || currentTime
