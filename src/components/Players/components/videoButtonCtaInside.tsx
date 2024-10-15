@@ -19,7 +19,7 @@ export const VideoButtonCtaInside: FC<VideoButtonCtaProps> = ({
         Buttons.map((button, index) => {
           const startTimeInSeconds = convertDurationToSeconds(button.startTime)
           const endTimeInSeconds = convertDurationToSeconds(button.endTime)
-          console.log(button.buttonPosition)
+
           if (
             button.buttonType === 'inside' && // Verifique o tipo de botão
             currentTime >= startTimeInSeconds &&

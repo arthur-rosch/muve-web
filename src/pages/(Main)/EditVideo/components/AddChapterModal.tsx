@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { useEffect, type FC } from 'react'
 import type { Video } from '../../../../types'
 import { cardVariants } from '../../../../animations'
 import {
@@ -20,12 +20,19 @@ interface AddChapterModalProps {
   isModalOpen: boolean
   chapterData: ChapterData
   handleAddChapter: () => string
+  handleEditChapter: (index: number) => string
   setIsModalOpen: (value: boolean) => void
   setChapterData: React.Dispatch<React.SetStateAction<ChapterData>>
+  isEditChapter?: {
+    chapter: ChapterData
+    index: number
+  }
 }
 
 export const AddChapterModal: FC<AddChapterModalProps> = ({
   video,
+  handleEditChapter,
+  isEditChapter,
   isModalOpen,
   chapterData,
   setChapterData,
@@ -33,7 +40,12 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
   handleAddChapter,
 }) => {
   const handleValidationsChapters = () => {
-    const result = handleAddChapter()
+    let result
+    if (isEditChapter) {
+      result = handleEditChapter(isEditChapter.index)
+    } else {
+      result = handleAddChapter()
+    }
 
     const errorMessages = {
       durationError:
@@ -54,6 +66,19 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
       toastSuccess({ text: 'Capítulo adicionado com sucesso' })
     }
   }
+
+  useEffect(() => {
+    setChapterData({
+      title: isEditChapter?.chapter.title ?? '',
+      startTime: isEditChapter?.chapter.startTime ?? '',
+      endTime: isEditChapter?.chapter.endTime ?? '',
+    })
+  }, [
+    isEditChapter?.chapter.endTime,
+    isEditChapter?.chapter.startTime,
+    isEditChapter?.chapter.title,
+    setChapterData,
+  ])
 
   return (
     <CustomModal.Root

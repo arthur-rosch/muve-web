@@ -19,12 +19,7 @@ export const VideoButtonCtaBelow: FC<VideoButtonCtaProps> = ({
         Buttons.map((button, index) => {
           const startTimeInSeconds = convertDurationToSeconds(button.startTime)
           const endTimeInSeconds = convertDurationToSeconds(button.endTime)
-          console.log(
-            button.buttonType === 'below' &&
-              currentTime >= startTimeInSeconds &&
-              currentTime <= endTimeInSeconds &&
-              !overlayVisible,
-          )
+
           if (
             button.buttonType === 'below' &&
             currentTime >= startTimeInSeconds &&

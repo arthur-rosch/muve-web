@@ -3,7 +3,6 @@ export function convertDurationToSeconds(duration: string): number {
 
   // Verifica se algum valor é NaN (caso a string não esteja no formato correto)
   if (timeParts.some(isNaN)) {
-    console.error('O formato esperado é hh:mm:ss ou mm:ss')
     return 0 // Retorna 0 ou pode lançar um erro
   }
 
@@ -23,6 +22,5 @@ export function convertDurationToSeconds(duration: string): number {
     return 0
   }
 
-  console.log(totalSeconds)
   return totalSeconds
 }

@@ -31,6 +31,7 @@ import {
   UsersThree,
 } from '@phosphor-icons/react'
 import { ChevronDownIcon } from 'lucide-react'
+import { AccordionMenuButton } from './AccordionMenuButton'
 
 interface ConfigMenuProps {
   video: Video
@@ -74,6 +75,10 @@ type FormValues = z.infer<typeof schema>
 export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
   const { editPlayerVideo } = useVideo()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isEditButton, setIsEditButton] = useState<{
+    button: VideoButton
+    index: number
+  }>()
 
   const {
     watch,
@@ -88,13 +93,19 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
 
   const watchedFields = watch()
 
-  const { append } = useFieldArray({
+  const { append, remove, update } = useFieldArray({
     control,
     name: 'VideoButtons',
   })
 
   const handleAddButton = (button: VideoButton) => {
     append(button)
+
+    return 'success'
+  }
+
+  const handleEditButton = (updatedButton: VideoButton, index: number) => {
+    update(index, updatedButton)
 
     return 'success'
   }
@@ -672,6 +683,13 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                                   {button.startTime} | {button.endTime}
                                 </span>
                               </div>
+                              <AccordionMenuButton
+                                index={index}
+                                button={button}
+                                handleDeleted={remove}
+                                setIsModalOpen={setIsModalOpen}
+                                setIsEditButton={setIsEditButton}
+                              />
                             </div>
                           </div>
                         )
@@ -799,9 +817,11 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
         </Button>
       </form>
       <AddButtonModal
+        isEditButton={isEditButton}
         isModalOpen={isModalOpen}
-        handleAddButton={handleAddButton}
         setIsModalOpen={setIsModalOpen}
+        handleAddButton={handleAddButton}
+        handleEditButton={handleEditButton}
       />
     </>
   )

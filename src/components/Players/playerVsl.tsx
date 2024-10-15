@@ -152,10 +152,12 @@ export function PlayerVsl({ video }: { video: Video }) {
       if (playerInstance) {
         playerInstance.addEventListener('play', handlePlay)
         playerInstance.addEventListener('pause', handlePause)
+        playerInstance.addEventListener('ended', handlePause)
 
         return () => {
           playerInstance.removeEventListener('play', handlePlay)
           playerInstance.removeEventListener('pause', handlePause)
+          playerInstance.removeEventListener('ended', handlePause)
         }
       }
     }

@@ -25,6 +25,12 @@ import {
   CardsThree,
 } from '@phosphor-icons/react'
 
+interface ChapterData {
+  title: string
+  startTime: string
+  endTime: string
+}
+
 interface ConfigMenuProps {
   video: Video
   setVideo: (video: Video | ((prevVideo: Video) => Video)) => void
@@ -102,7 +108,12 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
     endTime: '',
   })
 
-  const { fields, append, remove } = useFieldArray({
+  const [isEditChapter, setIsEditChapter] = useState<{
+    chapter: ChapterData
+    index: number
+  }>()
+
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: 'Chapter',
   })
@@ -142,6 +153,61 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
 
       append({ title, startTime, endTime })
       console.log(chapterData)
+      setChapterData({ title: '', startTime: '', endTime: '' })
+
+      return 'success'
+    }
+
+    return 'error'
+  }
+
+  const handleEditChapter = (index: number) => {
+    const { title, startTime, endTime } = chapterData
+
+    if (title && startTime && endTime) {
+      const convertToSeconds = (time: string) => {
+        const [hours, minutes, seconds] = time.split(':').map(Number)
+        return hours * 3600 + minutes * 60 + seconds
+      }
+
+      const newDuration = convertToSeconds(video.duration)
+      const newStartTime = convertToSeconds(startTime)
+      const newEndTime = convertToSeconds(endTime)
+
+      console.log(newStartTime, newEndTime)
+
+      // Validação de início e término
+      if (newStartTime >= newEndTime) {
+        return 'O horário de início não pode ser maior ou igual ao horário de término.'
+      }
+
+      // Validação de duração do vídeo
+      if (newEndTime > newDuration) {
+        return 'Não é possível adicionar um capítulo que ultrapassa a duração do vídeo.'
+      }
+
+      // Validação de sobreposição ignorando o capítulo atual (com o índice recebido)
+      const isOverlapping = fields.some((chapter, chapterIndex) => {
+        if (chapterIndex === index) {
+          return false // Ignora a validação para o capítulo que está sendo editado
+        }
+        const chapterStartTime = convertToSeconds(chapter.startTime)
+        const chapterEndTime = convertToSeconds(chapter.endTime)
+
+        // Verifica se os horários do novo capítulo sobrepõem algum outro
+        return newStartTime < chapterEndTime && newEndTime > chapterStartTime
+      })
+
+      // Se houver sobreposição
+      if (isOverlapping) {
+        return 'Não é possível adicionar um capítulo que sobreponha um intervalo existente.'
+      }
+
+      // Atualiza o capítulo
+      update(index, { title, startTime, endTime })
+      console.log(chapterData)
+
+      // Limpa os dados do formulário
       setChapterData({ title: '', startTime: '', endTime: '' })
 
       return 'success'
@@ -658,6 +724,9 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                                 </span>
                               </div>
                               <AccordionMenuChapter
+                                chapter={chapter}
+                                setIsEditChapter={setIsEditChapter}
+                                setIsModalOpen={setIsModalOpen}
                                 handleDeleted={remove}
                                 index={index}
                               />
@@ -689,10 +758,12 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
       </form>
       <AddChapterModal
         video={video}
+        isEditChapter={isEditChapter}
         chapterData={chapterData}
         isModalOpen={isModalOpen}
         setChapterData={setChapterData}
         setIsModalOpen={setIsModalOpen}
+        handleEditChapter={handleEditChapter}
         handleAddChapter={handleAddChapter}
       />
     </>

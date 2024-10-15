@@ -1,38 +1,33 @@
-import { useState, type FC } from 'react'
 import { motion } from 'framer-motion'
+import { useState, type FC } from 'react'
+import type { VideoButton } from '../../../../types'
 import { itemVariants, menuVariants } from '../../../../animations'
 import {
   DotsThreeOutlineVertical,
-  Trash,
   PencilSimple,
+  Trash,
 } from '@phosphor-icons/react'
 
-interface ChapterData {
-  title: string
-  startTime: string
-  endTime: string
-}
-
-interface AccordionMenuChapterProps {
+interface AccordionMenuButtonProps {
   index: number
-  chapter: ChapterData
-  setIsEditChapter: ({
-    chapter,
+  button: VideoButton
+  handleDeleted: (index: number) => void
+  setIsEditButton: ({
+    button,
     index,
   }: {
-    chapter: ChapterData
+    button: VideoButton
     index: number
   }) => void
-  handleDeleted: (index: number) => void
   setIsModalOpen: (value: boolean) => void
 }
 
-export const AccordionMenuChapter: FC<AccordionMenuChapterProps> = ({
+export const AccordionMenuButton: FC<AccordionMenuButtonProps> = ({
   handleDeleted,
+  button,
   index,
-  chapter,
-  setIsEditChapter,
   setIsModalOpen,
+  setIsEditButton,
 }) => {
   const [isOpen, setIsOpen] = useState(false)
 
@@ -65,8 +60,8 @@ export const AccordionMenuChapter: FC<AccordionMenuChapterProps> = ({
             <ul className="py-2">
               <motion.li
                 onClick={() => {
-                  setIsEditChapter({
-                    chapter,
+                  setIsEditButton({
+                    button,
                     index,
                   })
                   setIsModalOpen(true)

@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react'
+import { useEffect, useState, type FC } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -61,7 +61,12 @@ export const addButtonSchema = z.object({
 
 interface AddButtonModalProps {
   isModalOpen: boolean
+  isEditButton?: {
+    button: VideoButton
+    index: number
+  }
   handleAddButton: (data: VideoButton) => string
+  handleEditButton: (data: VideoButton, index: number) => string
 
   setIsModalOpen: (value: boolean) => void
 }
@@ -70,8 +75,10 @@ type AddButtonFormData = z.infer<typeof addButtonSchema>
 
 export const AddButtonModal: FC<AddButtonModalProps> = ({
   isModalOpen,
+  isEditButton,
   setIsModalOpen,
   handleAddButton,
+  handleEditButton,
 }) => {
   const [createdSuccess, setCreatedSuccess] = useState(false)
   const [selectedPosition, setSelectedPosition] = useState<'below' | 'inside'>(
@@ -80,16 +87,14 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
   const [gridPosition, setGridPosition] = useState<string | null>(null)
 
   const {
+    reset,
     control,
     handleSubmit,
     setValue,
-    reset,
+
     formState: { errors },
   } = useForm<AddButtonFormData>({
     resolver: zodResolver(addButtonSchema),
-    defaultValues: {
-      buttonType: selectedPosition,
-    },
   })
 
   const onSubmit = (data: AddButtonFormData) => {
@@ -97,10 +102,46 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
       ...data,
       buttonPositions: gridPosition,
     })
-    handleAddButton(data)
+
+    if (isEditButton) {
+      handleEditButton(data, isEditButton.index)
+    } else {
+      handleAddButton(data)
+    }
+
     setCreatedSuccess(!createdSuccess)
     reset()
   }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const setFormValuesForEdit = () => {
+    if (isEditButton) {
+      const { button } = isEditButton
+
+      // Definindo os valores no formulário usando os campos da interface VideoButton
+      setValue('buttonType', button.buttonType)
+      setValue('buttonText', button.buttonText)
+      setValue('buttonSize', button.buttonSize)
+      setValue('buttonLink', button.buttonLink)
+      setValue('startTime', button.startTime)
+      setValue('endTime', button.endTime)
+      setValue(
+        'buttonAfterTheVideoEnds',
+        button.buttonAfterTheVideoEnds ?? false,
+      ) // Default para false se não definido
+      setValue('backgroundColor', button.backgroundColor)
+      setValue('textColor', button.textColor)
+      setValue('hoverBackgroundColor', button.hoverBackgroundColor)
+      setValue('hoverTextColor', button.hoverTextColor)
+      setValue('buttonPosition', button.buttonPosition ?? 'center') // Default para null se não definido
+    } else {
+      reset() // Reseta o formulário caso não seja edição
+    }
+  }
+
+  useEffect(() => {
+    setFormValuesForEdit()
+  }, [setFormValuesForEdit])
 
   return (
     <CustomModal.Root
