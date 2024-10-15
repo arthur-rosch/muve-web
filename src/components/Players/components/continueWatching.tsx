@@ -15,7 +15,7 @@ export const ContinueWatching = ({
       {/* Modal centralizado e cobrindo toda a tela */}
       <div className="absolute inset-0 flex items-center justify-center z-20">
         <div className="bg-black bg-opacity-75 text-white p-6 rounded-md text-center">
-          <p>Você pausou o vídeo</p>
+          <p>Você já começou a assistir esse vídeo</p>
           <div className="mt-4 flex flex-col sm:flex-row sm:space-x-4">
             <button
               onClick={handleResume}
