@@ -175,7 +175,7 @@ export function Player({ video }: { video: Video }) {
 
   useEffect(() => {
     const handleEnded = async () => {
-      console.log(ended)
+      // Garante que a requisição será feita apenas se o vídeo terminou, e playEnd ainda não foi setado
       if (ended && playStartTime !== null && playerData && !playEnd) {
         const currentTime = player.current?.currentTime || 0
         const duration = player.current?.duration || currentTime
@@ -187,15 +187,18 @@ export function Player({ video }: { video: Video }) {
             startTimestamp: playStartTime,
             videoId: video.id,
           })
-          setPlayEnd(true)
+          setPlayEnd(true) // Marca que a requisição foi feita
         } catch (error) {
           console.error('Erro ao adicionar timestamps:', error)
         }
       }
     }
 
-    handleEnded()
-  }, [addViewTimestamps, ended, playEnd, playStartTime, playerData, video.id])
+    // Se ended for true e ainda não tiver enviado a requisição, executa handleEnded
+    if (ended && !playEnd) {
+      handleEnded()
+    }
+  }, [ended, playEnd, addViewTimestamps, playStartTime, playerData, video.id])
 
   return (
     <>
@@ -223,7 +226,7 @@ export function Player({ video }: { video: Video }) {
               />
             </MediaProvider>
 
-            {showResumeMenu && (
+            {video.continueWatching && showResumeMenu && (
               <ContinueWatching
                 handleRestart={handleRestart}
                 handleResume={handleResume}
