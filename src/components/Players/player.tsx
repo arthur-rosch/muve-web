@@ -39,6 +39,7 @@ export function Player({ video }: { video: Video }) {
   const { ended } = useMediaStore(player)
   const { addViewTimestamps, addViewUnique } = useAnalytics()
 
+  const [playEnd, setPlayEnd] = useState<boolean>(false)
   const [showResumeMenu, setShowResumeMenu] = useState(false)
   const [lastTime, setLastTime] = useState<number | null>(null)
   const [playStartTime, setPlayStartTime] = useState<number | null>(0)
@@ -175,7 +176,7 @@ export function Player({ video }: { video: Video }) {
   useEffect(() => {
     const handleEnded = async () => {
       console.log(ended)
-      if (ended && playStartTime !== null && playerData) {
+      if (ended && playStartTime !== null && playerData && !playEnd) {
         const currentTime = player.current?.currentTime || 0
         const duration = player.current?.duration || currentTime
 
@@ -186,6 +187,7 @@ export function Player({ video }: { video: Video }) {
             startTimestamp: playStartTime,
             videoId: video.id,
           })
+          setPlayEnd(true)
         } catch (error) {
           console.error('Erro ao adicionar timestamps:', error)
         }
@@ -193,7 +195,7 @@ export function Player({ video }: { video: Video }) {
     }
 
     handleEnded()
-  }, [addViewTimestamps, ended, playStartTime, playerData, video.id])
+  }, [addViewTimestamps, ended, playEnd, playStartTime, playerData, video.id])
 
   return (
     <>

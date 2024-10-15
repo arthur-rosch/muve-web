@@ -37,6 +37,7 @@ export function PlayerVsl({ video }: { video: Video }) {
   const { addViewTimestamps, addViewUnique } = useAnalytics()
 
   const [progress, setProgress] = useState(0)
+  const [playEnd, setPlayEnd] = useState<boolean>(false)
   const [transitionDuration, setTransitionDuration] = useState(0)
   const [playStartTime, setPlayStartTime] = useState<number | null>(0)
   const [playerData, setPlayerData] = useState<PlayerDataVariables>()
@@ -217,7 +218,7 @@ export function PlayerVsl({ video }: { video: Video }) {
 
   useEffect(() => {
     const handleEnded = async () => {
-      if (ended && playStartTime !== null && playerData) {
+      if (ended && playStartTime !== null && playerData && !playEnd) {
         const currentTime = player.current?.currentTime || 0
         const duration = player.current?.duration || currentTime
 
@@ -228,6 +229,7 @@ export function PlayerVsl({ video }: { video: Video }) {
             startTimestamp: playStartTime,
             videoId: video.id,
           })
+          setPlayEnd(true)
         } catch (error) {
           console.error('Erro ao adicionar timestamps:', error)
         }
@@ -235,7 +237,7 @@ export function PlayerVsl({ video }: { video: Video }) {
     }
 
     handleEnded()
-  }, [addViewTimestamps, ended, playStartTime, playerData, video.id])
+  }, [addViewTimestamps, ended, playEnd, playStartTime, playerData, video.id])
 
   return (
     <>
