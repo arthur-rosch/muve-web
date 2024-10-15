@@ -71,6 +71,22 @@ export function Player({ video }: { video: Video }) {
     nativeEvent: MediaCanPlayEvent,
   ) {}
 
+  async function onCanEnd() {
+    const currentPauseTime = player.current?.currentTime || 0 // Pegue o tempo atual do player
+    if (playStartTime !== null) {
+      try {
+        await addViewTimestamps.mutateAsync({
+          ...playerData!,
+          endTimestamp: currentPauseTime,
+          startTimestamp: playStartTime,
+          videoId: video.id,
+        })
+      } catch (error) {
+        console.error('Erro ao adicionar timestamps:', error)
+      }
+    }
+  }
+
   function onPause() {
     const playerRef = player.current
     if (playerRef) {
@@ -185,6 +201,7 @@ export function Player({ video }: { video: Video }) {
             posterLoad="visible"
             onCanPlay={onCanPlay}
             controls={false}
+            onEnded={onCanEnd}
             crossOrigin="anonymous"
             aspectRatio={video.format}
             onProviderChange={onProviderChange}

@@ -68,6 +68,22 @@ export function PlayerVsl({ video }: { video: Video }) {
     }
   }
 
+  async function onCanEnd() {
+    const currentPauseTime = player.current?.currentTime || 0 // Pegue o tempo atual do player
+    if (playStartTime !== null) {
+      try {
+        await addViewTimestamps.mutateAsync({
+          ...playerData!,
+          endTimestamp: currentPauseTime,
+          startTimestamp: playStartTime,
+          videoId: video.id,
+        })
+      } catch (error) {
+        console.error('Erro ao adicionar timestamps:', error)
+      }
+    }
+  }
+
   function onCanPlay(
     detail: MediaCanPlayDetail,
     nativeEvent: MediaCanPlayEvent,
@@ -217,6 +233,7 @@ export function PlayerVsl({ video }: { video: Video }) {
             controls={false}
             onProviderChange={onProviderChange}
             src={urlVideo}
+            onEnded={onCanEnd}
             muted={overlayVisible}
             autoPlay={video.smartAutoPlay}
             className="w-full h-[85%] relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
