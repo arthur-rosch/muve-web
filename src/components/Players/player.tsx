@@ -19,6 +19,7 @@ import {
   type MediaPlayerInstance,
   type MediaProviderAdapter,
   type MediaProviderChangeEvent,
+  useMediaStore,
 } from '@vidstack/react'
 
 const setVideoTimeCookie = (videoId: string, time: number) => {
@@ -35,6 +36,7 @@ const getVideoTimeFromCookie = (videoId: string): number | null => {
 export function Player({ video }: { video: Video }) {
   const player = useRef<MediaPlayerInstance>(null)
 
+  const { ended } = useMediaStore(player)
   const { addViewTimestamps, addViewUnique } = useAnalytics()
 
   const [showResumeMenu, setShowResumeMenu] = useState(false)
@@ -70,22 +72,6 @@ export function Player({ video }: { video: Video }) {
     detail: MediaCanPlayDetail,
     nativeEvent: MediaCanPlayEvent,
   ) {}
-
-  async function onCanEnd() {
-    const currentPauseTime = player.current?.currentTime || 0 // Pegue o tempo atual do player
-    if (playStartTime !== null) {
-      try {
-        await addViewTimestamps.mutateAsync({
-          ...playerData!,
-          endTimestamp: currentPauseTime,
-          startTimestamp: playStartTime,
-          videoId: video.id,
-        })
-      } catch (error) {
-        console.error('Erro ao adicionar timestamps:', error)
-      }
-    }
-  }
 
   function onPause() {
     const playerRef = player.current
@@ -169,12 +155,10 @@ export function Player({ video }: { video: Video }) {
       if (playerInstance) {
         playerInstance.addEventListener('play', handlePlay)
         playerInstance.addEventListener('pause', handlePause)
-        playerInstance.addEventListener('ended', handlePause)
 
         return () => {
           playerInstance.removeEventListener('play', handlePlay)
           playerInstance.removeEventListener('pause', handlePause)
-          playerInstance.removeEventListener('ended', handlePause)
         }
       }
     }
@@ -187,6 +171,29 @@ export function Player({ video }: { video: Video }) {
       setShowResumeMenu(true)
     }
   }, [video.id])
+
+  useEffect(() => {
+    const handleEnded = async () => {
+      if (ended && playStartTime !== null && playerData) {
+        const currentTime = player.current?.currentTime || 0
+        const duration = player.current?.duration || currentTime
+
+        try {
+          await addViewTimestamps.mutateAsync({
+            ...playerData,
+            endTimestamp: duration,
+            startTimestamp: playStartTime,
+            videoId: video.id,
+          })
+        } catch (error) {
+          console.error('Erro ao adicionar timestamps:', error)
+        }
+      }
+    }
+
+    handleEnded()
+  }, [addViewTimestamps, ended, playStartTime, playerData, video.id])
+
   return (
     <>
       {video && (
@@ -201,7 +208,6 @@ export function Player({ video }: { video: Video }) {
             posterLoad="visible"
             onCanPlay={onCanPlay}
             controls={false}
-            onEnded={onCanEnd}
             crossOrigin="anonymous"
             aspectRatio={video.format}
             onProviderChange={onProviderChange}

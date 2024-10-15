@@ -168,12 +168,10 @@ export function PlayerVsl({ video }: { video: Video }) {
       if (playerInstance) {
         playerInstance.addEventListener('play', handlePlay)
         playerInstance.addEventListener('pause', handlePause)
-        playerInstance.addEventListener('ended', handlePause)
 
         return () => {
           playerInstance.removeEventListener('play', handlePlay)
           playerInstance.removeEventListener('pause', handlePause)
-          playerInstance.removeEventListener('ended', handlePause)
         }
       }
     }
@@ -216,6 +214,28 @@ export function PlayerVsl({ video }: { video: Video }) {
       }
     }
   }, [video.smartAutoPlay])
+
+  useEffect(() => {
+    const handleEnded = async () => {
+      if (ended && playStartTime !== null && playerData) {
+        const currentTime = player.current?.currentTime || 0
+        const duration = player.current?.duration || currentTime
+
+        try {
+          await addViewTimestamps.mutateAsync({
+            ...playerData,
+            endTimestamp: duration,
+            startTimestamp: playStartTime,
+            videoId: video.id,
+          })
+        } catch (error) {
+          console.error('Erro ao adicionar timestamps:', error)
+        }
+      }
+    }
+
+    handleEnded()
+  }, [addViewTimestamps, ended, playStartTime, playerData, video.id])
 
   return (
     <>
