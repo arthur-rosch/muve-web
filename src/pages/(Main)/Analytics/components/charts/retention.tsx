@@ -50,7 +50,7 @@ export const ChartRetention: FC<ChartProps> = ({
   useEffect(() => {
     const interval = 60
     const totalDuration = convertDurationToSeconds(selectedVideo.duration)
-    console.log(totalDuration)
+
     const numIntervals = Math.ceil(totalDuration / interval)
 
     let maxEndTime = 0
@@ -82,7 +82,7 @@ export const ChartRetention: FC<ChartProps> = ({
         retentionArray[i]++
       }
     })
-
+    console.log(filteredViews)
     const totalFilteredViews = filteredViews.length
 
     const retentionPercentages = retentionArray
@@ -98,7 +98,7 @@ export const ChartRetention: FC<ChartProps> = ({
           Retenção: (count / totalFilteredViews) * 100,
         }
       })
-
+    console.log(retentionPercentages)
     setChartData(retentionPercentages)
 
     const tableMetrics: RetentionMetrics[] = Array(numIntervals)
