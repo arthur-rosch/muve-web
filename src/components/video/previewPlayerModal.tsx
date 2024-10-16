@@ -24,7 +24,10 @@ export const PreviewPlayerModal: FC<PreviewPlayerModalProps> = ({
   const [copiedIframe, setCopiedIframe] = useState(false)
   const [copiedLink, setCopiedLink] = useState(false)
 
-  const iframeCode = `<div style="position: relative; width: 100%; max-height: 40rem; margin-top: 8px; aspect-ratio: ${video.format};"><iframe style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" src="https://web.muveplayer.com/player?videoId=${video.id}" allow="autoplay; gyroscope; picture-in-picture;" allowfullscreen frameBorder="0"></iframe></div>`
+  const iframeCode16 = `<div style="width:100%;max-width:60rem;margin:auto"><div style="position:relative;width:100%;overflow:hidden;padding-top:56.25%;transition:0.25s;"><iframe style="position:absolute;top:0;left:0;bottom:0;right:0;width:100%;height:100%" src="https://web.muveplayer.com/player?videoId=${video.id}" scrolling="no" frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe></div></div>`
+  const iframeCode9 = `<div style="width:100%;max-width:360px;margin:auto"><div style="position:relative;width:100%;overflow:hidden;padding-top:177.7%;transition:0.25s;"><iframe style="position:absolute;top:0;left:0;bottom:0;right:0;width:100%;height:100%" src="https://web.muveplayer.com/player?videoId=${video.id}" scrolling="no" frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe></div></div>`
+
+  const iframeCode = video.format === '16/9' ? iframeCode16 : iframeCode9
   const videoLink = `https://web.muveplayer.com/player?videoId=${video.id}`
 
   const handleCopyIframe = () => {
