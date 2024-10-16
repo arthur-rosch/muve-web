@@ -8,13 +8,13 @@ import type { VideoButton } from '../../../../types'
 
 const buttonPositions = [
   'top-left',
-  'top',
-  'top-right',
-  'left',
-  'center',
-  'right',
+  'left-center',
   'bottom-left',
-  'bottom',
+  'top-center',
+  'center',
+  'bottom-center',
+  'top-right',
+  'right-center',
   'bottom-right',
 ] as const
 
@@ -52,11 +52,6 @@ export const addButtonSchema = z.object({
   hoverTextColor: z.string({
     required_error: 'Cor do texto ao passar o mouse é obrigatória',
   }),
-  buttonPosition: z
-    .enum(buttonPositions, {
-      message: 'Selecione uma posição válida',
-    })
-    .optional(),
 })
 
 interface AddButtonModalProps {
@@ -84,7 +79,7 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
   const [selectedPosition, setSelectedPosition] = useState<'below' | 'inside'>(
     'inside',
   )
-  const [gridPosition, setGridPosition] = useState<string | null>(null)
+  const [gridPosition, setGridPosition] = useState<string>('center')
 
   const {
     reset,
@@ -102,20 +97,29 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
       ...data,
       buttonPositions: gridPosition,
     })
-
+    console.log(buttonPositions)
     if (isEditButton) {
-      handleEditButton(data, isEditButton.index)
+      handleEditButton(
+        {
+          ...data,
+          buttonPosition: gridPosition,
+        },
+        isEditButton.index,
+      )
     } else {
-      handleAddButton(data)
+      handleAddButton({
+        ...data,
+        buttonPosition: gridPosition,
+      })
     }
 
     setCreatedSuccess(!createdSuccess)
     reset()
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const setFormValuesForEdit = () => {
+  useEffect(() => {
     if (isEditButton) {
+      console.log('Teste')
       const { button } = isEditButton
 
       // Definindo os valores no formulário usando os campos da interface VideoButton
@@ -133,15 +137,10 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
       setValue('textColor', button.textColor)
       setValue('hoverBackgroundColor', button.hoverBackgroundColor)
       setValue('hoverTextColor', button.hoverTextColor)
-      setValue('buttonPosition', button.buttonPosition ?? 'center') // Default para null se não definido
     } else {
       reset() // Reseta o formulário caso não seja edição
     }
-  }
-
-  useEffect(() => {
-    setFormValuesForEdit()
-  }, [setFormValuesForEdit])
+  }, [isEditButton, reset, setValue])
 
   return (
     <CustomModal.Root
@@ -555,11 +554,11 @@ export const ButtonPositionSelector: FC<ButtonPositionSelectorProps> = ({
 }) => {
   // Define as posições com seus respectivos rótulos
   const positions = [
-    ['top-left', 'top', 'top-right'],
-    ['left', 'center', 'right'],
-    ['bottom-left', 'bottom', 'bottom-right'],
+    ['top-left', 'left-center', 'bottom-left'],
+    ['top-center', 'center', 'bottom-center'],
+    ['top-right', 'right-center', 'bottom-right'],
   ]
-
+  console.log(selectedPosition)
   return (
     <div className="flex gap-2">
       {positions.map((row, rowIndex) => (

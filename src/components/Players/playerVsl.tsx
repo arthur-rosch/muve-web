@@ -216,32 +216,25 @@ export function PlayerVsl({ video }: { video: Video }) {
     }
   }, [video.smartAutoPlay])
 
-  useEffect(() => {
-    const handleEnded = async () => {
-      // Garante que a requisição será feita apenas se o vídeo terminou, e playEnd ainda não foi setado
-      if (ended && playStartTime !== null && playerData && !playEnd) {
-        const currentTime = player.current?.currentTime || 0
-        const duration = player.current?.duration || currentTime
+  const handleEnded = async () => {
+    // Garante que a requisição será feita apenas se o vídeo terminou, e playEnd ainda não foi setado
+    if (ended && playStartTime !== null && playerData && !playEnd) {
+      const currentTime = player.current?.currentTime || 0
+      const duration = player.current?.duration || currentTime
 
-        try {
-          await addViewTimestamps.mutateAsync({
-            ...playerData,
-            endTimestamp: duration,
-            startTimestamp: playStartTime,
-            videoId: video.id,
-          })
-          setPlayEnd(true) // Marca que a requisição foi feita
-        } catch (error) {
-          console.error('Erro ao adicionar timestamps:', error)
-        }
+      try {
+        await addViewTimestamps.mutateAsync({
+          ...playerData,
+          endTimestamp: duration,
+          startTimestamp: playStartTime,
+          videoId: video.id,
+        })
+        setPlayEnd(true) // Marca que a requisição foi feita
+      } catch (error) {
+        console.error('Erro ao adicionar timestamps:', error)
       }
     }
-
-    // Se ended for true e ainda não tiver enviado a requisição, executa handleEnded
-    if (ended && !playEnd) {
-      handleEnded()
-    }
-  }, [ended, playEnd, addViewTimestamps, playStartTime, playerData, video.id])
+  }
 
   return (
     <>
@@ -259,7 +252,7 @@ export function PlayerVsl({ video }: { video: Video }) {
             controls={false}
             onProviderChange={onProviderChange}
             src={urlVideo}
-            onEnded={onCanEnd}
+            onEnded={handleEnded}
             muted={overlayVisible}
             autoPlay={video.smartAutoPlay}
             className="w-full h-[85%] relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"

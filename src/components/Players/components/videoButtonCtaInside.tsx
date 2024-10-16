@@ -29,17 +29,22 @@ export const VideoButtonCtaInside: FC<VideoButtonCtaProps> = ({
             // Defina a classe com base na posição do botão
             const buttonPositionClass = {
               'top-left': 'absolute top-4 left-4',
-              top: 'absolute top-4 left-1/2 transform -translate-x-1/2',
-              'top-right': 'absolute top-4 right-4',
-              left: 'absolute top-1/2 left-4 transform -translate-y-1/2',
+              'left-center':
+                'absolute top-1/2 left-4 transform -translate-y-1/2',
+              'bottom-left': 'absolute bottom-4 left-4',
+              'top-center':
+                'absolute top-4 left-1/2 transform -translate-x-1/2',
               center:
                 'absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2',
-              right: 'absolute top-1/2 right-4 transform -translate-y-1/2',
-              'bottom-left': 'absolute bottom-4 left-4',
-              bottom: 'absolute bottom-4 left-1/2 transform -translate-x-1/2',
+              'bottom-center':
+                'absolute bottom-4 left-1/2 transform -translate-x-1/2',
+              'top-right': 'absolute top-4 right-4',
+              'right-center':
+                'absolute top-1/2 right-4 transform -translate-y-1/2',
               'bottom-right': 'absolute bottom-4 right-4',
-            }[button.buttonPosition || 'bottom'] // Posição padrão se não estiver definida
+            }[button.buttonPosition || 'bottom-center'] // Posição padrão se não estiver definida
 
+            console.log(buttonPositionClass, button.buttonPosition)
             return (
               <a
                 href={button.buttonLink}
