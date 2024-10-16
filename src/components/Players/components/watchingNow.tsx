@@ -15,7 +15,7 @@ export function WatchingNow({ video }: WatchingNowProps) {
   }, [])
 
   return (
-    <div className="w-full z-50">
+    <div className="w-full z-50 mb-6">
       <div className="relative w-full h-14">
         <div
           style={{
