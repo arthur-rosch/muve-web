@@ -62,7 +62,7 @@ export const Folder: FC = () => {
         />
 
         {filteredVideos.length > 0 ? (
-          <div className="min-h-full max-h-[28rem] grid grid-cols-3 gap-6 mt-10 overflow-auto pb-20 pr-4">
+          <div className="min-h-full max-h-[40rem] grid grid-cols-3 gap-6 mt-10 overflow-auto pb-20 pr-4">
             {filteredVideos.map((video) => (
               <CardVideo
                 key={video.id}

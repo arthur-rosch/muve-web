@@ -154,7 +154,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
       }
     })
   }, [video, setValue])
-
+  console.log(video)
   return (
     <>
       <form

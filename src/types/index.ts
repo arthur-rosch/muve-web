@@ -177,18 +177,6 @@ export interface Signature {
   created_at: Date
 }
 
-// Define as posições do botão como tipos literais
-type ButtonPosition =
-  | 'top-left'
-  | 'top'
-  | 'top-right'
-  | 'left'
-  | 'center'
-  | 'right'
-  | 'bottom-left'
-  | 'bottom'
-  | 'bottom-right'
-
 // Define a interface para o botão
 export interface VideoButton {
   buttonType: 'below' | 'inside'
@@ -202,7 +190,7 @@ export interface VideoButton {
   textColor: string
   hoverBackgroundColor: string
   hoverTextColor: string
-  buttonPosition?: ButtonPosition
+  buttonPosition?: string
 }
 
 export interface EditPlayerVideoProps {
