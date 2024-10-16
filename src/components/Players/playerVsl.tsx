@@ -239,7 +239,7 @@ export function PlayerVsl({ video }: { video: Video }) {
   return (
     <>
       {video && (
-        <>
+        <div className="relative w-full h-screen z-0">
           <MediaPlayer
             ref={player}
             crossorigin
@@ -379,7 +379,7 @@ export function PlayerVsl({ video }: { video: Video }) {
               overlayVisible={overlayVisible}
             />
           )}
-        </>
+        </div>
       )}
     </>
   )
