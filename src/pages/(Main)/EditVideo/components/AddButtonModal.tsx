@@ -6,18 +6,6 @@ import { cardVariants } from '../../../../animations'
 import { Input, Button, CustomModal, CheckBox } from '../../../../components'
 import type { VideoButton } from '../../../../types'
 
-const buttonPositions = [
-  'top-left',
-  'left-center',
-  'bottom-left',
-  'top-center',
-  'center',
-  'bottom-center',
-  'top-right',
-  'right-center',
-  'bottom-right',
-] as const
-
 export const addButtonSchema = z.object({
   buttonType: z.enum(['below', 'inside'], {
     required_error: 'A posição do botão é obrigatória',
@@ -52,6 +40,7 @@ export const addButtonSchema = z.object({
   hoverTextColor: z.string({
     required_error: 'Cor do texto ao passar o mouse é obrigatória',
   }),
+  buttonPosition: z.string().nullable().optional(),
 })
 
 interface AddButtonModalProps {
@@ -93,11 +82,6 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
   })
 
   const onSubmit = (data: AddButtonFormData) => {
-    console.log('Form Data:', {
-      ...data,
-      buttonPositions: gridPosition,
-    })
-    console.log(buttonPositions)
     if (isEditButton) {
       handleEditButton(
         {
@@ -117,13 +101,17 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
     reset()
   }
 
+  const setPositionButton = (value: string) => {
+    setGridPosition(value)
+    console.log(value)
+  }
+
   useEffect(() => {
     if (isEditButton) {
-      console.log('Teste')
       const { button } = isEditButton
 
-      // Definindo os valores no formulário usando os campos da interface VideoButton
       setValue('buttonType', button.buttonType)
+      setSelectedPosition(button.buttonType)
       setValue('buttonText', button.buttonText)
       setValue('buttonSize', button.buttonSize)
       setValue('buttonLink', button.buttonLink)
@@ -137,10 +125,12 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
       setValue('textColor', button.textColor)
       setValue('hoverBackgroundColor', button.hoverBackgroundColor)
       setValue('hoverTextColor', button.hoverTextColor)
+      setValue('buttonPosition', button.buttonPosition)
     } else {
-      reset() // Reseta o formulário caso não seja edição
+      reset()
+      setValue('buttonType', selectedPosition)
     }
-  }, [isEditButton, reset, setValue])
+  }, [isEditButton, reset, selectedPosition, setValue])
 
   return (
     <CustomModal.Root
@@ -208,7 +198,7 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
                 <h3 className="text-white mb-2">Posição do botão:</h3>
                 <ButtonPositionSelector
                   selectedPosition={gridPosition}
-                  onSelect={setGridPosition}
+                  onSelect={setPositionButton}
                 />
               </div>
             )}
@@ -558,7 +548,7 @@ export const ButtonPositionSelector: FC<ButtonPositionSelectorProps> = ({
     ['top-center', 'center', 'bottom-center'],
     ['top-right', 'right-center', 'bottom-right'],
   ]
-  console.log(selectedPosition)
+
   return (
     <div className="flex gap-2">
       {positions.map((row, rowIndex) => (

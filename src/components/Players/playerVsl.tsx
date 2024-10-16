@@ -239,7 +239,7 @@ export function PlayerVsl({ video }: { video: Video }) {
   return (
     <>
       {video && (
-        <div className="relative w-full h-full z-0">
+        <>
           <MediaPlayer
             ref={player}
             crossorigin
@@ -255,7 +255,7 @@ export function PlayerVsl({ video }: { video: Video }) {
             onEnded={handleEnded}
             muted={overlayVisible}
             autoPlay={video.smartAutoPlay}
-            className="w-full h-[85%] relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
+            className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
           >
             <MediaProvider>
               <Poster
@@ -379,7 +379,7 @@ export function PlayerVsl({ video }: { video: Video }) {
               overlayVisible={overlayVisible}
             />
           )}
-        </div>
+        </>
       )}
     </>
   )
