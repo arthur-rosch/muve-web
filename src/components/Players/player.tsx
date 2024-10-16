@@ -211,7 +211,7 @@ export function Player({ video }: { video: Video }) {
             onEnded={handleEnded}
             aspectRatio={video.format}
             onProviderChange={onProviderChange}
-            className="w-full h-[95%] relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
+            className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
           >
             <MediaProvider>
               <Poster
