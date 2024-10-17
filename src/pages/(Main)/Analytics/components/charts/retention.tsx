@@ -1,5 +1,5 @@
 import { useEffect, useState, type FC } from 'react'
-import type { ChartProps } from '../../../../../types'
+import type { ChartProps, ViewTimestamp } from '../../../../../types'
 import { convertDurationToSeconds, dataFormatter } from '../../../../../utils'
 import {
   // Table,
@@ -55,22 +55,59 @@ export const ChartRetention: FC<ChartProps> = ({
     // Array para armazenar a quantidade de usuários que assistiram até cada segundo
     const retentionArray = Array(totalDuration + 1).fill(0)
 
+    // Criar um mapa para acessar as visualizações por startTimestamp rapidamente
+    const viewMap = new Map<number, ViewTimestamp[]>()
+    analytics.viewTimestamps.forEach((view) => {
+      const start = Math.floor(view.startTimestamp)
+      if (!viewMap.has(start)) {
+        viewMap.set(start, [])
+      }
+      viewMap.get(start)?.push(view)
+    })
+
+    // Função para encontrar visualizações encadeadas de forma otimizada
+    const findChainedViews = (
+      startView: ViewTimestamp,
+      viewMap: Map<number, ViewTimestamp[]>,
+    ) => {
+      let endTimestamp = Math.min(
+        Math.floor(startView.endTimestamp),
+        totalDuration,
+      )
+
+      let nextViews = viewMap.get(endTimestamp)
+
+      // Continuar encadeando visualizações enquanto houver correspondências
+      while (nextViews && nextViews.length > 0) {
+        const nextView = nextViews.shift() // Pegar a próxima visualização disponível
+        if (nextView) {
+          endTimestamp = Math.min(
+            Math.floor(nextView.endTimestamp),
+            totalDuration,
+          )
+          nextViews = viewMap.get(endTimestamp)
+        } else {
+          break
+        }
+      }
+
+      return endTimestamp
+    }
+
     // Filtrar as visualizações que começaram no início do vídeo (startTimestamp == 0)
-    const filteredViews = analytics.viewTimestamps
-      .filter((view) => Math.floor(view.startTimestamp) === 0)
-      .sort((a, b) => a.endTimestamp - b.endTimestamp) // Ordenar por endTimestamp
+    const filteredViews = viewMap.get(0) || []
 
     // Contar quantos usuários assistiram até cada segundo do vídeo
     filteredViews.forEach((view) => {
-      const end = Math.min(Math.floor(view.endTimestamp), totalDuration)
+      const end = findChainedViews(view, viewMap)
 
-      // Incrementar a contagem de retenção para todos os segundos até o fim da visualização
+      // Incrementar a contagem de retenção para todos os segundos até o fim da visualização encadeada
       for (let i = 0; i <= end; i++) {
         retentionArray[i]++
       }
     })
 
-    const totalFilteredViews = filteredViews.length // Número total de visualizações
+    const totalFilteredViews = filteredViews.length || 1 // Número total de visualizações (evitar divisão por zero)
 
     // Calcular a porcentagem de retenção para cada segundo do vídeo
     const retentionPercentages = retentionArray.map((count, second) => {
@@ -85,6 +122,7 @@ export const ChartRetention: FC<ChartProps> = ({
       }
     })
 
+    console.log(retentionPercentages)
     setChartData(retentionPercentages) // Atualizar os dados do gráfico
 
     const tableMetrics: RetentionMetrics[] = Array(numIntervals)
