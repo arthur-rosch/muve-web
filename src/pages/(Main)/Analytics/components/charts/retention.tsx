@@ -48,58 +48,44 @@ export const ChartRetention: FC<ChartProps> = ({
   // }
 
   useEffect(() => {
-    const interval = 60
+    const interval = 10 // Intervalo de 10 segundos
     const totalDuration = convertDurationToSeconds(selectedVideo.duration)
-
     const numIntervals = Math.ceil(totalDuration / interval)
 
-    let maxEndTime = 0
+    // Array para armazenar a quantidade de usuários que assistiram até cada segundo
     const retentionArray = Array(totalDuration + 1).fill(0)
 
+    // Filtrar as visualizações que começaram no início do vídeo (startTimestamp == 0)
     const filteredViews = analytics.viewTimestamps
       .filter((view) => Math.floor(view.startTimestamp) === 0)
-      .sort((a, b) => a.startTimestamp - b.startTimestamp)
+      .sort((a, b) => a.endTimestamp - b.endTimestamp) // Ordenar por endTimestamp
 
-    filteredViews.forEach((view, index) => {
-      const start = Math.floor(view.startTimestamp)
-      let end = Math.min(Math.floor(view.endTimestamp), totalDuration)
+    // Contar quantos usuários assistiram até cada segundo do vídeo
+    filteredViews.forEach((view) => {
+      const end = Math.min(Math.floor(view.endTimestamp), totalDuration)
 
-      for (let i = index + 1; i < filteredViews.length; i++) {
-        if (Math.floor(filteredViews[i].startTimestamp) === end) {
-          end = Math.min(
-            Math.floor(filteredViews[i].endTimestamp),
-            totalDuration,
-          )
-          break
-        }
-      }
-
-      if (end > maxEndTime) {
-        maxEndTime = end
-      }
-
-      for (let i = start; i <= end; i++) {
+      // Incrementar a contagem de retenção para todos os segundos até o fim da visualização
+      for (let i = 0; i <= end; i++) {
         retentionArray[i]++
       }
     })
-    console.log(filteredViews)
-    const totalFilteredViews = filteredViews.length
 
-    const retentionPercentages = retentionArray
-      .slice(0, maxEndTime + 1)
-      .map((count, index) => {
-        const hours = Math.floor(index / 3600)
-        const minutes = Math.floor((index % 3600) / 60)
-        const seconds = index % 60
-        const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+    const totalFilteredViews = filteredViews.length // Número total de visualizações
 
-        return {
-          date: formattedTime,
-          Retenção: (count / totalFilteredViews) * 100,
-        }
-      })
-    console.log(retentionPercentages)
-    setChartData(retentionPercentages)
+    // Calcular a porcentagem de retenção para cada segundo do vídeo
+    const retentionPercentages = retentionArray.map((count, second) => {
+      const hours = Math.floor(second / 3600)
+      const minutes = Math.floor((second % 3600) / 60)
+      const seconds = second % 60
+      const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+
+      return {
+        date: formattedTime, // Tempo formatado para exibir no gráfico
+        Retenção: (count / totalFilteredViews) * 100, // Percentual de retenção
+      }
+    })
+
+    setChartData(retentionPercentages) // Atualizar os dados do gráfico
 
     const tableMetrics: RetentionMetrics[] = Array(numIntervals)
       .fill(0)

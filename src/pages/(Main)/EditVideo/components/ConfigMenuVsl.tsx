@@ -115,7 +115,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
       dataEdit: data as EditPlayerVideoProps,
       videoId: video.id,
     })
-
+    console.log(data)
     if (success) {
       toastSuccess({
         text: 'Player editado com sucesso',
@@ -154,8 +154,6 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
       }
     })
   }, [video, setValue])
-
-  console.log(getValues('VideoButtons'))
 
   return (
     <>
