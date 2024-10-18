@@ -4,5 +4,5 @@
   "dev-host": "http://localhost:3333/api",
   "qa-host": "",
   "test-host": "http://localhost:3333/api",
-  "staging-host": "https://api.muveplayer.com/api"
+  "staging-host": "https://muve-player-api-gne7gcdzc4hpg0cc.brazilsouth-01.azurewebsites.net/api"
 }
