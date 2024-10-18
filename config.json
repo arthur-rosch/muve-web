@@ -5,3 +5,4 @@
   "qa-host": "",
   "test-host": "http://localhost:3333/api",
   "staging-host": "https://walrus-app-vapab.ondigitalocean.app/api"
+}
