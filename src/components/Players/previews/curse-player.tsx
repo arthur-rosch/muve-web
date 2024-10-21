@@ -105,7 +105,7 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
   }, [video.id])
 
   return (
-    <div className="relative w-full h-full z-0">
+    <div className="relative w-full h-full z-10">
       <MediaPlayer
         crossorigin
         playsInline
@@ -130,8 +130,6 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
 
         <VideoLayout video={video} chapters={video.Chapter} />
       </MediaPlayer>
-
-      {/* {video.watchingNow && <WatchingNow video={video} />} */}
 
       {video.continueWatching && showResumeMenu && (
         <ContinueWatching

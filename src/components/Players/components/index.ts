@@ -19,6 +19,7 @@ export * from './sliders/time-chapter'
 export * from './progress-bar'
 
 export * from './menus/menu'
+export * from './menus/info'
 export * from './menus/chapterMenu'
 export * from './menus/sudMenus/speedSubMenu'
 export * from './menus/sudMenus/qualitySubMenu'
