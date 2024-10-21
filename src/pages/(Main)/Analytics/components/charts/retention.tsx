@@ -116,13 +116,18 @@ export const ChartRetention: FC<ChartProps> = ({
       const seconds = second % 60
       const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 
+      // Garantir que a retenção esteja entre 0% e 100%
+      const retention = Math.min(
+        100,
+        Math.max(0, (count / totalFilteredViews) * 100),
+      )
+
       return {
         date: formattedTime, // Tempo formatado para exibir no gráfico
-        Retenção: (count / totalFilteredViews) * 100, // Percentual de retenção
+        Retenção: retention, // Percentual de retenção corrigido
       }
     })
 
-    console.log(retentionPercentages)
     setChartData(retentionPercentages) // Atualizar os dados do gráfico
 
     const tableMetrics: RetentionMetrics[] = Array(numIntervals)

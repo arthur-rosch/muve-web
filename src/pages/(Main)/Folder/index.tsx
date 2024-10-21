@@ -24,7 +24,7 @@ export const Folder: FC = () => {
   )
 
   const goBack = () => {
-    navigate('/dashboard')
+    navigate(-1)
   }
 
   return (
@@ -62,7 +62,7 @@ export const Folder: FC = () => {
         />
 
         {filteredVideos.length > 0 ? (
-          <div className="min-h-full max-h-[40rem] grid grid-cols-3 gap-6 mt-10 overflow-auto pb-20 pr-4">
+          <div className="h-full max-h-[40rem] grid grid-cols-3 gap-6 mt-10 overflow-auto pr-4">
             {filteredVideos.map((video) => (
               <CardVideo
                 key={video.id}
