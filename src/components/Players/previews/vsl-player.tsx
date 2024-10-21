@@ -92,9 +92,12 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
       if (isYouTubeProvider(provider)) {
         provider.cookies = true
       }
+
       if (isHLSProvider(provider)) {
         provider.config = {}
       }
+    } else {
+      console.error('Provider não está disponível.', provider)
     }
   }
 

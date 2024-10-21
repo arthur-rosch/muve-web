@@ -74,7 +74,6 @@ export function VideoLayout({ video, chapters }: VideoLayoutProps) {
           </Tooltip.Provider>
         </Controls.Root>
       )}
-      s
     </>
   )
 }
