@@ -84,7 +84,6 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
     watch,
     control,
     setValue,
-    getValues,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
