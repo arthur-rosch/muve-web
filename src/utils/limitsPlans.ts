@@ -8,7 +8,7 @@ export const limitPlan = (plan: string) => {
       videoLimit = 25
       break
     case 'UNLIMITED':
-      videoLimit = 250
+      videoLimit = 150
       break
   }
 
