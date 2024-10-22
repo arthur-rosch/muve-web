@@ -31,7 +31,7 @@ export const Folder: FC = () => {
     <section className="w-full h-full mx-8">
       <HeaderFolder name={folder.name} />
 
-      <div className="w-full h-full flex flex-col mt-10">
+      <div className="w-full h-full max-h-screen flex flex-col mt-10 overflow-auto pb-96">
         <motion.header
           className="flex flex-col"
           initial="hidden"
@@ -62,7 +62,7 @@ export const Folder: FC = () => {
         />
 
         {filteredVideos.length > 0 ? (
-          <div className="h-full max-h-[40rem] grid grid-cols-3 gap-6 mt-10 overflow-auto pr-4">
+          <div className="h-full grid grid-cols-3 gap-6 mt-10  pr-4">
             {filteredVideos.map((video) => (
               <CardVideo
                 key={video.id}
