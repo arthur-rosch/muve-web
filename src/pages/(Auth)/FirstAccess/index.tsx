@@ -65,10 +65,10 @@ export const FirstAccess: FC = () => {
   return (
     <>
       <div className="w-full h-screen flex bg-[#121212]">
-        <div className="w-[50%] h-screen flex items-center justify-center flex-col">
-          <div className="flex items-start justify-center flex-col">
+        <div className="max-w-[50%] w-full h-screen flex items-center justify-center flex-col">
+          <div className="max-w-[40%] flex items-start justify-center flex-col">
             <img src={logo} alt="" className="mb-8 w-36 h-w-36 text-start" />
-            <h1 className="text-white text-2xl font-bold mb-4">FirstAccess</h1>
+            <h1 className="text-white text-2xl font-bold mb-4">Vamos pedir isso apenas uma vez, juro! 😄</h1>
             <p className="text-white text-sm font-semibold mb-4">
               Escolha suas preferências para acessar sua conta
             </p>
@@ -78,7 +78,7 @@ export const FirstAccess: FC = () => {
             >
               {/* Input Tipo de Conta */}
               <label
-                className="text-white mb-2 font-semibold"
+                className="text-white my-2 font-semibold"
                 htmlFor="accountType"
               >
                 Tipo de Conta
@@ -89,7 +89,7 @@ export const FirstAccess: FC = () => {
                 render={({ field }) => (
                   <InputSelect
                     {...field}
-                    className="w-full h-12 p-2 mb-2"
+                    className="w-full h-12 p-2 mb-2 border-white"
                     options={[
                       { label: 'Selecione o tipo de conta', value: '' }, // Placeholder option
                       {
@@ -119,7 +119,7 @@ export const FirstAccess: FC = () => {
 
               {/* Select Área de Membros */}
               <label
-                className="text-white mb-2 font-semibold"
+                className="text-white my-2 font-semibold"
                 htmlFor="memberArea"
               >
                 Sua Área de Membros
@@ -130,7 +130,7 @@ export const FirstAccess: FC = () => {
                 render={({ field }) => (
                   <InputSelect
                     {...field}
-                    className="w-full h-12 p-2 mb-2"
+                    className="w-full h-12 p-2 mb-2 border-white"
                     options={[
                       { label: 'Selecione sua área de membros', value: '' }, // Placeholder option
                       { label: 'Curseduca', value: 'curseduca' },
@@ -164,7 +164,7 @@ export const FirstAccess: FC = () => {
 
               {/* Select Hosting de Vídeos */}
               <label
-                className="text-white mb-2 font-semibold"
+                className="text-white my-2 font-semibold"
                 htmlFor="videoHosting"
               >
                 Seu Hosting de Vídeos
@@ -175,7 +175,7 @@ export const FirstAccess: FC = () => {
                 render={({ field }) => (
                   <InputSelect
                     {...field}
-                    className="w-full h-12 p-2 mb-2"
+                    className="w-full h-12 p-2 mb-2 border-white"
                     options={[
                       { label: 'Selecione seu hosting de vídeos', value: '' }, // Placeholder option
                       { label: 'Vimeo', value: 'vimeo' },
@@ -205,7 +205,7 @@ export const FirstAccess: FC = () => {
             </form>
           </div>
         </div>
-        <div className="w-[50%] h-screen p-8">
+        <div className="max-w-[50%] w-full h-screen p-8">
           <img
             src={loginImg}
             alt=""

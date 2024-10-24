@@ -7,6 +7,41 @@ import {
   UPDATE_INFO_FIRST_ACCESS,
 } from '../constants'
 
+// Definir o tipo de cada ação
+interface SetUserAction {
+  type: typeof SET_USER;
+  payload: User;
+}
+
+interface SetJwtAction {
+  type: typeof SET_JWT;
+  payload: string;
+}
+
+interface UpdateUserEmailAction {
+  type: typeof UPDATE_USER_EMAIL;
+  payload: string;
+}
+
+interface UpdateUserInfoAction {
+  type: typeof UPDATE_USER_INFO;
+  payload: Partial<Pick<User, 'name' | 'document' | 'phone'>>;
+}
+
+interface UpdateInfoFirstAccessAction {
+  type: typeof UPDATE_INFO_FIRST_ACCESS;
+  payload: Partial<Pick<User, 'accountType' | 'memberArea' | 'videoHosting'>>;
+}
+
+// Unir todas as ações em um tipo
+export type UserActionTypes =
+  | SetUserAction
+  | SetJwtAction
+  | UpdateUserEmailAction
+  | UpdateUserInfoAction
+  | UpdateInfoFirstAccessAction;
+
+
 type UserReducerType = {
   user: User
   jwt?: string
@@ -19,8 +54,7 @@ const initialState: UserReducerType = {
 
 export const userReducer = (
   state = initialState,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  action: { type: string; payload: any },
+  action: UserActionTypes,
 ): UserReducerType => {
   switch (action.type) {
     case SET_USER:
