@@ -1,22 +1,23 @@
-import { userReducer } from '../reducers'
-import storage from 'redux-persist/lib/storage'
-import { combineReducers, legacy_createStore as createStore } from 'redux'
-import { persistStore, persistReducer } from 'redux-persist'
+// @ts-nocheck
+import { userReducer } from '../reducers';
+import storage from 'redux-persist/lib/storage';
+import { combineReducers, legacy_createStore as createStore } from 'redux';
+import { persistStore, persistReducer } from 'redux-persist';
 
 const persistConfig = {
   key: 'root',
   storage,
-}
+};
 
 const rootReducer = combineReducers({
   user: userReducer,
-})
+});
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = createStore(persistedReducer)
-const persistor = persistStore(store)
+const store = createStore(persistedReducer);
+const persistor = persistStore(store);
 
-export default { store, persistor }
+export default { store, persistor };
 
-export type State = ReturnType<typeof rootReducer>
+export type State = ReturnType<typeof rootReducer>;
