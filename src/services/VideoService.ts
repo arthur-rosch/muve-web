@@ -63,6 +63,36 @@ export class VideoService {
     }
   }
 
+  static async ediFolderIdVideo(videoId: string, folderId: string) {
+    const url = `${host()}/edit/folder/video`
+
+    try {
+      const response = await (await this.getAxiosInstance()).post(url, {
+        folderId,
+        videoId,
+      })
+
+      if (response.status === 200) {
+        return { data: response.data, success: true }
+      } else {
+        return {
+          error: response.data.message,
+          success: false,
+        }
+      }
+    } catch (error: any) {
+      if (error.response.data.error)
+        return {
+          error: error.response.data.error,
+          success: false,
+        }
+      return {
+        error: 'Erro ao mover video de pasta',
+        success: false,
+      }
+    }
+  }
+
   static async getAllVideosByUserId() {
     const url = `${host()}/video/all`
     try {

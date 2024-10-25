@@ -264,6 +264,8 @@ export function PlayerVsl({ video }: { video: Video }) {
               />
             </MediaProvider>
 
+            <a href="https://muveplayer.com/" className="invisible">Link 1</a>
+
             {paused && !overlayVisible && (
               <div
                 className="absolute inset-0 flex items-center justify-center z-10 cursor-pointer"
