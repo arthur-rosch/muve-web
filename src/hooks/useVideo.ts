@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from 'react-query'
 import { VideoService } from './../services/VideoService'
 import type {
+  Video,
   CreateVideoVariables,
   EditPlayerVideoProps,
-  Video,
 } from '../types'
 
 export const useVideo = () => {
@@ -69,11 +69,18 @@ export const useVideo = () => {
     return { data, success, error }
   })
 
+  const ediFolderIdVideo = useMutation(async ({folderId, videoId}: {videoId: string, folderId: string}) => {
+    const { data, success, error } = await VideoService.ediFolderIdVideo(videoId, folderId)
+
+    return { data, success, error }
+  })
+
   return {
     createVideo,
     deleteVideo,
     getVideoById,
     editPlayerVideo,
+    ediFolderIdVideo,
     getAllVideosByUserId,
     getManyVideosNotFolderId,
   }

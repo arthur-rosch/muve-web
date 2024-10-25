@@ -1,18 +1,21 @@
 import { motion } from 'framer-motion'
-import type { Video } from '../../types'
 import { useVideo } from '../../hooks'
+import type { Video } from '../../types'
 import { useState, type FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toastError, toastSuccess } from '../Ui/toast'
 import { PreviewPlayerModal } from './previewPlayerModal'
-import {
-  ChartLine,
-  Code,
-  DotsThreeOutlineVertical,
-  PencilSimple,
-  Trash,
-} from '@phosphor-icons/react'
 import { itemVariants, menuVariants } from '../../animations'
+import {
+  Code,
+  Trash,
+  ChartLine,
+  PencilSimple,
+  ArrowsOutCardinal,
+  DotsThreeOutlineVertical,
+} from '@phosphor-icons/react'
+import { MoveVideoModal } from './moveVideoModal'
+
 
 interface AccordionMenuVideoProps {
   video: Video
@@ -23,20 +26,21 @@ export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
   const { deleteVideo, getAllVideosByUserId } = useVideo()
 
   const [isOpen, setIsOpen] = useState(false)
+  const [isMoveModalOpen, setIsMoveModalOpen] = useState(false)
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false)
 
   const toggleMenu = () => {
     setIsOpen(!isOpen)
   }
 
-  const handleAnalytics = () => {
-    toggleMenu()
-    navigate('/analytics', { state: { video } })
-  }
-
   const handleEdit = () => {
     toggleMenu()
     navigate('/edit/video', { state: { video } })
+  }
+
+  const handleAnalytics = () => {
+    toggleMenu()
+    navigate('/analytics', { state: { video } })
   }
 
   const handleDeleteVideo = async () => {
@@ -92,7 +96,14 @@ export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
               >
                 <ChartLine size={22} color="#707070" /> Analisar
               </motion.li>
-
+              <motion.li
+                onClick={() => setIsMoveModalOpen(!isMoveModalOpen)}
+                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm flex items-start justify-start gap-2"
+                variants={itemVariants}
+              >
+                <ArrowsOutCardinal size={22} color="#707070" />
+                Mover
+              </motion.li>
               <motion.li
                 onClick={handleEdit}
                 className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm flex items-start justify-start gap-2"
@@ -113,9 +124,14 @@ export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
         )}
       </div>
       <PreviewPlayerModal
+        video={video}
         isModalOpen={isPreviewModalOpen}
         setIsModalOpen={setIsPreviewModalOpen}
+      />
+      <MoveVideoModal 
         video={video}
+        isModalOpen={isMoveModalOpen} 
+        setIsModalOpen={setIsMoveModalOpen} 
       />
     </>
   )
