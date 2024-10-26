@@ -30,14 +30,24 @@ export const VideoButtonCtaBelow: FC<VideoButtonCtaProps> = ({
               <a
                 href={button.buttonLink}
                 key={index}
-                className={`mx-2 px-4 py-2 rounded-md bg-[${button.backgroundColor}] text-[${button.textColor}] hover:bg-[${button.hoverBackgroundColor}] hover:text-[${button.hoverTextColor}]`}
+                className="mx-2 px-4 py-2 rounded-md"
                 style={{
                   backgroundColor: button.backgroundColor,
                   color: button.textColor,
+                  transition: "background-color 1s, color 1s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = button.hoverBackgroundColor;
+                  e.currentTarget.style.color = button.hoverTextColor;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = button.backgroundColor;
+                  e.currentTarget.style.color = button.textColor;
                 }}
               >
                 {button.buttonText}
               </a>
+
             )
           }
           return null

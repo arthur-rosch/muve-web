@@ -15,12 +15,12 @@ export const MenuInfo = () => {
         placement="top"
         offset={0}
       >
-        <span className="ml-1.5 parent-data-[open]:ml-0 my-2 hover:text-gray-500">
+        <a href="https://muveplayer.com/" target="_blank" rel="noopener noreferrer" className="ml-1.5 parent-data-[open]:ml-0 my-2 hover:text-gray-500">
           Sobre o Muve
-        </span>
-        <span className="ml-1.5 parent-data-[open]:ml-0 my-2 hover:text-gray-500">
+        </a>
+        <a href="https://muveplayer.com/" target="_blank" rel="noopener noreferrer" className="ml-1.5 parent-data-[open]:ml-0 my-2 hover:text-gray-500">
           Reportar o erro
-        </span>
+        </a>
       </Menu.Items>
     </Menu.Root>
   )
