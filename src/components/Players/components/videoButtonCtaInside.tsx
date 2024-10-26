@@ -53,6 +53,15 @@ export const VideoButtonCtaInside: FC<VideoButtonCtaProps> = ({
                 style={{
                   backgroundColor: button.backgroundColor,
                   color: button.textColor,
+                  transition: "background-color 1s, color 1s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = button.hoverBackgroundColor;
+                  e.currentTarget.style.color = button.hoverTextColor;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = button.backgroundColor;
+                  e.currentTarget.style.color = button.textColor;
                 }}
               >
                 {button.buttonText}

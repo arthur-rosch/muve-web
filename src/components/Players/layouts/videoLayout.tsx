@@ -57,23 +57,6 @@ export function VideoLayout({ video, chapters }: VideoLayoutProps) {
           </Tooltip.Provider>
         </Controls.Root>
       )}
-      {video.type === 'Vsl' && (
-        <Controls.Root className="media-controls:opacity-100 absolute inset-0 z-10 flex h-auto w-full flex-col bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity">
-          <Tooltip.Provider>
-            <div className="flex-1" />
-            <Controls.Group className="flex w-full items-center px-2"></Controls.Group>
-            <Controls.Group className="mb-4 flex w-full items-center px-2 pb-2">
-              <TimeGroup
-                timeCurrent={video.timeTraveled}
-                timeDuration={video.videoDuration}
-              />
-              <ChapterTitle />
-              <div className="flex-1" />
-              <MenuInfo />
-            </Controls.Group>
-          </Tooltip.Provider>
-        </Controls.Root>
-      )}
     </>
   )
 }
