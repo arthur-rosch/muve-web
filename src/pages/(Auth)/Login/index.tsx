@@ -54,7 +54,14 @@ export const Login: FC = () => {
         toastError({
           text: 'Assinatura atrasada. Renove seu plano para ter acesso',
         })
-      } else {
+      } 
+      else if (Erro === 'Subscription is paused due to overdue next charge date.'){
+        toastError({
+          text: 'Assinatura pausada. Renova seu plano para ter acesso',
+        }         
+        )
+      }
+      else {
         setError('password', {
           message: 'E-mail e/ou senha inválidos',
         })

@@ -42,7 +42,7 @@ export const VideoButtonCtaInside: FC<VideoButtonCtaProps> = ({
               'right-center':
                 'absolute top-1/2 right-4 transform -translate-y-1/2',
               'bottom-right': 'absolute bottom-4 right-4',
-            }[button.buttonPosition || 'bottom-center'] // Posição padrão se não estiver definida
+            }[button.buttonPosition || 'bottom-center']
 
             console.log(buttonPositionClass, button.buttonPosition)
             return (
