@@ -6,6 +6,7 @@ import {
   WatchingNow,
   VideoButtonCtaBelow,
   VideoButtonCtaInside,
+  ContinueWatching,
 } from '../components'
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { VideoLayout } from '../layouts/videoLayout'
@@ -29,7 +30,7 @@ import '@vidstack/react/player/styles/base.css'
 import '@vidstack/react/player/styles/default/theme.css'
 import '@vidstack/react/player/styles/default/layouts/audio.css'
 import '@vidstack/react/player/styles/default/layouts/video.css'
-import { getYoutubeVideoId } from '../../../utils'
+import { getVideoTimeFromCookie, getYoutubeVideoId, setVideoTimeCookie } from '../../../utils'
 
 interface PreviewPlayerProps {
   video: Video
@@ -39,6 +40,8 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
   const playerRef = useRef<MediaPlayerInstance>(null)
 
   const [progress, setProgress] = useState(0)
+  const [showResumeMenu, setShowResumeMenu] = useState(false)
+  const [lastTime, setLastTime] = useState<number | null>(null)
   const [transitionDuration, setTransitionDuration] = useState(0)
 
   const [overlayVisible, setOverlayVisible] = useState(!!video.smartAutoPlay)
@@ -101,6 +104,25 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
     }
   }
 
+  function handleResume() {
+    const player = playerRef.current
+    if (player && lastTime) {
+      player.currentTime = lastTime
+      player.play()
+      setShowResumeMenu(false)
+    }
+  }
+
+  function handleRestart() {
+    const player = playerRef.current
+    if (player) {
+      player.currentTime = 0
+      player.play()
+      setShowResumeMenu(false)
+    }
+  }
+
+
   const urlVideo = useMemo(() => {
     if (isYouTubeProvider(video.url)) {
       const videoId = getYoutubeVideoId(video.url)
@@ -121,6 +143,21 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
     }
   }
 
+  function onPause() {
+    const player = playerRef.current
+    if (player) {
+      const currentTime = player.currentTime
+      setVideoTimeCookie(video.id, currentTime)
+    }
+  }
+  useEffect(() => {
+    const savedTime = getVideoTimeFromCookie(video.id)
+    if (savedTime) {
+      setLastTime(savedTime)
+      setShowResumeMenu(true)
+    }
+  }, [video.id])
+
   return (
     <div className="relative w-full h-full z-0">
       <MediaPlayer
@@ -134,6 +171,7 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
         crossOrigin="anonymous"
         onProviderChange={onProviderChange}
         src={urlVideo}
+        onPause={onPause}
         muted={overlayVisible}
         autoPlay={video.smartAutoPlay}
         className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
@@ -255,6 +293,13 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
           Buttons={video.VideoButtons}
           currentTime={currentTime}
           overlayVisible={overlayVisible}
+        />
+      )}
+      
+       {video.continueWatching && showResumeMenu && (
+        <ContinueWatching
+          handleRestart={handleRestart}
+          handleResume={handleResume}
         />
       )}
     </div>

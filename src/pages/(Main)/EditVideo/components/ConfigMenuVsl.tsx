@@ -22,6 +22,7 @@ import {
 } from '../../../../components'
 import * as Accordion from '@radix-ui/react-accordion'
 import {
+  ClockCounterClockwise,
   DotsThree,
   GitCommit,
   Info,
@@ -114,7 +115,6 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
       dataEdit: data as EditPlayerVideoProps,
       videoId: video.id,
     })
-    console.log(data)
     if (success) {
       toastSuccess({
         text: 'Player editado com sucesso',
@@ -702,6 +702,43 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     text="Adicionar Botão"
                     onClick={() => setIsModalOpen(!isModalOpen)}
                   />
+                </motion.div>
+              </Accordion.Content>
+            </Accordion.Item>
+
+            {/* Continue Assistindo */}
+            <Accordion.Item
+              value="continue-assistindo"
+              className="bg-[#1D1D1D] text-white rounded-lg py-5 px-4"
+            >
+              <Accordion.Header className="flex justify-between items-center">
+                <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
+                  <ClockCounterClockwise size={20} />
+                  Continue Assistindo
+                </Accordion.Trigger>
+                <Accordion.Trigger className="flex items-center">
+                  <ChevronDownIcon className="transition-transform duration-300 ease-in-out AccordionChevron" />
+                </Accordion.Trigger>
+              </Accordion.Header>
+              <Accordion.Content className="mt-2">
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={cardVariants}
+                >
+                  <div className="flex gap-2 my-4">
+                    <Controller
+                      control={control}
+                      name="continueWatching"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">Ativo</span>
+                  </div>
                 </motion.div>
               </Accordion.Content>
             </Accordion.Item>

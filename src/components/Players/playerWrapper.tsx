@@ -10,38 +10,98 @@ export function PlayerWrapper() {
   const location = useLocation()
   const [video, setVideo] = useState<Video | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const getVideoIdFromQuery = () => {
     const searchParams = new URLSearchParams(location.search)
     return searchParams.get('videoId')
   }
 
+  const checkUserSubscription = async () => {
+    try {
+      const response = await axios.get(`${host()}/user/subscription`)
+      const signature = response.data.signature
+
+      if (!signature) {
+        setErrorMessage('Usuário sem Plano')
+        return false
+      }
+
+      switch (signature.status) {
+        case 'canceled':
+          setErrorMessage('Assinatura cancelada.')
+          return false
+        case 'past_due':
+          setErrorMessage('Assinatura com pagamento atrasado.')
+          return false
+        case 'trialing':
+          const trialEndDate = new Date(signature.trial_end_date)
+          if (trialEndDate && trialEndDate < new Date()) {
+            setErrorMessage('Período de teste expirado.')
+            return false
+          }
+          break
+        default:
+          if (signature.status !== 'active' && signature.status !== 'trialing') {
+            setErrorMessage('Assinatura inválida.')
+            return false
+          }
+      }
+
+      return true
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || 'Erro ao verificar assinatura.'
+      console.error(errorMsg)
+      setErrorMessage(errorMsg)
+      return false
+    }
+  }
+
   const fetchVideo = async () => {
     const videoId = getVideoIdFromQuery()
+    if (!videoId) {
+      setErrorMessage('ID do vídeo não encontrado na URL.')
+      setIsLoading(false)
+      return
+    }
+
     try {
-      if (videoId) {
-        const response = await axios.get(`${host()}/video/${videoId}`)
-        const video = response.data.video
-        if (video) {
-          setVideo(video)
-          setIsLoading(false)
-        } else {
-          console.error('Video not found or API response is invalid')
-          setIsLoading(false)
-        }
+      const response = await axios.get(`${host()}/video/${videoId}`)
+      const video = response.data.video
+      if (video) {
+        setVideo(video)
+      } else {
+        setErrorMessage('Vídeo não encontrado ou resposta inválida da API.')
       }
     } catch (error) {
-      console.error('Erro ao buscar vídeo:', error)
+      const errorMsg = error.response?.data?.message || 'Erro ao buscar vídeo.'
+      console.error(errorMsg)
+      setErrorMessage(errorMsg)
+    } finally {
       setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchVideo()
-  }, [location.search]) // Re-fetch video when query changes
+    const initializePlayer = async () => {
+      setIsLoading(true)
+      const hasValidSubscription = await checkUserSubscription()
+      if (hasValidSubscription) {
+        await fetchVideo()
+      } else {
+        setIsLoading(false)
+      }
+    }
+
+    initializePlayer()
+  }, [location.search])
 
   if (isLoading) {
-    return <div>Loading...</div> // Loading indicator or placeholder
+    return <div>Loading...</div>
+  }
+
+  if (errorMessage) {
+    return <div>{errorMessage}</div>
   }
 
   return video ? (
@@ -51,6 +111,6 @@ export function PlayerWrapper() {
       <Player video={video} />
     )
   ) : (
-    <div>Video not found</div>
+    <div>Vídeo não encontrado</div>
   )
 }

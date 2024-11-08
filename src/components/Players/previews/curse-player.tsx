@@ -1,6 +1,6 @@
 import type { Video } from '../../../types'
 import { VideoLayout } from '../layouts/videoLayout'
-import { getYoutubeVideoId } from '../../../utils'
+import { getVideoTimeFromCookie, getYoutubeVideoId, setVideoTimeCookie } from '../../../utils'
 import { useEffect, useRef, useMemo, useState } from 'react'
 import {
   Poster,
@@ -24,17 +24,6 @@ interface PreviewPlayerProps {
   video: Video
 }
 
-// Função para salvar e obter o tempo de reprodução nos cookies
-const setVideoTimeCookie = (videoId: string, time: number) => {
-  document.cookie = `video-${videoId}-time=${time}; path=/;`
-}
-
-const getVideoTimeFromCookie = (videoId: string): number | null => {
-  const match = document.cookie.match(
-    new RegExp(`(^| )video-${videoId}-time=([^;]+)`),
-  )
-  return match ? Number(match[2]) : null
-}
 
 export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
   const playerRef = useRef<MediaPlayerInstance>(null)
