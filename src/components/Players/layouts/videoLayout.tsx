@@ -25,13 +25,15 @@ export function VideoLayout({ video, chapters }: VideoLayoutProps) {
   return (
     <>
       <Gestures />
-      {video.type === 'Curso' && (
+
         <Controls.Root className="media-controls:opacity-100 absolute inset-0 z-10 flex h-auto w-full flex-col bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity">
           <Tooltip.Provider>
             <div className="flex-1" />
-            <Controls.Group className="flex w-full items-center px-2">
-              <TimeChapter />
-            </Controls.Group>
+            {video.type !== 'Vsl' && 
+              <Controls.Group className="flex w-full items-center px-2">
+                <TimeChapter />
+              </Controls.Group>
+            }
             <Controls.Group className="-mt-0.5 flex w-full items-center px-2 pb-2">
               {video.playAndPause && (
                 <Play tooltipAlign="start" tooltipOffset={popupOffset} />
@@ -39,24 +41,29 @@ export function VideoLayout({ video, chapters }: VideoLayoutProps) {
               {video.volumeButton && <Mute tooltipOffset={popupOffset} />}
 
               {video.volumeBar && <Volume />}
-
+              
               <TimeGroup
                 timeCurrent={video.timeTraveled}
                 timeDuration={video.videoDuration}
               />
+              
+
               <ChapterTitle />
               <div className="flex-1" />
-              <Seek />
+              {video.speed && <Seek />}
               {video.chapterMenu && <ChapterMenu chapters={chapters!} />}
-              <MenuPlayer menuSpeed={video.speed} />
-              <MenuInfo />
+              {video.type !== 'Vsl' && 
+              <>
+                <MenuPlayer menuSpeed={video.speed} />
+                <MenuInfo />
+              </>
+              }
               {video.fullscreen && (
                 <Fullscreen tooltipAlign="end" tooltipOffset={popupOffset} />
               )}
             </Controls.Group>
           </Tooltip.Provider>
         </Controls.Root>
-      )}
     </>
   )
 }

@@ -31,7 +31,7 @@ import {
   Play,
   UsersThree,
 } from '@phosphor-icons/react'
-import { ChevronDownIcon } from 'lucide-react'
+import { ChevronDownIcon, VideoIcon } from 'lucide-react'
 import { AccordionMenuButton } from './AccordionMenuButton'
 
 interface ConfigMenuProps {
@@ -738,6 +738,131 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                       )}
                     />
                     <span className="text-[#909090] text-sm">Ativo</span>
+                  </div>
+                </motion.div>
+              </Accordion.Content>
+            </Accordion.Item>
+
+            {/* Controles */}
+            <Accordion.Item
+              value="controles"
+              className="bg-[#1D1D1D] text-white rounded-lg py-5 px-4"
+            >
+              <Accordion.Header className="flex justify-between items-center">
+                <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
+                  <VideoIcon size={20} />
+                  Controles
+                </Accordion.Trigger>
+                <Accordion.Trigger className="flex items-center">
+                  <ChevronDownIcon className="transition-transform duration-300 ease-in-out AccordionChevron" />
+                </Accordion.Trigger>
+              </Accordion.Header>
+              <Accordion.Content className="mt-2">
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={cardVariants}
+                >
+                  <div className="flex gap-2">
+                    <Controller
+                      control={control}
+                      name="playAndPause"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">
+                      Botão de Play e Pause
+                    </span>
+                  </div>
+                  <div className="flex gap-2 my-2">
+                    <Controller
+                      control={control}
+                      name="timeTraveled"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">
+                      Tempo percorrido
+                    </span>
+                  </div>
+                  <div className="flex gap-2 my-2">
+                    <Controller
+                      control={control}
+                      name="videoDuration"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">
+                      Duração do vídeo
+                    </span>
+                  </div>
+                  <div className="flex gap-2 my-2">
+                    <Controller
+                      control={control}
+                      name="volumeButton"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">
+                      Botão de volume
+                    </span>
+                  </div>
+                  <div className="flex gap-2 my-2">
+                    <Controller
+                      control={control}
+                      name="volumeBar"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">
+                      Barra de volume
+                    </span>
+                  </div>
+                  <div className="flex gap-2 my-2">
+                    <Controller
+                      control={control}
+                      name="speed"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">Velocidade</span>
+                  </div>
+                  <div className="flex gap-2 my-2">
+                    <Controller
+                      control={control}
+                      name="fullscreen"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">Tela cheia</span>
                   </div>
                 </motion.div>
               </Accordion.Content>
