@@ -41,7 +41,9 @@ export class VideoService {
     const url = `${host()}/video/${videoId}`
 
     try {
-      const response = await (await this.getAxiosInstance()).delete(url)
+      const response = await (await this.getAxiosInstance()).delete(url, {
+        
+      })
       if (response.status === 200) {
         return { data: response.data, success: true }
       } else {
