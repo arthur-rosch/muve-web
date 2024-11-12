@@ -49,7 +49,7 @@ export const VideoButtonCtaInside: FC<VideoButtonCtaProps> = ({
               <a
                 href={button.buttonLink}
                 key={index}
-                className={`mx-2 px-4 py-2 rounded-md ${buttonPositionClass}`}
+                className={`mx-2 px-4 py-2 rounded-md h-[${button.buttonSize}] ${buttonPositionClass}`}
                 style={{
                   backgroundColor: button.backgroundColor,
                   color: button.textColor,

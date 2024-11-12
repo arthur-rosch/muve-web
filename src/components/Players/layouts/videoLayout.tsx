@@ -26,7 +26,7 @@ export function VideoLayout({ video, chapters }: VideoLayoutProps) {
     <>
       <Gestures />
 
-        <Controls.Root className="media-controls:opacity-100 absolute inset-0 z-10 flex h-auto w-full flex-col bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity">
+        <Controls.Root className="media-controls:opacity-100 absolute inset-0 flex h-auto w-full flex-col bg-gradient-to-t from-black/10 to-transparent opacity-0 transition-opacity z-50">
           <Tooltip.Provider>
             <div className="flex-1" />
             {video.type !== 'Vsl' && 

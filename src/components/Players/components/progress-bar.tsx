@@ -11,7 +11,6 @@ export function ProgressBar({
   progress,
   transitionDuration,
 }: ProgressBarProps) {
-  console.log(size)
   return (
     <div className="absolute bottom-0 left-0 w-full z-50">
       <div

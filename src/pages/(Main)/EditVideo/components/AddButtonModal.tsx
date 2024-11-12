@@ -1,10 +1,10 @@
-import { useEffect, useState, type FC } from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { cardVariants } from '../../../../animations'
-import { Input, Button, CustomModal, CheckBox } from '../../../../components'
 import type { VideoButton } from '../../../../types'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useState, type FC } from 'react'
+import { Input, Button, CustomModal, CheckBox, InputSelect } from '../../../../components'
 
 export const addButtonSchema = z.object({
   buttonType: z.enum(['below', 'inside'], {
@@ -120,7 +120,7 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
       setValue(
         'buttonAfterTheVideoEnds',
         button.buttonAfterTheVideoEnds ?? false,
-      ) // Default para false se não definido
+      )
       setValue('backgroundColor', button.backgroundColor)
       setValue('textColor', button.textColor)
       setValue('hoverBackgroundColor', button.hoverBackgroundColor)
@@ -235,12 +235,17 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
                     name="buttonSize"
                     control={control}
                     render={({ field }) => (
-                      <Input
+                      <InputSelect
                         {...field}
-                        id="buttonSize"
-                        type="text"
-                        placeholder="Texto do botão"
+                        options={[
+                          { value: '12px', label: '12px' },
+                          { value: '14px', label: '14px' },
+                          { value: '16px', label: '16px' },
+                          { value: '18px', label: '18px' },
+                          { value: '20px', label: '20px' },
+                        ]}
                         className="w-full h-10 mt-2 mb-2"
+                        placeholder="Tamanho da fonte"
                       />
                     )}
                   />

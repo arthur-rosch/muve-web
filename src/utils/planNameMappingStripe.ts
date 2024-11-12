@@ -1,10 +1,10 @@
 export const planNameMappingStripe = (priceId: string): string => {
   switch (priceId) {
-    case 'prod_R7AxU9mGmGka46':
+    case 'price_1QFSPrEb05Ibkd2B63CkdONX':
       return 'Mensal - Essencial'
-    case 'prod_R7AxU9mGmGka46 ':
+    case 'price_1QFSQWEb05Ibkd2BaOS032wb':
       return 'Mensal - Profissional'
-    case 'prod_R7AxU9mGmGka46  ':
+    case 'price_1QFSQwEb05Ibkd2BjOjnD8Zs':
       return 'Mensal - Ilimitado'
     default:
       return 'Plano desconhecido'
