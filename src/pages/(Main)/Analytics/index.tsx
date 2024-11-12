@@ -27,8 +27,7 @@ export const Analytics: FC = () => {
   const { data: videos, isLoading } = getAllVideosByUserId
 
   const [loading, setLoading] = useState(true)
-  const [userPlan, setUserPlan] = useState<string>('')
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(true)
   const [metrics, setMetrics] = useState<VideoMetrics | null>(null)
   const [selectedVideo, setSelectedVideo] = useState<Video | undefined>(
     location.state?.video ? location.state.video : undefined,
@@ -41,7 +40,7 @@ export const Analytics: FC = () => {
   }
 
   useEffect(() => {
-    setLoading(true) // Inicia o loading quando os vídeos mudam
+    setLoading(true)
     if (selectedVideo && videos) {
       const foundVideo = videos.find(
         (video: Video) => video.url === selectedVideo.url,
@@ -55,27 +54,13 @@ export const Analytics: FC = () => {
 
   useEffect(() => {
     if (selectedVideo) {
-      console.log(convertDurationToSeconds(selectedVideo.duration))
       const metrics = calculateVideoMetrics(
         convertDurationToSeconds(selectedVideo.duration),
         selectedVideo.analytics,
       )
-      console.log(metrics)
       setMetrics(metrics)
     }
   }, [selectedVideo])
-
-  useEffect(() => {
-    const storedPlan = localStorage.getItem('@storage:plan')
-    if (storedPlan) {
-      try {
-        const plan = JSON.parse(storedPlan)
-        setUserPlan(plan.plan)
-      } catch (error) {
-        console.error('Error parsing user plan from localStorage:', error)
-      }
-    }
-  }, [])
 
   const metricsData = metrics
     ? [
@@ -84,61 +69,18 @@ export const Analytics: FC = () => {
         { label: 'Play Rate', value: `${metrics.playRate}%` },
         { label: 'Engajamento', value: `${metrics.engagement}%` },
         { label: 'Plays únicos', value: metrics.uniquePlays },
-        { label: 'Views únicos ', value: metrics.uniqueViews },
+        { label: 'Views únicos', value: metrics.uniqueViews },
       ]
     : []
 
-  const availableCharts = (plan: string) => {
-    switch (plan) {
-      case 'ESSENTIAL':
-      case 'UNLIMITED':
-      case 'PROFESSIONAL':
-        return ['retenção', 'pais', 'dispositivos']
-      default:
-        return []
-    }
-  }
-
-  const isPlanVisible = (label: string) => {
-    switch (userPlan) {
-      case 'ESSENTIAL':
-        return (
-          label === 'Plays' ||
-          label === 'Views' ||
-          label === 'Plays únicos' ||
-          label === 'Views únicos'
-        )
-      case 'UNLIMITED':
-      case 'PROFESSIONAL':
-        return true
-      default:
-        return false
-    }
-  }
-
-  const handleRedirectToPayment = () => {
-    const baseUrl =
-      'https://pay.kirvano.com/7c915a99-e9c3-4520-aa51-1721d914071b'
-
-    const params = new URLSearchParams({
-      'customer.name': user.name,
-      'customer.email': user.email,
-      'customer.document': user.document,
-      'customer.phone': user.phone,
-    }).toString()
-
-    const fullUrl = `${baseUrl}?${params}`
-
-    // Redireciona para a URL com os parâmetros
-    window.location.href = fullUrl
-  }
+  const availableCharts = ['retenção', 'pais', 'dispositivos']
 
   if (isLoading || !videos) {
-    return null // Pode retornar um spinner ou vazio
+    return null
   }
 
   return (
-    <section className="w-full max-h-screen mx-8 overflow-auto overflow-x-hidden pr-4  pb-28">
+    <section className="w-full max-h-screen mx-8 overflow-auto overflow-x-hidden pr-4 pb-28">
       <HeaderFolder name={'Análise'} />
 
       <div className="w-full h-full flex flex-col mt-10">
@@ -213,46 +155,24 @@ export const Analytics: FC = () => {
             <div className="w-full h-full flex flex-col">
               <div className="flex items-start justify-between">
                 <div className="flex items-start justify-start gap-4 flex-wrap">
-                  {metricsData.map(({ label, value }) => {
-                    const isVisible = isPlanVisible(label)
-                    const cardClassName = !isVisible
-                      ? 'w-44 h-32 flex flex-col justify-between px-5 py-6 rounded-lg bg-transparent blur-sm'
-                      : 'w-44 h-32 flex flex-col justify-between px-5 py-6 rounded-lg bg-transparent'
-
-                    return (
-                      <div className="relative" key={label}>
-                        <Card
-                          key={label}
-                          variant="secondary"
-                          className={cardClassName}
-                        >
-                          <span className="text-[#909090] text-sm">
-                            {label}
-                          </span>
-                          <span
-                            className={`text-white text-3xl ${!isVisible ? 'filter blur-sm' : ''}`}
-                          >
-                            {!isVisible ? '********' : value}
-                          </span>
-                        </Card>
-
-                        {!isVisible && (
-                          <Button
-                            type="button"
-                            variant="primary"
-                            className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center backdrop-blur-sm"
-                            onClick={handleRedirectToPayment}
-                          >
-                            Upgrade
-                          </Button>
-                        )}
-                      </div>
-                    )
-                  })}
+                  {metricsData.map(({ label, value }) => (
+                    <Card
+                      key={label}
+                      variant="secondary"
+                      className="w-44 h-32 flex flex-col justify-between px-5 py-6 rounded-lg bg-transparent"
+                    >
+                      <span className="text-[#909090] text-sm">
+                        {label}
+                      </span>
+                      <span className="text-white text-3xl">
+                        {value}
+                      </span>
+                    </Card>
+                  ))}
                 </div>
                 <InputSelect
                   defaultValue="retenção"
-                  options={availableCharts(userPlan).map((chart) => ({
+                  options={availableCharts.map((chart) => ({
                     value: chart,
                     label: chart.charAt(0).toUpperCase() + chart.slice(1),
                   }))}
@@ -270,18 +190,6 @@ export const Analytics: FC = () => {
                 />
               </motion.div>
             </div>
-          ) : selectedVideo && !selectedVideo ? (
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={cardVariants}
-              className="w-full h-full flex flex-col items-center justify-center mt-12 gap-4"
-            >
-              <FolderDashed size={64} color="white" />
-              <span className="text-white text-sm">
-                Não foi possível encontrar o vídeo
-              </span>
-            </motion.div>
           ) : (
             <motion.div
               initial="hidden"

@@ -2,12 +2,12 @@ import type { FC } from 'react'
 import { motion } from 'framer-motion'
 import { Input } from '../../../../components'
 import { cardVariants } from '../../../../animations'
-import { limitPlan } from '../../../../utils'
+import { limitPlan, planNameMappingStripe } from '../../../../utils'
 
 export const MyPlan: FC = () => {
   const plan = JSON.parse(localStorage.getItem('@storage:plan')!)
 
-  const limits = limitPlan(plan.plan)
+  const limits = limitPlan(planNameMappingStripe(plan.plan))
 
   return (
     <section className="w-full mt-12">

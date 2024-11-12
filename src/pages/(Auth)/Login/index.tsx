@@ -1,13 +1,13 @@
 import { z } from 'zod'
-import { useState, type FC } from 'react'
 import { useAuth } from '../../../hooks'
+import { useState, type FC } from 'react'
+import logo from '../../../assets/logo.svg'
+import loginImg from '../../../assets/bg-login.png'
 import { useNavigate } from 'react-router-dom'
+import { ForgotPasswordModal } from './components'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input, toastError } from '../../../components'
-import loginImg from '../../../assets/bg-login.png'
-import logo from '../../../assets/logo.svg'
-import { ForgotPasswordModal } from './components'
 
 const loginFormSchema = z.object({
   email: z.string().email('O e-mail fornecido não é válido.'),
@@ -32,42 +32,27 @@ export const Login: FC = () => {
   })
 
   const handleLogin = async ({ email, password }: loginFormInputs) => {
-    console.log(email, password)
-    const { success, Erro, data } = await signIn({ email, password })
+    const { success, data, Erro } = await signIn({ email, password });
 
     if (success) {
-      const { accountType, memberArea, videoHosting } = data
+      const { user } = data;
+      const { accountType, memberArea, videoHosting } = user;
 
       if (!accountType || !memberArea || !videoHosting) {
-        navigate('/access')
+        navigate('/access');
       } else {
-        navigate('/dashboard')
+        navigate('/dashboard');
       }
+    } else if (Erro) {
+      toastError({ text: Erro });
     } else {
-      if (
-        Erro === 'Subscription cancelled, Subscribe to a plan to gain access'
-      ) {
-        toastError({
-          text: 'Assinatura cancelada. Assine um plano para obter acesso',
-        })
-      } else if (Erro === 'Late Subscription. Renew your plan to gain access') {
-        toastError({
-          text: 'Assinatura atrasada. Renove seu plano para ter acesso',
-        })
-      } 
-      else if (Erro === 'Subscription is paused due to overdue next charge date.'){
-        toastError({
-          text: 'Assinatura pausada. Renova seu plano para ter acesso',
-        }         
-        )
-      }
-      else {
-        setError('password', {
-          message: 'E-mail e/ou senha inválidos',
-        })
-      }
+      setError('password', {
+        message: 'E-mail e/ou senha inválidos',
+      });
     }
-  }
+  };
+
+
 
   return (
     <>

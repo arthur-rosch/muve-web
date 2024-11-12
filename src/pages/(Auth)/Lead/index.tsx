@@ -1,8 +1,9 @@
 import { z } from 'zod'
-import { useState, type FC } from 'react'
+import { type FC } from 'react'
+import { useLead } from '../../../hooks'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input, toastError, Card, CheckBox } from '../../../components'
+import { Button, Input, Card } from '../../../components'
 
 const leadFormSchema = z.object({
   plan: z.string().nonempty('Selecione um plano.'),
@@ -16,6 +17,8 @@ const leadFormSchema = z.object({
 type LeadFormInputs = z.infer<typeof leadFormSchema>
 
 export const LeadCapture: FC = () => {
+  const { createLed } = useLead()
+
   const {
     control,
     handleSubmit,
@@ -25,9 +28,15 @@ export const LeadCapture: FC = () => {
     resolver: zodResolver(leadFormSchema),
   })
 
-  const handleLeadSubmit = async (data: LeadFormInputs) => {
-    console.log(data)
-    // Aqui, você pode adicionar a lógica para enviar os dados do lead.
+  const handleLeadSubmit = async (formData: LeadFormInputs) => {
+    const { success, data } = await createLed({
+      ...formData,
+      document: formData.cpfCnpj
+    })
+
+    if (success) {
+      window.location.href = data.checkoutUrl
+    }
   }
 
   return (
@@ -35,61 +44,78 @@ export const LeadCapture: FC = () => {
       <div className="w-[50%] h-screen flex items-center justify-center flex-col">
         <h1 className="text-white text-2xl font-bold mb-4">Escolha seu Plano</h1>
         <div className="flex flex-col w-full max-w-md space-y-4">
-          <Controller
+        <Controller
             name="plan"
             control={control}
             render={({ field }) => (
-              <>
-                {/* Bronze Plan */}
+            <>
+                {/* Card Plano Essencial */}
                 <Card
-                  variant="primary"
-                  className={`p-4 ${field.value === 'Bronze' ? 'border-[#187BF0] text-[#187BF0]' : ''}`}
-                  onClick={() => field.onChange('Bronze')}
+                variant="primary"
+                className={`p-6 rounded-xl border-2 transition-all duration-200 ease-in-out ${field.value === 'Plano - Essencial' ? 'border-[#187BF0] text-[#187BF0]' : 'border-gray-200'} shadow-md hover:shadow-lg cursor-pointer`}
+                onClick={() => field.onChange('Plano - Essencial')}
                 >
-                  <div className="flex items-center">
-                    <CheckBox
-                      checked={field.value === 'Bronze'}
-                      onCheckedChange={() => field.onChange('Bronze')}
-                    />
-                    <span className="font-bold ml-2">Bronze - R$ 87,90/mês</span>
-                  </div>
+                <div className="w-full flex justify-between items-center">
+                    <span className="font-semibold text-lg">Plano - Essencial</span>
+                    <span className="text-end font-bold text-[#187BF0]">
+                        R$ 97,00/mês
+                        <div className="mt-3">
+                            <span className="text-xs text-[#187BF0] bg-white px-2 py-1 rounded-full">7 dias grátis</span>
+                        </div>
+                    </span>
+                </div>
+                <div className="mt-2">
+                    <span className="text-sm text-gray-500">Limite: Até 10 vídeos</span>
+                </div>
                 </Card>
 
-                {/* Silver Plan */}
+                {/* Card Plano Profissional */}
                 <Card
-                  variant="primary"
-                  className={`p-4 ${field.value === 'Silver' ? 'border-[#187BF0] text-[#187BF0]' : ''}`}
-                  onClick={() => field.onChange('Silver')}
+                variant="primary"
+                className={`p-6 rounded-xl border-2 transition-all duration-200 ease-in-out ${field.value === 'Plano - Profissional' ? 'border-[#187BF0] text-[#187BF0]' : 'border-gray-200'} shadow-md hover:shadow-lg cursor-pointer relative`}
+                onClick={() => field.onChange('Plano - Profissional')}
                 >
-                  <div className="flex items-center">
-                    <CheckBox
-                      checked={field.value === 'Silver'}
-                      onCheckedChange={() => field.onChange('Silver')}
-                    />
-                    <span className="font-bold ml-2">Silver - R$ 187,90/mês</span>
-                  </div>
-                  <span className="text-sm text-[#187BF0] bg-[#505050] px-2 py-1 rounded-full mt-1">Mais popular</span>
-                  <span className="text-sm text-[#187BF0] font-semibold">7 dias grátis</span>
+                <div className="w-full flex justify-between items-center">
+                    <span className="font-semibold text-lg">
+                        Plano - Profissional 
+                    </span>
+                    <span className="text-end font-bold text-[#187BF0]">
+                        R$ 147,00/mês
+                        <div className="mt-3">
+                            <span className="text-xs text-[#187BF0] bg-white px-2 py-1 rounded-full">7 dias grátis</span>
+                        </div>
+                    </span>
+                </div>
+                <div className="mt-2">
+                    <span className="text-sm text-gray-500">Limite: Até 25 vídeos</span>
+                </div>
                 </Card>
 
-                {/* Gold Plan */}
+                {/* Card Plano Ilimitado */}
                 <Card
-                  variant="primary"
-                  className={`p-4 ${field.value === 'Gold' ? 'border-[#187BF0] text-[#187BF0]' : ''}`}
-                  onClick={() => field.onChange('Gold')}
+                variant="primary"
+                className={`p-6 rounded-xl border-2 transition-all duration-200 ease-in-out ${field.value === 'Plano - Ilimitado' ? 'border-[#187BF0] text-[#187BF0]' : 'border-gray-200'} shadow-md hover:shadow-lg cursor-pointer`}
+                onClick={() => field.onChange('Plano - Ilimitado')}
                 >
-                  <div className="flex items-center">
-                    <CheckBox
-                      checked={field.value === 'Gold'}
-                      onCheckedChange={() => field.onChange('Gold')}
-                    />
-                    <span className="font-bold ml-2">Gold - R$ 387,90/mês</span>
-                  </div>
+                <div className="w-full flex justify-between items-center">
+                    <span className="font-semibold text-lg">Plano - Ilimitado</span>
+                    <span className="text-end font-bold text-[#187BF0]">
+                        R$ 257,00/mês
+                        <div className="mt-3">
+                            <span className="text-xs text-[#187BF0] bg-white px-2 py-1 rounded-full">7 dias grátis</span>
+                        </div>
+                    </span>
+                </div>
+                <div className="mt-2">
+                    <span className="text-sm text-gray-500">Limite: Até 150 vídeos</span>
+                </div>
+                
                 </Card>
-              </>
+            </>
             )}
-          />
+        />
         </div>
+
       </div>
       <div className="w-[50%] h-screen flex items-center justify-center">
         <form
@@ -145,6 +171,8 @@ export const LeadCapture: FC = () => {
                 className="w-full h-12 p-2 mb-2"
                 type="text"
                 id="phone"
+                isMask={true}
+                mask="(99) 99999-9999"
                 placeholder="Insira seu número"
               />
             )}
@@ -163,6 +191,8 @@ export const LeadCapture: FC = () => {
                 className="w-full h-12 p-2 mb-2"
                 type="text"
                 id="cpfCnpj"
+                isMask={true}
+                mask='999.999.999.99'
                 placeholder="000.000.000-00 ou 00.000.000/0000-00"
               />
             )}

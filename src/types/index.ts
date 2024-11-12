@@ -15,6 +15,14 @@ export interface SignUpVariables {
   password: string
 }
 
+export interface LeadVariables {
+  email: string
+  name: string
+  phone: string
+  document: string
+  plan: string
+}
+
 export interface User {
   id: string
   name: string
@@ -163,18 +171,25 @@ export enum ChargeFrequency {
 }
 
 export interface Signature {
-  id: string
-  status: StatusSignature
-  plan: Plan
-  ChargeFrequency: ChargeFrequency
-  price: string
-  payment_method: string
-  userId: string
-  kirvano_type: string
-  kirvano_sale_id: string
-  kirvano_checkout_id: string
-  next_charge_date: string
-  created_at: Date
+  id: string;
+  status: string;
+  plan: string;
+  ChargeFrequency: ChargeFrequency;
+  price: string;
+  payment_method: string;
+  userId: string;
+  kirvano_type?: string;
+  kirvano_sale_id?: string;
+  kirvano_checkout_id?: string;
+  next_charge_date?: string;
+  stripe_subscription_id?: string;
+  stripe_customer_id?: string;
+  start_date?: Date;
+  end_date?: Date;
+  trial_end_date?: Date;
+  created_at: Date;
+
+  user: User;
 }
 
 // Define a interface para o botão
