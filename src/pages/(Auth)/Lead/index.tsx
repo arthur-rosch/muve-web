@@ -41,79 +41,81 @@ export const LeadCapture: FC = () => {
 
   return (
     <div className="w-full h-screen flex bg-[#121212]">
-      <div className="w-[50%] h-screen flex items-center justify-center flex-col">
-        <h1 className="text-white text-2xl font-bold mb-4">Escolha seu Plano</h1>
-        <div className="flex flex-col w-full max-w-md space-y-4">
-        <Controller
-            name="plan"
-            control={control}
-            render={({ field }) => (
-            <>
-                {/* Card Plano Essencial */}
-                <Card
-                variant="primary"
-                className={`p-6 rounded-xl border-2 transition-all duration-200 ease-in-out ${field.value === 'Plano - Essencial' ? 'border-[#187BF0] text-[#187BF0]' : 'border-gray-200'} shadow-md hover:shadow-lg cursor-pointer`}
-                onClick={() => field.onChange('Plano - Essencial')}
-                >
-                <div className="w-full flex justify-between items-center">
-                    <span className="font-semibold text-lg">Plano - Essencial</span>
-                    <span className="text-end font-bold text-[#187BF0]">
+      <div className="w-[50%] h-screen flex items-center justify-center flex-col bg-[#1b1a1a]">
+        <div className='max-w-xl w-full'>
+          <h1 className="text-white text-2xl font-bold mb-4">Escolha seu Plano</h1>
+          <div className="flex flex-col w-full max-w-xl space-y-4">
+            <Controller
+              name="plan"
+              control={control}
+              render={({ field }) => (
+                <>
+                  <Card
+                    variant={field.value === 'Plano - Essencial' ? 'selected' : 'primary'}
+                    className="p-6 rounded-xl border-2 transition-all duration-200 ease-in-out shadow-md hover:shadow-lg cursor-pointer"
+                    onClick={() => field.onChange('Plano - Essencial')}
+                  >
+                    <div className="w-full flex justify-between items-center">
+                      <span className="font-semibold text-lg">Plano - Essencial</span>
+                      <span className="text-end font-bold text-[#187BF0]">
                         R$ 97,00/mês
                         <div className="mt-3">
-                            <span className="text-xs text-[#187BF0] bg-white px-2 py-1 rounded-full">7 dias grátis</span>
+                          <span className="text-xs text-white bg-[#187BF0] px-2 py-1 rounded-full">7 dias grátis</span>
                         </div>
-                    </span>
-                </div>
-                <div className="mt-2">
-                    <span className="text-sm text-gray-500">Limite: Até 10 vídeos</span>
-                </div>
-                </Card>
+                      </span>
+                    </div>
+                    <div className="mt-2">
+                      <span className="text-sm text-gray-500">Limite: Até 10 vídeos</span>
+                    </div>
+                  </Card>
 
-                {/* Card Plano Profissional */}
-                <Card
-                variant="primary"
-                className={`p-6 rounded-xl border-2 transition-all duration-200 ease-in-out ${field.value === 'Plano - Profissional' ? 'border-[#187BF0] text-[#187BF0]' : 'border-gray-200'} shadow-md hover:shadow-lg cursor-pointer relative`}
-                onClick={() => field.onChange('Plano - Profissional')}
-                >
-                <div className="w-full flex justify-between items-center">
-                    <span className="font-semibold text-lg">
-                        Plano - Profissional 
-                    </span>
-                    <span className="text-end font-bold text-[#187BF0]">
+                  {/* Card Plano Profissional */}
+                  <Card
+                    variant={field.value === 'Plano - Profissional' ? 'selected' : 'primary'}
+                    className="p-6 rounded-xl border-2 transition-all duration-200 ease-in-out shadow-md hover:shadow-lg cursor-pointer"
+                    onClick={() => field.onChange('Plano - Profissional')}
+                  >
+                    <div className="w-full flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-lg">Plano - Profissional</span>
+                        <span className="text-xs text-white bg-[#187BF0] px-4 py-1 rounded-full">Mais popular</span>
+                      </div>
+                      <span className="text-end font-bold text-[#187BF0]">
                         R$ 147,00/mês
                         <div className="mt-3">
-                            <span className="text-xs text-[#187BF0] bg-white px-2 py-1 rounded-full">7 dias grátis</span>
+                          <span className="text-xs text-white bg-[#187BF0] px-2 py-1 rounded-full">7 dias grátis</span>
                         </div>
-                    </span>
-                </div>
-                <div className="mt-2">
-                    <span className="text-sm text-gray-500">Limite: Até 25 vídeos</span>
-                </div>
-                </Card>
+                      </span>
+                    </div>
+                    <div className="mt-2">
+                      <span className="text-sm text-gray-500">Limite: Até 25 vídeos</span>
+                    </div>
+                  </Card>
 
-                {/* Card Plano Ilimitado */}
-                <Card
-                variant="primary"
-                className={`p-6 rounded-xl border-2 transition-all duration-200 ease-in-out ${field.value === 'Plano - Ilimitado' ? 'border-[#187BF0] text-[#187BF0]' : 'border-gray-200'} shadow-md hover:shadow-lg cursor-pointer`}
-                onClick={() => field.onChange('Plano - Ilimitado')}
-                >
-                <div className="w-full flex justify-between items-center">
-                    <span className="font-semibold text-lg">Plano - Ilimitado</span>
-                    <span className="text-end font-bold text-[#187BF0]">
+                  {/* Card Plano Ilimitado */}
+                  <Card
+                    variant={field.value === 'Plano - Ilimitado' ? 'selected' : 'primary'}
+                    className="p-6 rounded-xl border-2 transition-all duration-200 ease-in-out shadow-md hover:shadow-lg cursor-pointer"
+                    onClick={() => field.onChange('Plano - Ilimitado')}
+                  >
+                    <div className="w-full flex justify-between items-center">
+                      <span className="font-semibold text-lg">Plano - Ilimitado</span>
+                      <span className="text-end font-bold text-[#187BF0]">
                         R$ 257,00/mês
                         <div className="mt-3">
-                            <span className="text-xs text-[#187BF0] bg-white px-2 py-1 rounded-full">7 dias grátis</span>
+                          <span className="text-xs text-white bg-[#187BF0] px-2 py-1 rounded-full">7 dias grátis</span>
                         </div>
-                    </span>
-                </div>
-                <div className="mt-2">
-                    <span className="text-sm text-gray-500">Limite: Até 150 vídeos</span>
-                </div>
-                
-                </Card>
-            </>
-            )}
-        />
+                      </span>
+                    </div>
+                    <div className="mt-2">
+                      <span className="text-sm text-gray-500">Limite: Até 150 vídeos</span>
+                    </div>
+                  </Card>
+                </>
+              )}
+            />
+
+          </div>
         </div>
 
       </div>
@@ -173,7 +175,7 @@ export const LeadCapture: FC = () => {
                 id="phone"
                 isMask={true}
                 mask="(99) 99999-9999"
-                placeholder="Insira seu número"
+                placeholder="(99) 99999-9999"
               />
             )}
           />
@@ -190,10 +192,10 @@ export const LeadCapture: FC = () => {
                 {...field}
                 className="w-full h-12 p-2 mb-2"
                 type="text"
-                id="cpfCnpj"
+                id="cpf"
                 isMask={true}
                 mask='999.999.999.99'
-                placeholder="000.000.000-00 ou 00.000.000/0000-00"
+                placeholder="000.000.000-00"
               />
             )}
           />
