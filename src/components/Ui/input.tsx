@@ -23,13 +23,14 @@ export const Input: FC<InputProps> = ({
   isMask = false,
   mask,
   maxLength,
-  ...rest // Captura todas as outras props padrão do input
+  ...rest
 }) => {
   const inputClassName = `bg-[#141414] border-[1px] border-[#333333] border-solid bg-opacity-50 rounded text-white hover:border-[#187BF0] ${className}`
 
   const InputComponent =
     isMask && mask ? (
       <InputMask
+        {...rest}
         id={id}
         mask={mask}
         value={value}
@@ -37,7 +38,7 @@ export const Input: FC<InputProps> = ({
         disabled={disabled}
         placeholder={placeholder}
         className={inputClassName}
-        {...rest} // Passa todas as outras props para o InputMask
+        maskPlaceholder={null} 
       />
     ) : (
       <input

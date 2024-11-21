@@ -1,47 +1,62 @@
+import axios from 'axios'
 import { Player } from './player'
+import host from '../../utils/host'
+import { PlayerVsl } from './playerVsl'
 import type { Video } from '../../types'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import { useLocation } from 'react-router-dom'
-import { PlayerVsl } from './playerVsl'
-import host from '../../utils/host'
 
 export function PlayerWrapper() {
   const location = useLocation()
   const [video, setVideo] = useState<Video | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const getVideoIdFromQuery = () => {
     const searchParams = new URLSearchParams(location.search)
     return searchParams.get('videoId')
   }
-
   const fetchVideo = async () => {
     const videoId = getVideoIdFromQuery()
+
+    if (!videoId) {
+      setErrorMessage('ID do vídeo não encontrado na URL.')
+      setIsLoading(false)
+      return
+    }
+
     try {
-      if (videoId) {
-        const response = await axios.get(`${host()}/video/${videoId}`)
-        const video = response.data.video
-        if (video) {
-          setVideo(video)
-          setIsLoading(false)
-        } else {
-          console.error('Video not found or API response is invalid')
-          setIsLoading(false)
-        }
+      const response = await axios.get(`${host()}/video/${videoId}`)
+      const video = response.data.video
+      if (video) {
+        setVideo(video)
+      } else {
+        setErrorMessage(response.data.message)
       }
-    } catch (error) {
-      console.error('Erro ao buscar vídeo:', error)
+    } catch (error: any) {
+      const errorMsg = error.response?.data?.message || 'Erro ao buscar vídeo.'
+      console.error(errorMsg)
+      setErrorMessage(errorMsg)
+    } finally {
       setIsLoading(false)
     }
   }
 
   useEffect(() => {
-    fetchVideo()
-  }, [location.search]) // Re-fetch video when query changes
+    const initializePlayer = async () => {
+      setIsLoading(true)
+      await fetchVideo()
+    }
+
+    initializePlayer()
+  }, [location.search])
 
   if (isLoading) {
-    return <div>Loading...</div> // Loading indicator or placeholder
+    return <div>Loading...</div>
+  }
+
+  if (errorMessage) {
+    return <div>{errorMessage}</div>
   }
 
   return video ? (
@@ -51,6 +66,6 @@ export function PlayerWrapper() {
       <Player video={video} />
     )
   ) : (
-    <div>Video not found</div>
+    <div>Vídeo não encontrado</div>
   )
 }

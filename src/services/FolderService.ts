@@ -35,11 +35,13 @@ export class FolderService {
     const url = `${host()}/folder/${folderId}`
 
     try {
-      const response = await (await this.getAxiosInstance()).delete(url)
+      const response = await (await this.getAxiosInstance()).post(url, {
+
+      })
       if (response.status === 200) {
         return { data: response.data, success: true }
       } else {
-        return {
+        return { 
           error: response.data.message,
           success: false,
         }

@@ -1,13 +1,13 @@
 export const limitPlan = (plan: string) => {
   let videoLimit
   switch (plan) {
-    case 'ESSENTIAL':
+    case 'Mensal - Essencial':
       videoLimit = 10
       break
-    case 'PROFESSIONAL':
+    case 'Mensal - Profissional':
       videoLimit = 25
       break
-    case 'UNLIMITED':
+    case 'Mensal - Ilimitado':
       videoLimit = 150
       break
   }

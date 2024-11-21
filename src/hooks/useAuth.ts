@@ -6,38 +6,44 @@ import { setUser } from '../redux/actions/user'
 import { Local } from '../services/Local'
 import type { SignInVariables, SignUpVariables } from '../types'
 import { AuthService } from '../services/AuthService'
+import { verifySignature } from '../utils'
 
 export const useAuth = () => {
   const dispatch = useDispatch()
 
-  const signIn = useCallback(
-    async (variables: SignInVariables) => {
-      console.log(variables)
-      const response = await AuthService.signIn(variables)
+ const signIn = useCallback(
+  async (variables: SignInVariables) => {
+    console.log(variables);
+    const response = await AuthService.signIn(variables);
 
-      if (response.success) {
-        dispatch(setUser(response.data.user))
-        await Local.setJWT(response.data.token)
-        if (response.data.signature) {
-          await Local.setPlan(
-            response.data.signature.plan,
-            response.data.signature.next_charge_date,
-            response.data.signature.ChargeFrequency,
-          )
-        } else {
-          await Local.setPlan('FREE', '00/00/0000', '')
-        }
+    if (response.success) {
+      const signatureError = verifySignature(response.data.signature);
 
-        return {
-          success: true,
-          Message: 'Usuário fez login com sucesso!',
-          data: response.data.user,
-        }
+      if (signatureError) {
+        return { success: false, Erro: signatureError };
       }
-      return { success: false, Erro: response.error }
-    },
-    [dispatch],
-  )
+
+      dispatch(setUser(response.data.user));
+      await Local.setJWT(response.data.token);
+
+      if (response.data.signature) {
+        await Local.setPlan(
+          response.data.signature.plan,
+          response.data.signature.next_charge_date,
+          response.data.signature.ChargeFrequency,
+        );
+      }
+      return {
+        success: true,
+        Message: 'Usuário fez login com sucesso!',
+        data: response.data,
+      };
+    }
+
+    return { success: false, Erro: response.error };
+  },
+  [dispatch],
+  );
 
   const signUp = useCallback(async (variables: SignUpVariables) => {
     const response = await AuthService.signUp(variables)

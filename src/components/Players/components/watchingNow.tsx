@@ -9,9 +9,16 @@ export function WatchingNow({ video }: WatchingNowProps) {
   const [viewers, setViewers] = useState<number>(0)
 
   useEffect(() => {
-    // Gera um número aleatório entre 100 e 200 para simular o número de pessoas assistindo
-    const randomViewers = Math.floor(Math.random() * (200 - 100 + 1)) + 100
-    setViewers(randomViewers)
+    const updateViewers = () => {
+      const randomViewers = Math.floor(Math.random() * (200 - 100 + 1)) + 100
+      setViewers(randomViewers)
+    }
+    
+    updateViewers()
+    
+    const intervalId = setInterval(updateViewers, Math.floor(Math.random() * (4000 - 3000 + 1)) + 3000)
+
+    return () => clearInterval(intervalId)
   }, [])
 
   return (

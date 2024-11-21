@@ -48,7 +48,6 @@ export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
 
     if (success) {
       toggleMenu()
-      navigate('/dashboard')
       toastSuccess({
         text: `Vídeo excluído com sucesso`,
       })

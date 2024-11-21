@@ -217,7 +217,7 @@ export function PlayerVsl({ video }: { video: Video }) {
   }, [video.smartAutoPlay])
 
   const handleEnded = async () => {
-    // Garante que a requisição será feita apenas se o vídeo terminou, e playEnd ainda não foi setado
+    
     if (ended && playStartTime !== null && playerData && !playEnd) {
       const currentTime = player.current?.currentTime || 0
       const duration = player.current?.duration || currentTime
@@ -229,7 +229,7 @@ export function PlayerVsl({ video }: { video: Video }) {
           startTimestamp: playStartTime,
           videoId: video.id,
         })
-        setPlayEnd(true) // Marca que a requisição foi feita
+        setPlayEnd(true) 
       } catch (error) {
         console.error('Erro ao adicionar timestamps:', error)
       }
@@ -264,7 +264,7 @@ export function PlayerVsl({ video }: { video: Video }) {
               />
             </MediaProvider>
 
-            <a href="https://muveplayer.com/" className="invisible">Link 1</a>
+            <a href="https://muveplayer.com/" className="hidden">Link 1</a>
 
             {paused && !overlayVisible && (
               <div
@@ -276,7 +276,7 @@ export function PlayerVsl({ video }: { video: Video }) {
                     <img
                       src={video.UrlCoverImageVideoPause}
                       alt=""
-                      className="w-full h-auto rounded-md" // Estilos opcionais para a imagem
+                      className="w-full h-auto rounded-md" 
                     />
                     <PlayButton
                       className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
@@ -308,7 +308,7 @@ export function PlayerVsl({ video }: { video: Video }) {
                     <img
                       src={video.UrlCoverImageOfFinished}
                       alt=""
-                      className="w-full h-auto rounded-md" // Estilos opcionais para a imagem
+                      className="w-full h-auto rounded-md"
                     />
 
                     <PlayButton
@@ -371,6 +371,7 @@ export function PlayerVsl({ video }: { video: Video }) {
 
             <VideoLayout video={video} chapters={video.Chapter} />
           </MediaPlayer>
+
           {video.watchingNow && <WatchingNow video={video} />}
 
           {video.buttonsActive && (

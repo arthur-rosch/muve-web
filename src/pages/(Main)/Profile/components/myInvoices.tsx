@@ -9,8 +9,8 @@ import {
   getPaginationRowModel,
 } from '@tanstack/react-table'
 import { useSignature } from '../../../../hooks'
+import { planNameMappingStripe } from '../../../../utils'
 
-// Define os dados da tabela
 interface Invoice {
   name: string
   date: string
@@ -21,13 +21,11 @@ interface Invoice {
 export const MyInvoices: FC = () => {
   const { getAllSignaturesByUserId } = useSignature()
   const { data: signatures } = getAllSignaturesByUserId
-  console.log(signatures)
 
-  // Dados da tabela - Mapeia as assinaturas para o formato de Invoice
   const data = useMemo<Invoice[]>(
     () =>
       signatures?.map((signature) => ({
-        name: signature.plan,
+        name: planNameMappingStripe(signature.plan),
         date: new Date(signature.created_at).toLocaleDateString(),
         status: signature.status,
         valueInvested: signature.price,
@@ -60,13 +58,13 @@ export const MyInvoices: FC = () => {
     [columnHelper],
   )
 
-  // Criação da instância da tabela com paginação
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    pageCount: Math.ceil(data.length / 5), // Define o número total de páginas
+    pageCount: Math.ceil(data.length / 5),
     state: {
       pagination: {
         pageIndex: 0,
