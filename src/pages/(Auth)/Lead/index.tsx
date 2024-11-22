@@ -1,12 +1,9 @@
-import logo from '../../../assets/logo.svg'
-
 import { z } from 'zod'
+import React, { useState } from 'react'
 import { useLead } from '../../../hooks'
-import { ChevronDown } from 'lucide-react'
-import { useState, useEffect } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input, Card } from '../../../components'
+import { Check, Star, Zap, Infinity } from 'lucide-react'
 
 const leadFormSchema = z.object({
   plan: z.string().nonempty('Selecione um plano.'),
@@ -19,22 +16,14 @@ const leadFormSchema = z.object({
 type LeadFormInputs = z.infer<typeof leadFormSchema>
 
 const plans = [
-  { name: 'Plano - Essencial', price: '97,00', limit: 'Até 10 vídeos' },
-  { name: 'Plano - Profissional', price: '147,00', limit: 'Até 25 vídeos', popular: true },
-  { name: 'Plano - Ilimitado', price: '257,00', limit: 'Até 150 vídeos' },
+  { name: 'Essencial', price: '97', limit: 'Até 10 vídeos', icon: Star },
+  { name: 'Profissional', price: '147', limit: 'Até 25 vídeos', popular: true, icon: Zap },
+  { name: 'Ilimitado', price: '257', limit: 'Até 150 vídeos', icon: Infinity },
 ]
 
 export function LeadCapture() {
   const { createLed } = useLead()
-  const [selectedPlanIndex, setSelectedPlanIndex] = useState(plans.findIndex(plan => plan.popular) || 0)
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkIfMobile = () => setIsMobile(window.innerWidth < 768)
-    checkIfMobile()
-    window.addEventListener('resize', checkIfMobile)
-    return () => window.removeEventListener('resize', checkIfMobile)
-  }, [])
+  const [selectedPlanIndex, setSelectedPlanIndex] = useState(plans.findIndex((plan) => plan.popular) || 0);
 
   const {
     control,
@@ -45,192 +34,140 @@ export function LeadCapture() {
     defaultValues: {
       plan: plans[selectedPlanIndex].name,
     },
-  })
+  });
 
   const handleLeadSubmit = async (formData: LeadFormInputs) => {
-    const { success, data } = await createLed({
+    console.log(formData);
+
+    const { success, data } =  await createLed({
       ...formData,
-      document: formData.cpfCnpj
+      document: formData.cpfCnpj,
     })
 
     if (success) {
       window.location.href = data.checkoutUrl
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-4 sm:p-6 md:p-8 flex items-center justify-center">
-      <div className="w-full max-w-7xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 md:mb-10">
-          Escolha seu Plano e Comece Agora
+    <div className="max-h-full bg-[#0B0F17] text-white flex flex-col items-center justify-start px-4 py-6 md:py-12 overflow-auto">
+      <div className="w-full max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+        <h1 className="text-2xl md:text-3xl font-bold text-center leading-tight mb-2 md:mb-4">
+          Escolha seu Plano e <br />
+          Comece Agora
         </h1>
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8 lg:gap-12">
-          <div className="space-y-4 sm:space-y-6">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-4">Selecione seu Plano</h2>
-            <Controller
-              name="plan"
-              control={control}
-              render={({ field }) => (
-                <PlanCard
-                  plans={plans}
-                  selectedPlanIndex={selectedPlanIndex}
-                  onSelect={(index) => {
-                    setSelectedPlanIndex(index)
-                    field.onChange(plans[index].name)
-                  }}
-                  isMobile={isMobile}
-                />
-              )}
-            />
-            {errors.plan && <p className="text-red-500 text-sm">{errors.plan.message}</p>}
-          </div>
-          <div className="mt-6 md:mt-0">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-4">Seus Dados</h2>
-            <form onSubmit={handleSubmit(handleLeadSubmit)} className="space-y-4">
-              <FormField
-                label="Nome"
-                name="name"
-                control={control}
-                errors={errors}
-                placeholder="Digite seu nome completo"
-              />
-              <FormField
-                label="E-mail"
-                name="email"
-                control={control}
-                errors={errors}
-                placeholder="Digite seu e-mail"
-                type="email"
-              />
-              <FormField
-                label="Número de Telefone"
-                name="phone"
-                control={control}
-                errors={errors}
-                placeholder="(99) 99999-9999"
-                mask="(99) 99999-9999"
-              />
-              <FormField
-                label="CPF/CNPJ"
-                name="cpfCnpj"
-                control={control}
-                errors={errors}
-                placeholder="000.000.000-00"
-                mask="999.999.999-99"
-              />
-              <Button
-                className="w-full py-3 mt-6 text-lg font-semibold"
-                type="submit"
-                variant="primary"
+        <p className="text-[#8F9BBA] text-center text-sm md:text-base mb-6 md:mb-8">
+          Com o Muve, você tem personalização, análise detalhada e um custo fixo.
+          <br className="hidden md:inline" />
+          Sem surpresas, sem pagar por play.
+        </p>
+        
+        {/* Planos */}
+        <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
+          {plans.map((plan, index) => {
+            const Icon = plan.icon;
+            return (
+              <div
+                key={plan.name}
+                onClick={() => setSelectedPlanIndex(index)}
+                className={`w-full rounded-lg transition-all duration-300 cursor-pointer overflow-hidden ${
+                  selectedPlanIndex === index
+                    ? 'bg-[#187BF0]'
+                    : 'bg-[#1A1F37] hover:bg-[#242B45]'
+                }`}
               >
-                Criar Conta
-              </Button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-interface PlanCardProps {
-  plans: Array<{
-    name: string
-    price: string
-    limit: string
-    popular?: boolean
-  }>
-  selectedPlanIndex: number
-  onSelect: (index: number) => void
-  isMobile: boolean
-}
-
-function PlanCard({ plans, selectedPlanIndex, onSelect, isMobile }: PlanCardProps) {
-  const [isOpen, setIsOpen] = useState(false)
-
-  if (!isMobile) {
-    return (
-      <div className="space-y-4">
-        {plans.map((plan, index) => (
-          <Card
-            key={plan.name}
-            variant={selectedPlanIndex === index ? 'selected' : 'primary'}
-            className={`p-4 sm:p-6 rounded-xl border-2 transition-all duration-200 ease-in-out shadow-md hover:shadow-lg cursor-pointer ${
-              selectedPlanIndex === index ? 'border-blue-500' : 'border-gray-700'
-            }`}
-            onClick={() => onSelect(index)}
-          >
-            <div className="w-full flex justify-between items-center">
-              <div className="flex-1">
-                <div className="font-semibold text-base sm:text-lg">
-                  {plan.name}
-                  {plan.popular && (
-                    <span className="ml-4 inline-block mt-2 text-xs bg-blue-500 text-white px-2 py-1 rounded-full">Mais popular</span>
+                <div className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <Icon className={`w-5 h-5 md:w-6 md:h-6 ${selectedPlanIndex === index ? 'text-white' : 'text-[#8F9BBA]'}`} />
+                      <div>
+                        <h3 className="font-medium text-base md:text-lg">{plan.name}</h3>
+                        <p className={`text-xs md:text-sm ${selectedPlanIndex === index ? 'text-white' : 'text-[#8F9BBA]'}`}>
+                          {plan.limit}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="flex items-baseline">
+                        <span className="text-xs md:text-sm">R$</span>
+                        <span className="text-xl md:text-2xl font-bold ml-1">{plan.price}</span>
+                        <span className={`text-xs md:text-sm ${selectedPlanIndex === index ? 'text-white' : 'text-[#8F9BBA]'}`}>
+                          /mês
+                        </span>
+                      </div>
+                      <p className={`text-[10px] md:text-xs mt-1 ${
+                        selectedPlanIndex === index
+                          ? 'text-white font-bold bg-[#1569D3] px-2 py-0.5 rounded-full inline-block'
+                          : 'text-[#8F9BBA]'
+                      }`}>
+                        7 dias grátis
+                      </p>
+                    </div>
+                  </div>
+                  {selectedPlanIndex === index && (
+                    <div className="flex items-center mt-2 text-xs md:text-sm">
+                      <Check className="w-4 h-4 mr-1.5" />
+                      Selecionado
+                    </div>
                   )}
                 </div>
-                <div className="text-sm text-gray-400 mt-1">{plan.limit}</div>
+                {plan.popular && (
+                  <div className="bg-[#187BF0] text-center py-1 text-[10px] md:text-xs font-medium">
+                    Mais popular
+                  </div>
+                )}
               </div>
-              <div className="text-right">
-                <div className="font-bold text-blue-400 text-lg sm:text-xl">R$ {plan.price}/mês</div>
-                <div className="mt-4">
-                  <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">7 dias grátis</span>
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-    )
-  }
-
-  const selectedPlan = plans[selectedPlanIndex]
-
-  return (
-    <div className="w-full relative">
-      <Card
-        variant="primary"
-        className="p-4 sm:p-6 rounded-xl border-2 border-blue-500 transition-all duration-200 ease-in-out shadow-md hover:shadow-lg cursor-pointer"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <div className="w-full flex justify-between items-center">
-          <div className="flex-1">
-            <div className="font-semibold text-base sm:text-lg">
-              {selectedPlan.name}
-              {selectedPlan.popular && (
-                <span className="ml-4 inline-block mt-2 text-xs bg-blue-500 text-white px-2 py-1 rounded-full">Mais popular</span>
-              )}
-            </div>
-            <div className="text-sm text-gray-400 mt-1">{selectedPlan.limit}</div>
-          </div>
-          <div className="text-right">
-            <div className="font-bold text-blue-400 text-lg sm:text-xl">R$ {selectedPlan.price}/mês</div>
-            <div className="mt-4">
-              <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">7 dias grátis</span>
-            </div>
-          </div>
+            );
+          })}
         </div>
-        <div className="absolute top-2 right-2 p-2 cursor-pointer">
-          <ChevronDown className={`w-6 h-6 transition-transform ${isOpen ? 'transform rotate-180' : ''}`} />
-        </div>
-      </Card>
-      {isOpen && (
-        <div className="absolute z-10 w-full mt-2 bg-gray-800 border border-gray-700 rounded-md shadow-lg">
-          {plans.map((plan, index) => (
-            <div
-              key={plan.name}
-              className={`p-2 cursor-pointer hover:bg-gray-700 ${index === selectedPlanIndex ? 'bg-gray-700' : ''}`}
-              onClick={() => {
-                onSelect(index)
-                setIsOpen(false)
-              }}
+
+        {/* Formulário */}
+        <div className="w-full">
+          <h2 className="text-lg md:text-xl font-bold mb-4 md:mb-6">Crie sua conta</h2>
+          <form onSubmit={handleSubmit(handleLeadSubmit)} className="space-y-4 md:space-y-6">
+            <FormField
+              label="Nome"
+              name="name"
+              control={control}
+              errors={errors}
+              placeholder="Seu nome completo"
+            />
+            <FormField
+              label="E-mail"
+              name="email"
+              control={control}
+              errors={errors}
+              placeholder="seu@email.com"
+              type="email"
+            />
+            <FormField
+              label="Telefone"
+              name="phone"
+              control={control}
+              errors={errors}
+              placeholder="(00) 00000-0000"
+            />
+            <FormField
+              label="CPF/CNPJ"
+              name="cpfCnpj"
+              control={control}
+              errors={errors}
+              placeholder="000.000.000-00"
+            />
+            <button
+              type="submit"
+              className="w-full py-3 md:py-4 mt-2 bg-[#187BF0] hover:bg-[#1569D3] text-white font-medium rounded-lg transition-all duration-300 text-base md:text-lg"
             >
-              {plan.name} - R$ {plan.price}/mês
-            </div>
-          ))}
+              Criar Conta
+            </button>
+          </form>
+          <p className="text-[10px] md:text-xs text-[#8F9BBA] text-center mt-4 md:mt-6">
+            Ao criar uma conta, você concorda com nossos Termos de Serviço e Política de Privacidade.
+          </p>
         </div>
-      )}
+      </div>
     </div>
-  )
+  );
 }
 
 interface FormFieldProps {
@@ -240,31 +177,28 @@ interface FormFieldProps {
   errors: any
   placeholder: string
   type?: string
-  mask?: string
 }
 
-function FormField({ label, name, control, errors, placeholder, type = 'text', mask }: FormFieldProps) {
+function FormField({ label, name, control, errors, placeholder, type = 'text' }: FormFieldProps) {
   return (
     <div>
-      <label className="block text-sm font-medium mb-1" htmlFor={name}>
+      <label className="block text-sm md:text-base font-medium mb-1 md:mb-1.5 text-[#8F9BBA]" htmlFor={name}>
         {label}
       </label>
       <Controller
         name={name}
         control={control}
         render={({ field }) => (
-          <Input
+          <input
             {...field}
-            className="w-full p-3 bg-gray-800 rounded text-white placeholder-gray-400"
+            className="w-full h-12 md:h-14 px-3 py-2 md:py-3 bg-[#1A1F37] rounded-lg text-white placeholder-[#8F9BBA]/50 focus:ring-1 focus:ring-[#187BF0] outline-none transition-all duration-300 text-base"
             type={type}
             id={name}
             placeholder={placeholder}
-            isMask={!!mask}
-            mask={mask}
           />
         )}
       />
-      {errors[name] && <p className="text-red-500 text-sm mt-1">{errors[name].message}</p>}
+      {errors[name] && <p className="mt-1 text-xs md:text-sm text-red-400">{errors[name].message}</p>}
     </div>
   )
 }
