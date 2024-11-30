@@ -53,9 +53,7 @@ export const Folder: FC = () => {
 
         <Input
           type="text"
-          animation={true}
           className="w-full mt-8"
-          variants={cardVariants}
           placeholder="Pesquisar vídeo"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

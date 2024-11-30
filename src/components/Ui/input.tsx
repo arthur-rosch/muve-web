@@ -1,69 +1,73 @@
-import { type FC, type InputHTMLAttributes } from 'react'
-import { motion, type Variants } from 'framer-motion'
-import InputMask from 'react-input-mask'
+import { forwardRef } from 'react';
+import { cn } from '../../utils';
+import InputMask from "react-input-mask";
+import { cva, type VariantProps } from 'class-variance-authority';
 
-// Extende InputHTMLAttributes para incluir todas as props padrão de input
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  animation?: boolean
-  variants?: Variants
-  isMask?: boolean
-  mask?: string
+const inputVariants = cva(
+  'flex w-full rounded-lg border px-3 py-2 text-sm transition-colors',
+  {
+    variants: {
+      variant: {
+        default: 'bg-[#141414] border-[#333333] text-white placeholder:text-gray-500',
+        filled: 'bg-[#2A2A2A] border-[#3A3A3A] text-white placeholder:text-gray-500',
+      },
+      size: {
+        default: 'h-10',
+        sm: 'h-8 px-2',
+        lg: 'h-12 px-4',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  }
+);
+
+export interface InputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'>,
+    VariantProps<typeof inputVariants> {
+  error?: boolean;
+  mask?: string;
 }
 
-export const Input: FC<InputProps> = ({
-  id,
-  value,
-  onChange,
-  placeholder,
-  type = 'text',
-  className,
-  animation = false,
-  variants,
-  disabled = false,
-  isMask = false,
-  mask,
-  maxLength,
-  ...rest
-}) => {
-  const inputClassName = `bg-[#141414] border-[1px] border-[#333333] border-solid bg-opacity-50 rounded text-white hover:border-[#187BF0] ${className}`
+export const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, error, variant, size, mask, max, ...props }, ref) => {
+   const isMasked = !!mask;
 
-  const InputComponent =
-    isMask && mask ? (
-      <InputMask
-        {...rest}
-        id={id}
-        mask={mask}
-        value={value}
-        onChange={onChange}
-        disabled={disabled}
-        placeholder={placeholder}
-        className={inputClassName}
-        maskPlaceholder={null} 
-      />
-    ) : (
+    if (isMasked) {
+      return (
+        <InputMask 
+          mask={mask}
+          maskPlaceholder={null}
+          className={cn(
+            inputVariants({ variant, size }),
+            "file:border-0 file:bg-transparent file:text-sm file:font-medium",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#187BF0] focus-visible:ring-offset-2",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            error && "border-red-500 focus-visible:ring-red-500",
+            className
+          )}
+          inputRef={ref as any}
+          {...props}
+        />
+      );
+    }
+
+    return (
       <input
-        id={id}
         type={type}
-        value={value}
-        onChange={onChange}
-        disabled={disabled}
-        placeholder={placeholder}
-        className={inputClassName}
-        maxLength={maxLength} // Aplica o comprimento máximo se não estiver usando máscara
-        {...rest} // Passa todas as outras props para o input
+        className={cn(
+          inputVariants({ variant, size }),
+          'file:border-0 file:bg-transparent file:text-sm file:font-medium',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#187BF0] focus-visible:ring-offset-2',
+          'disabled:cursor-not-allowed disabled:opacity-50',
+          error && 'border-red-500 focus-visible:ring-red-500',
+          className
+        )}
+        ref={ref}
+        {...props}
       />
-    )
-
-  return animation ? (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={variants}
-      className="w-full"
-    >
-      {InputComponent}
-    </motion.div>
-  ) : (
-    InputComponent
-  )
-}
+    );
+  }
+);

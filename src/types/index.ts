@@ -1,4 +1,4 @@
-enum Role {
+export enum Role {
   ADMIN,
   MEMBER,
 }
@@ -12,6 +12,7 @@ export interface SignUpVariables {
   email: string
   name: string
   phone: string
+  document: string
   password: string
 }
 

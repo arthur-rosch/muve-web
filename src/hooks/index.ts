@@ -6,3 +6,5 @@ export * from './useTokenPlayer'
 export * from './useProfile'
 export * from './useSignature'
 export * from './useLead'
+export * from './useUpgradeModal'
+

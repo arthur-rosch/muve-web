@@ -3,7 +3,7 @@ import { useVideo } from '../../hooks'
 import type { Video } from '../../types'
 import { useState, type FC } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { toastError, toastSuccess } from '../Ui/toast'
+import { toastError, toastSuccess } from '../ui/toast'
 import { PreviewPlayerModal } from './previewPlayerModal'
 import { itemVariants, menuVariants } from '../../animations'
 import {
@@ -52,7 +52,7 @@ export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
         text: `Vídeo excluído com sucesso`,
       })
 
-      await getAllVideosByUserId.refetch()
+      await getAllVideosByUserId(true).refetch()
     } else {
       toastError({
         text: `Algo deu errado, tente mais tarde`,

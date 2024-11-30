@@ -699,9 +699,9 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     type="button"
                     variant="outline"
                     className="w-full h-14"
-                    text="Adicionar Botão"
+                    
                     onClick={() => setIsModalOpen(!isModalOpen)}
-                  />
+                  >Adicionar botão</Button>
                 </motion.div>
               </Accordion.Content>
             </Accordion.Item>

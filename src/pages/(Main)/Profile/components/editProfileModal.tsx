@@ -107,8 +107,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({
             <Button
               type="button"
               variant="primary"
-              animation={true}
-              variants={cardVariants}
               onClick={() => setIsModalOpen(false)}
               className="w-full flex items-center justify-center py-3 px-4 h-10"
             >
@@ -213,8 +211,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({
             <Button
               type="button"
               variant="danger"
-              animation={true}
-              variants={cardVariants}
               onClick={() => setIsModalOpen(false)}
               className="w-full flex items-center justify-center py-3 px-4 h-10"
             >
@@ -223,8 +219,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({
             <Button
               type="button"
               variant="primary"
-              animation={true}
-              variants={cardVariants}
               className="w-full flex items-center justify-center py-3 px-4 h-10"
               onClick={handleSubmit(onSubmit)}
             >

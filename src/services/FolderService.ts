@@ -1,131 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios'
-import { Local } from './Local'
-import host from '../utils/host'
-import type { CreateFolderVariables } from '../types'
+import axios from 'axios';
+import host from '../utils/host';
+import { handleRequest, type ApiResponse } from './HandleRequest';
+import type { CreateFolderVariables } from '../types';
+import { Local } from './Local';
+import { getAxiosInstance } from './GetAxiosInstance';
 
-export class FolderService {
-  static async createFolder(data: CreateFolderVariables) {
-    const url = `${host()}/folder`
+export const FolderService = {
+  createFolder: async (data: CreateFolderVariables): Promise<ApiResponse<any>> => {
+    const url = `${host()}/folder`;
+    return handleRequest((await getAxiosInstance()).post(url, data));
+  },
 
-    try {
-      const response = await (await this.getAxiosInstance()).post(url, data)
-      if (response.status === 201) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data.message,
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      if (error.response.data.error)
-        return {
-          error: error.response.data.error,
-          success: false,
-        }
-      return {
-        error: 'Erro ao criar Pasta',
-        success: false,
-      }
-    }
-  }
+  deleteFolder: async (folderId: string): Promise<ApiResponse<any>> => {
+    const url = `${host()}/folder/${folderId}`;
+    return handleRequest((await getAxiosInstance()).delete(url));
+  },
 
-  static async deleteFolder(folderId: string) {
-    const url = `${host()}/folder/${folderId}`
+  addFavoriteFolder: async (folderId: string, value: boolean): Promise<ApiResponse<any>> => {
+    const url = `${host()}/folder/favorite`;
+    return handleRequest((await getAxiosInstance()).post(url, { folderId, value }));
+  },
 
-    try {
-      const response = await (await this.getAxiosInstance()).post(url, {
+  getAllFolderByUserId: async (): Promise<ApiResponse<any>> => {
+    const url = `${host()}/folder/all`;
+    return handleRequest((await getAxiosInstance()).get(url));
+  },
 
-      })
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return { 
-          error: response.data.message,
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      if (error.response.data.error)
-        return {
-          error: error.response.data.error,
-          success: false,
-        }
-      return {
-        error: 'Erro ao deletar Pasta',
-        success: false,
-      }
-    }
-  }
-
-  static async addFavoriteFolder(folderId: string, value: boolean) {
-    const url = `${host()}/folder/favorite`
-    console.log(folderId, value)
-    try {
-      const response = await (
-        await this.getAxiosInstance()
-      ).post(url, {
-        folderId,
-        value,
-      })
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data.message,
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      if (error.response.data.error)
-        return {
-          error: error.response.data.error,
-          success: false,
-        }
-      return {
-        error: 'Erro ao add Pasta como favorita',
-        success: false,
-      }
-    }
-  }
-
-  static async getAllFolderByUserId() {
-    const url = `${host()}/folder/all`
-    try {
-      const response = await (await this.getAxiosInstance()).get(url)
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data.message,
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      if (error.response.data.error)
-        return {
-          error: error.response.data.error,
-          success: false,
-        }
-      return {
-        error: 'Erro ao buscar as pastas do usuário',
-        success: false,
-      }
-    }
-  }
-
-  static async getAxiosInstance() {
-    const jwt = await Local.get('JWT')
-
-    return axios.create({
-      baseURL: `${host()}`,
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        accept: '*/*',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    })
-  }
-}
+};

@@ -1,6 +1,6 @@
 
 {
-  "environment": "staging",
+  "environment": "development",
   "dev-host": "http://localhost:3000/api",
   "qa-host": "",
   "test-host": "http://localhost:3333/api",

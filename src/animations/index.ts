@@ -1,17 +1,21 @@
 import type { Variants } from 'framer-motion'
 
 export const listItensDelay: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: i * 0.1,
+    hidden: { opacity: 0, y: 20 },
+    exit: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 25,
+      },
     },
-  }),
-}
+  };
 
-export const cardVariants = {
+
+export const cardVariants: Variants = {
   hidden: { opacity: 0, scale: 0.9 },
   visible: {
     opacity: 1,
@@ -22,7 +26,7 @@ export const cardVariants = {
 
 const listItensDelayMenu = 0.1
 
-export const menuVariants = {
+export const menuVariants: Variants = {
   hidden: { opacity: 0, y: -20 },
   visible: {
     opacity: 1,
@@ -35,7 +39,17 @@ export const menuVariants = {
   },
 }
 
-export const itemVariants = {
+export const itemVariants: Variants = {
   hidden: { opacity: 0, y: -10 },
   visible: { opacity: 1, y: 0 },
+}
+
+export const formVariants: Variants = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 }
+}
+
+export const DivVariantes: Variants = {
+  initial: { opacity: 0, x: -20 },
+  animate: { opacity: 1, x: 0 }
 }

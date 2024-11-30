@@ -19,8 +19,7 @@ interface Invoice {
 }
 
 export const MyInvoices: FC = () => {
-  const { getAllSignaturesByUserId } = useSignature()
-  const { data: signatures } = getAllSignaturesByUserId
+  const { data: signatures } = useSignature()
 
   const data = useMemo<Invoice[]>(
     () =>

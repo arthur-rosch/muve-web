@@ -100,7 +100,7 @@ export const SelectVideoModal: FC<CreateFolderModalProps> = ({
                   </div>
                   <CheckBox
                     onCheckedChange={(checked) =>
-                      handleVideoCheckedChange(checked, video)
+                      handleVideoCheckedChange(Boolean(checked), video)
                     }
                     checked={!!(selectedVideo && selectedVideo.id === video.id)}
                   />
@@ -125,8 +125,6 @@ export const SelectVideoModal: FC<CreateFolderModalProps> = ({
           <Button
             type="button"
             variant="danger"
-            animation={true}
-            variants={cardVariants}
             onClick={() => setIsModalOpen(false)}
             className="w-full flex items-center justify-center py-3 px-4 h-10"
           >
@@ -135,8 +133,6 @@ export const SelectVideoModal: FC<CreateFolderModalProps> = ({
           <Button
             type="button"
             variant="primary"
-            animation={true}
-            variants={cardVariants}
             className="w-full flex items-center justify-center py-3 px-4 h-10"
             onClick={() => setIsModalOpen(!isModalOpen)}
           >

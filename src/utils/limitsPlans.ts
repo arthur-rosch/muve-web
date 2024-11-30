@@ -10,6 +10,9 @@ export const limitPlan = (plan: string) => {
     case 'Mensal - Ilimitado':
       videoLimit = 150
       break
+
+    default:
+      videoLimit = 1
   }
 
   return videoLimit

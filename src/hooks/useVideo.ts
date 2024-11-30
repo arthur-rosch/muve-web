@@ -1,78 +1,117 @@
-import { useMutation, useQuery } from 'react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { VideoService } from './../services/VideoService'
-import type {
-  Video,
-  CreateVideoVariables,
-  EditPlayerVideoProps,
-} from '../types'
+import { toast } from 'sonner'
+import { handleError } from './handle-error'
+import type { CreateVideoVariables, Video, EditPlayerVideoProps } from '@/types'
 
-export const useVideo = () => {
-  const createVideo = useMutation(async (video: CreateVideoVariables) => {
-    const { data, success, error } = await VideoService.createVideo(video)
+export const useVideo = (getByVideoId?: string) => {
 
-    return { data, success, error }
-  })
-
-  const editPlayerVideo = useMutation(
-    async ({
-      dataEdit,
-      videoId,
-    }: {
-      dataEdit: EditPlayerVideoProps
-      videoId: string
-    }) => {
-      const { data, success, error } = await VideoService.editPlayerVideo(
-        videoId,
-        dataEdit,
-      )
-
-      return { data, success, error }
+  const createVideo = useMutation({
+    mutationFn: async (video: CreateVideoVariables) => {
+      return await VideoService.createVideo(video)
     },
-  )
-
-  const deleteVideo = useMutation(async (videoId: string) => {
-    const { data, success, error } = await VideoService.deleteVideo(videoId)
-
-    return { data, success, error }
+    onSuccess: (response) => {
+      if (response.success && response.data) {
+        toast.success('Vídeo criado com sucesso!')
+      } else {
+        handleError(response.error?.message || 'Erro ao criar vídeo.')
+      }
+    },
+    onError: (error) => {
+      handleError(error?.message || 'Erro ao criar vídeo.')
+    }
   })
 
-  const getAllVideosByUserId = useQuery<Video[]>(
-    ['getAllVideosByUserId'],
-    async () => {
+  const editPlayerVideo = useMutation({
+    mutationFn: async ({ dataEdit, videoId }: { dataEdit: EditPlayerVideoProps, videoId: string }) => {
+      return await VideoService.editPlayerVideo(videoId, dataEdit)
+    },
+    onSuccess: ({ success, data, error }) => {
+      if (success && data) {
+        toast.success('Vídeo editado com sucesso!')
+      } else {
+        handleError(error?.message || 'Erro ao editar vídeo.')
+      }
+    },
+    onError: (error) => {
+      handleError(error?.message || 'Erro ao editar vídeo.')
+    }
+  })
+
+  const deleteVideo = useMutation({
+    mutationFn: async (videoId: string) => {
+      return await VideoService.deleteVideo(videoId)
+    },
+    onSuccess: ({ success, data, error }) => {
+      if (success && data) {
+        toast.success('Vídeo excluído com sucesso!')
+      } else {
+        handleError(error?.message || 'Erro ao excluir vídeo.')
+      }
+    },
+    onError: (error) => {
+      handleError(error?.message || 'Erro ao excluir vídeo.')
+    }
+  })
+
+  
+  const getAllVideosByUserId = (enabled: boolean) =>
+  useQuery<Video[], Error>({
+    queryKey: ['getAllVideosByUserId'],
+    queryFn: async () => {
       const { success, data, error } = await VideoService.getAllVideosByUserId()
-
       if (success) {
         return data.videos
       }
-
+      handleError(error?.message || 'Erro ao buscar')
       throw error
     },
-  )
-
-  const getManyVideosNotFolderId = useQuery<Video[]>(
-    ['getManyVideosNotFolderId'],
-    async () => {
-      const { success, data, error } =
-        await VideoService.getManyVideosNotFolderId()
-
-      if (success) {
-        return data.videos
-      }
-
-      throw error
-    },
-  )
-
-  const getVideoById = useMutation(async (videoId: string) => {
-    const { success, data, error } = await VideoService.getVideoById(videoId)
-
-    return { data, success, error }
+    enabled,
   })
 
-  const ediFolderIdVideo = useMutation(async ({folderId, videoId}: {videoId: string, folderId: string}) => {
-    const { data, success, error } = await VideoService.ediFolderIdVideo(videoId, folderId)
+  const getManyVideosNotFolderId = (enabled: boolean) =>
+    useQuery<Video[], Error>({
+      queryKey: ['getManyVideosNotFolderId'],
+      queryFn: async () => {
+        const { success, data, error } = await VideoService.getManyVideosNotFolderId()
+        if (success) {
+          return data.videos
+        }
+        handleError(error?.message || 'Erro ao buscar vídeos.')
+        throw error
+      },
+      enabled,
+  })
 
-    return { data, success, error }
+  const getVideoById = (enabled: boolean, getByVideoId: string | null) =>
+    useQuery<Video, Error>({
+      queryKey: ['getVideoById', getByVideoId],
+      queryFn: async () => {
+        if (!getByVideoId) throw new Error('Video ID is required')
+        const { success, data, error } = await VideoService.getVideoById(getByVideoId)
+        if (success) {
+          return data
+        }
+        handleError(error?.message || 'Erro ao buscar vídeo.')
+        throw error
+      },
+      enabled: enabled && !!getByVideoId,
+  })
+
+  const ediFolderIdVideo = useMutation({
+    mutationFn: async ({ folderId, videoId }: { folderId: string, videoId: string }) => {
+      return await VideoService.ediFolderIdVideo(videoId, folderId)
+    },
+    onSuccess: ({ success, data, error }) => {
+      if (success && data) {
+        toast.success('Pasta do vídeo atualizada com sucesso!')
+      } else {
+        handleError(error?.message || 'Erro ao atualizar pasta do vídeo.')
+      }
+    },
+    onError: (error) => {
+      handleError(error?.message || 'Erro ao atualizar pasta do vídeo.')
+    }
   })
 
   return {

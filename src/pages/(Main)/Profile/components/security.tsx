@@ -149,10 +149,8 @@ export const Security: FC = () => {
             </label>
             <Input
               type="text"
-              animation={true}
               className="w-full mt-2"
               disabled={true}
-              variants={cardVariants}
               placeholder={user.email}
             />
           </div>
@@ -191,27 +189,26 @@ export const Security: FC = () => {
               <div className="flex">
                 <Button
                   type="button"
-                  text="Cancelar"
                   variant="outline"
                   onClick={() => handleCancelClick('email')}
                   className="mr-2 w-full p-2"
-                />
+                >
+                  Cancelar
+                </Button>
                 <Button
                   type="submit"
-                  text="Salvar"
                   variant="primary"
                   className="w-full p-2"
                   onClick={handleEmailSubmit}
-                />
+                > Salvar </Button>
               </div>
             ) : (
               <Button
                 type="button"
-                text="Editar"
                 variant="outline"
                 className="w-[600px] p-2"
                 onClick={() => handleEditClick('email')}
-              />
+              >Editar</Button>
             )}
           </div>
         </div>
@@ -241,10 +238,10 @@ export const Security: FC = () => {
               onBlur={() => setIsEditingPassword(false)}
               onFocus={() => setIsEditingPassword(true)} // Ativa modo de edição ao focar no input
               onChange={(e) => setCurrentPassword(e.target.value)}
-              animation={true}
+          
               className="w-full mt-2"
               disabled={!isEditingPassword}
-              variants={cardVariants}
+              
             />
           </div>
           <div className="grid grid-cols-2 gap-4 w-[600px] ml-96">
@@ -281,27 +278,26 @@ export const Security: FC = () => {
               <div className="flex">
                 <Button
                   type="button"
-                  text="Cancelar"
+                  
                   variant="outline"
                   onClick={() => handleCancelClick('password')}
                   className="mr-2 w-full p-2"
-                />
+                >Cancelar</Button>
                 <Button
                   type="submit"
-                  text="Salvar"
+                  
                   variant="primary"
                   className="w-full p-2"
                   onClick={handlePasswordSubmit}
-                />
+                >Salvar</Button>
               </div>
             ) : (
               <Button
                 type="button"
-                text="Editar"
                 variant="outline"
                 className="w-[600px] p-2"
                 onClick={() => handleEditClick('password')}
-              />
+              >Editar</Button>
             )}
           </div>
         </div>

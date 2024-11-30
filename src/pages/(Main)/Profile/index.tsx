@@ -57,10 +57,9 @@ export const Profile: FC = () => {
             <Button
               variant="link"
               type="button"
-              text={'Editar Perfil'}
               onClick={() => setIsModalOpen(!isModalOpen)}
               className="w-40 h-10 py-3 px-8 border-[1px] border-solid border-[#333333] flex items-center"
-            />
+            >Editar Perfil</Button>
           </div>
 
           <div className="w-full h-full bg-[#141414] border-[1px] border-solid border-[#333333] p-6 mt-16">
@@ -70,30 +69,26 @@ export const Profile: FC = () => {
                 type="button"
                 variant="link"
                 className={`px-4 py-3 text-sm ${activeTab === 'profile' ? 'bg-[#333333] text-white' : ''}`}
-                text="Meu perfil"
                 onClick={() => setActiveTab('profile')}
-              />
+              >Meu perfil</Button>
               <Button
                 type="button"
                 variant="link"
                 className={`px-4 py-3 text-sm ${activeTab === 'security' ? 'bg-[#333333] text-white' : ''}`}
-                text="Segurança"
                 onClick={() => setActiveTab('security')}
-              />
+              >Segurança</Button>
               <Button
                 type="button"
                 variant="link"
                 className={`px-4 py-3 text-sm ${activeTab === 'plan' ? 'bg-[#333333] text-white' : ''}`}
-                text="Informações do plano"
                 onClick={() => setActiveTab('plan')}
-              />
+              >Informações do plano</Button>
               <Button
                 type="button"
                 variant="link"
                 className={`px-4 py-3 text-sm ${activeTab === 'invoices' ? 'bg-[#333333] text-white' : ''}`}
-                text="Lista de faturas"
                 onClick={() => setActiveTab('invoices')}
-              />
+              >Lista de faturas</Button>
             </header>
 
             {renderActiveComponent()}

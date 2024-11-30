@@ -1,1 +1,2 @@
-export * from './forgotMyPassword'
+export * from './form'
+export * from './forgot-password'

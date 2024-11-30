@@ -24,7 +24,7 @@ export const Analytics: FC = () => {
   const { user } = useSelector((state: State) => state.user)
 
   const { getAllVideosByUserId } = useVideo()
-  const { data: videos, isLoading } = getAllVideosByUserId
+  const { data: videos, isLoading } = getAllVideosByUserId(true)
 
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(true)
@@ -112,8 +112,6 @@ export const Analytics: FC = () => {
           <Button
             type="button"
             variant="primary"
-            animation={true}
-            variants={cardVariants}
             onClick={() => setIsModalOpen(!isModalOpen)}
             className="min-w-48 flex items-center justify-center py-3 px-4 h-10"
           >
@@ -121,9 +119,7 @@ export const Analytics: FC = () => {
           </Button>
           <Input
             type="text"
-            animation={true}
             className="w-full mr-8 brightness-75"
-            variants={cardVariants}
             placeholder="Informações do seu vídeo"
             disabled={true}
             value={
@@ -171,7 +167,6 @@ export const Analytics: FC = () => {
                   ))}
                 </div>
                 <InputSelect
-                  defaultValue="retenção"
                   options={availableCharts.map((chart) => ({
                     value: chart,
                     label: chart.charAt(0).toUpperCase() + chart.slice(1),

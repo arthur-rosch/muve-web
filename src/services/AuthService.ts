@@ -1,227 +1,58 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios'
-import host from '../utils/host'
-import { Local } from './Local'
-import type { SignInVariables, SignUpVariables } from '../types'
+import { Local } from './Local';
+import host from '../utils/host';
+import axios from 'axios';
+import { getAxiosInstance } from './GetAxiosInstance';
+import { handleRequest, type ApiResponse } from './HandleRequest';
+import type { SignInVariables, Signature, User, SignUpVariables } from '@/types';
 
-export class AuthService {
-  static async signIn(signIn: SignInVariables) {
-    const url = `${host()}/sessions`
-    try {
-      const response = await axios.post(url, {
-        email: signIn.email,
-        password: signIn.password,
-      })
-      console.log(response)
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data?.message || 'Erro desconhecido',
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      console.log(error.response?.data?.message)
-      const errorMessage =
-        error.response?.data?.message || 'Erro ao logar usuário'
-      return {
-        error: errorMessage,
-        success: false,
-      }
-    }
-  }
 
-  static async signUp(signUp: SignUpVariables) {
-    const url = `${host()}/users`
-    try {
-      const response = await axios.post(url, signUp)
-      console.log(response)
-      if (response.status === 201) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data?.message || 'Erro desconhecido',
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      console.log(error)
-      const errorMessage =
-        error.response?.data?.error || 'Erro ao criar usuário'
-      return {
-        error: errorMessage,
-        success: false,
-      }
-    }
-  }
 
-  static async generatePasswordResetToken(email: string) {
-    const url = `${host()}/send/password`
-    try {
-      const response = await axios.post(url, {
-        email,
-      })
-      console.log(response)
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data?.message || 'Erro desconhecido',
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      console.log(error.response?.data?.message)
-      const errorMessage =
-        error.response?.data?.message || 'Erro ao logar usuário'
-      return {
-        error: errorMessage,
-        success: false,
-      }
-    }
-  }
+export const AuthService = {
+  signIn: async ({ email, password }: SignInVariables): Promise<ApiResponse<{ user: User; token: string; signature: Signature }>> => {
+    const url = `${host()}/sessions`;
+    return handleRequest(axios.post(url, { email, password }));
+  },
 
-  static async forgotPassword(
-    newPassword: string,
-    confirmNewPassword: string,
-    token: string,
-  ) {
-    const url = `${host()}/forgot/password`
+  signUp: async ({ name, email, password, document, phone }: SignUpVariables): Promise<ApiResponse<{ user: User }>> => {
+    const url = `${host()}/users`;
+    return handleRequest(axios.post(url, { name, email, password, document, phone }));
+  },
 
-    try {
-      const response = await axios.post(
-        url,
-        {
-          newPassword,
-          confirmNewPassword,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: '*/*',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-          },
-        },
-      )
+  validateVerificationCode: async ({ email, code }: { email: string; code: string }): Promise<ApiResponse<{ status: boolean }>> => {
+    const url = `${host()}/email-verification/validate`;
+    return handleRequest(axios.post(url, { email, code }));
+  },
 
-      console.log(response)
+  sendVerificationCode: async ({ email }: { email: string }): Promise<ApiResponse<{ status: boolean }>> => {
+    const url = `${host()}/email-verification/send`;
+    return handleRequest(axios.post(url, { email }));
+  },
 
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data?.message || 'Erro desconhecido',
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      console.log(error.response?.data?.message)
-      const errorMessage =
-        error.response?.data?.message || 'Erro ao redefinir a senha'
-      return {
-        error: errorMessage,
-        success: false,
-      }
-    }
-  }
+  generatePasswordResetToken: async (email: string): Promise<ApiResponse<{ message: string }>> => {
+    const url = `${host()}/send/password`;
+    return handleRequest(axios.post(url, { email }));
+  },
 
-  static async checkEmailExistence(email: string) {
-    const url = `${host()}/check/email`
+  forgotPassword: async (token: string, newPassword: string, confirmNewPassword: string): Promise<ApiResponse<{ user: User }>> => {
+    const url = `${host()}/forgot/password`;
+    return handleRequest(axios.post(url, { newPassword, confirmNewPassword }, { headers: { Authorization: `Bearer ${token}` } }));
+  },
 
-    try {
-      const response = await axios.post(url, {
-        email,
-      })
+  checkEmailExistence: async (email: string): Promise<ApiResponse<void>> => {
+    const url = `${host()}/check/email`;
+    return handleRequest(axios.post(url, { email }));
+  },
 
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data?.message || 'Erro desconhecido',
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      console.log(error)
-      const errorMessage =
-        error.response?.data?.error || 'Erro ao procurar email'
-      return {
-        error: errorMessage,
-        success: false,
-      }
-    }
-  }
+  checkJWT: async (): Promise<ApiResponse<{ user: User }>> => {
+    const url = `/checkJWT`;
+    const instance = await getAxiosInstance();
+    return handleRequest(instance.get(url));
+  },
 
-  static async checkJWT() {
-    const url = `/checkJWT`
-    try {
-      const response = await (await this.getAxiosInstance()).get(url)
+  addInfoFirstAccess: async (accountType: string, memberArea: string, videoHosting: string): Promise<ApiResponse<void>> => {
+    const url = `/first/access`;
+    const instance = await getAxiosInstance();
+    return handleRequest(instance.post(url, { accountType, memberArea, videoHosting }));
+  },
+};
 
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data?.message || 'Erro desconhecido',
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      console.log(error)
-      const errorMessage =
-        error.response?.data?.error || 'Erro ao verificar token'
-      return {
-        error: errorMessage,
-        success: false,
-      }
-    }
-  }
-
-  static async addInfoFirstAccess(
-    accountType: string,
-    memberArea: string,
-    videoHosting: string,
-  ) {
-    const url = `/first/access`
-    try {
-      const response = await (
-        await this.getAxiosInstance()
-      ).post(url, {
-        accountType,
-        memberArea,
-        videoHosting,
-      })
-
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data?.message || 'Erro desconhecido',
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      console.log(error)
-      const errorMessage = error.response?.data?.error || 'Erro ao Add Info'
-      return {
-        error: errorMessage,
-        success: false,
-      }
-    }
-  }
-
-  static async getAxiosInstance() {
-    const jwt = await Local.get('JWT')
-
-    return axios.create({
-      baseURL: `${host()}`,
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        accept: '*/*',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    })
-  }
-}

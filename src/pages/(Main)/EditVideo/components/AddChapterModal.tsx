@@ -80,6 +80,10 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
     setChapterData,
   ])
 
+  function setValue() {
+    throw new Error('Function not implemented.')
+  }
+
   return (
     <CustomModal.Root
       isOpen={isModalOpen}
@@ -122,16 +126,18 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
                 <Input
                   id="startTime"
                   type="text"
-                  isMask={true}
                   mask="99:99:99"
                   placeholder="hh:mm:ss"
                   className="w-full h-10 mt-2 mb-2"
                   value={chapterData.startTime}
                   onChange={(e) =>
+                  {
                     setChapterData((prev: ChapterData) => ({
                       ...prev,
                       startTime: e.target.value,
                     }))
+                  }
+
                   }
                 />
               </div>
@@ -143,7 +149,7 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
                 <Input
                   id="endTime"
                   type="text"
-                  isMask={true}
+                  
                   mask="99:99:99"
                   placeholder="hh:mm:ss"
                   className="w-full h-10 mt-2 mb-2"
@@ -163,8 +169,8 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
           <Button
             type="button"
             variant="danger"
-            animation={true}
-            variants={cardVariants}
+            
+            
             onClick={() => setIsModalOpen(false)}
             className="w-full flex items-center justify-center py-3 px-4 h-10"
           >
@@ -173,8 +179,8 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
           <Button
             type="button"
             variant="primary"
-            animation={true}
-            variants={cardVariants}
+            
+            
             onClick={handleValidationsChapters}
             className="w-full flex items-center justify-center py-3 px-4 h-10"
           >

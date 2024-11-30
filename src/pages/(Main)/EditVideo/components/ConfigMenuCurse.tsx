@@ -740,9 +740,8 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     type="button"
                     variant="outline"
                     className="w-full h-14"
-                    text="Adicionar capitulo"
                     onClick={() => setIsModalOpen(!isModalOpen)}
-                  />
+                  >Adicionar capitulo</Button>
                 </motion.div>
               </Accordion.Content>
             </Accordion.Item>

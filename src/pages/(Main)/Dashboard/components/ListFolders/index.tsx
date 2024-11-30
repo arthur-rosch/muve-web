@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { useState, type FC } from 'react'
 import { FolderDashed } from '@phosphor-icons/react'
 import { recentFolders } from '../../../../../utils'
-import { cardVariants } from '../../../../../animations'
+import { cardVariants, listItensDelay } from '../../../../../animations'
 import { Button, CardVideo, Input } from '../../../../../components'
 import type { Folder as FolderType, Video } from '../../../../../types'
 
@@ -18,7 +18,7 @@ interface ListFoldersProps {
   videosNotFolderId: Video[]
 }
 
-export const ListFolders: FC<ListFoldersProps> = ({
+const ListFolders: FC<ListFoldersProps> = ({
   folders,
   videosNotFolderId,
 }) => {
@@ -57,29 +57,22 @@ export const ListFolders: FC<ListFoldersProps> = ({
     filterButton === '4' ? videosNotFolderId : searchedFolders
 
   return (
-    <div className="flex flex-col w-full h-full mt-12">
-      <motion.span
+    <motion.div className="flex flex-col w-full h-full mt-12"         initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}>
+      <span
         className="text-white text-lg"
-        initial="hidden"
-        animate="visible"
-        variants={cardVariants}
       >
         Todas as pastas
-      </motion.span>
+      </span>
 
-      <motion.div
-        className="flex items-start justify-start mt-6"
-        initial="hidden"
-        animate="visible"
-        variants={cardVariants}
+      <div
+        className="flex items-start justify-start mt-6 gap-4" 
       >
         {buttons.map((button) => (
           <Button
             key={button.id}
             type="button"
             variant="link"
-            animation={true}
-            variants={cardVariants}
             onClick={() => setFilterButton(button.id)}
             className={`flex items-center justify-center w-40 py-3 px-4 h-9 ${
               filterButton === button.id ? 'bg-[#333333] text-white' : ''
@@ -88,14 +81,12 @@ export const ListFolders: FC<ListFoldersProps> = ({
             {button.label} ( {button.count} )
           </Button>
         ))}
-      </motion.div>
+      </div>
 
       <Input
         type="text"
-        animation={true}
         value={searchTerm}
         className="w-full mt-8"
-        variants={cardVariants}
         placeholder="Pesquisar pasta"
         onChange={(e) => setSearchTerm(e.target.value)}
       />
@@ -108,7 +99,7 @@ export const ListFolders: FC<ListFoldersProps> = ({
                   key={video.id}
                   animation={true}
                   video={video as Video}
-                  variant={cardVariants}
+                  variant={listItensDelay}
                 />
               ))
             : displayedItems.map((folder) => (
@@ -117,9 +108,8 @@ export const ListFolders: FC<ListFoldersProps> = ({
         </div>
       ) : (
         <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={cardVariants}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
           className="w-full h-full flex flex-col items-center justify-center mt-12 gap-4"
         >
           <FolderDashed size={64} color="white" />
@@ -128,6 +118,8 @@ export const ListFolders: FC<ListFoldersProps> = ({
           </span>
         </motion.div>
       )}
-    </div>
+    </motion.div>
   )
 }
+
+export default ListFolders; 

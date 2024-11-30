@@ -39,9 +39,10 @@ export const Folder: FC<FolderProps> = ({ folder }: FolderProps) => {
   return (
     <motion.div
       className="w-auto h-60 flex flex-col relative"
-      initial="hidden"
-      animate="visible"
-      variants={cardVariants}
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      whileHover="hover"
+      whileTap="tap"
     >
       <div className="w-full h-48 flex items-center justify-center bg-[#1D1D1D] relative">
         <img

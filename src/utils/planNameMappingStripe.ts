@@ -7,6 +7,6 @@ export const planNameMappingStripe = (priceId: string): string => {
     case 'price_1QFSQwEb05Ibkd2BjOjnD8Zs':
       return 'Mensal - Ilimitado'
     default:
-      return 'Plano desconhecido'
+      return 'Free'
   }
-}
+} 
