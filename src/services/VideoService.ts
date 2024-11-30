@@ -1,124 +1,56 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios'
-import { Local } from './Local'
-import host from '../utils/host'
-import type { CreateVideoVariables } from '../types'
+import { handleRequest, type ApiResponse } from './HandleRequest';
+import { getAxiosInstance } from './GetAxiosInstance'; 
+import host from '../utils/host';
+import type { CreateVideoVariables, EditPlayerVideoProps } from '../types';
 
-export class VideoService {
-  static async createVideo(data: CreateVideoVariables) {
-    const url = `${host()}/video`
+export const VideoService = {
+  createVideo: async (data: CreateVideoVariables): Promise<ApiResponse<any>> => {
+    const url = `${host()}/video`;
+    const instance = await getAxiosInstance(); 
+    return handleRequest(instance.post(url, data)); 
+  },
 
-    try {
-      const response = await (await this.getAxiosInstance()).post(url, data)
-      if (response.status === 201) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data.message,
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      if (error.response.data.error)
-        return {
-          error: error.response.data.error,
-          success: false,
-        }
-      return {
-        error: 'Erro ao criar Video',
-        success: false,
-      }
-    }
-  }
+  deleteVideo: async (videoId: string): Promise<ApiResponse<any>> => {
+    const url = `${host()}/video/${videoId}`;
+    const instance = await getAxiosInstance(); 
+    return handleRequest(instance.post(url)); 
+  },
 
-  static async deleteVideo(videoId: string) {
-    const url = `${host()}/video/${videoId}`
+  ediFolderIdVideo: async (videoId: string, folderId: string): Promise<ApiResponse<any>> => {
+    const url = `${host()}/edit/folder/video`;
+    const instance = await getAxiosInstance(); 
+    return handleRequest(
+      instance.post(url, {
+        folderId,
+        videoId,
+      })
+    ); 
+  },
 
-    try {
-      const response = await (await this.getAxiosInstance()).delete(url)
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data.message,
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      if (error.response.data.error)
-        return {
-          error: error.response.data.error,
-          success: false,
-        }
-      return {
-        error: 'Erro ao deletar Video',
-        success: false,
-      }
-    }
-  }
+  getAllVideosByUserId: async (): Promise<ApiResponse<any>> => {
+    const url = `${host()}/video/all`;
+    const instance = await getAxiosInstance(); 
+    return handleRequest(instance.get(url)); 
+  },
 
-  static async getAllVideosByUserId() {
-    const url = `${host()}/video/all`
-    try {
-      const response = await (await this.getAxiosInstance()).get(url)
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data.message,
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      if (error.response.data.error)
-        return {
-          error: error.response.data.error,
-          success: false,
-        }
-      return {
-        error: 'Erro ao buscar as videos do usuário',
-        success: false,
-      }
-    }
-  }
+  getManyVideosNotFolderId: async (): Promise<ApiResponse<any>> => {
+    const url = `${host()}/video/not/folder`;
+    const instance = await getAxiosInstance(); 
+    return handleRequest(instance.get(url)); 
+  },
 
-  static async getVideoById(videoId: string) {
-    const url = `${host()}/video/${videoId}`
-    try {
-      const response = await (await this.getAxiosInstance()).get(url)
-      console.log(response, url)
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data.message,
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      if (error.response.data.error)
-        return {
-          error: error.response.data.error,
-          success: false,
-        }
-      return {
-        error: 'Erro ao buscar o video',
-        success: false,
-      }
-    }
-  }
+  getVideoById: async (videoId: string): Promise<ApiResponse<any>> => {
+    const url = `${host()}/video/${videoId}`;
+    const instance = await getAxiosInstance(); 
+    return handleRequest(instance.get(url)); 
+  },
 
-  static async getAxiosInstance() {
-    const jwt = await Local.get('JWT')
-
-    return axios.create({
-      baseURL: `${host()}`,
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        accept: '*/*',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    })
-  }
-}
+  editPlayerVideo: async (
+    videoId: string,
+    data: EditPlayerVideoProps
+  ): Promise<ApiResponse<any>> => {
+    const url = `${host()}/edit/player/video/${videoId}`;
+    const instance = await getAxiosInstance(); 
+    return handleRequest(instance.post(url, data)); 
+  },
+};

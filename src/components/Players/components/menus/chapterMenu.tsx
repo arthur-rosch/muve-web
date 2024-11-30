@@ -1,21 +1,19 @@
-import { Menu, useMediaRemote } from '@vidstack/react'
 import { ChaptersIcon } from '@vidstack/react/icons'
+import type { Chapters } from '../../../../types'
+import { Menu, useMediaRemote } from '@vidstack/react'
+import { convertDurationToSeconds } from '../../../../utils'
 
-// Função para converter MM:SS para segundos
-const convertToSeconds = (timeString: string) => {
-  const [minutes, seconds] = timeString.split(':').map(Number)
-  return minutes * 60 + seconds
+interface ChapterMenuProps {
+  chapters: Chapters[] | []
 }
 
-export function ChapterMenu() {
+export function ChapterMenu({ chapters }: ChapterMenuProps) {
   const remote = useMediaRemote()
 
-  // Função para buscar o tempo do capítulo em segundos
   const handleSeek = (timeString: string) => {
-    const newCurrentTime = convertToSeconds(timeString)
+    const newCurrentTime = convertDurationToSeconds(timeString)
     remote.seek(newCurrentTime)
   }
-
   return (
     <Menu.Root className="chapter-menu">
       <Menu.Button className="vds-menu-button vds-button" aria-label="Chapters">
@@ -26,36 +24,30 @@ export function ChapterMenu() {
         placement="top end"
         offset={10}
       >
-        <div
-          className="mb-4 border-l-4 border-blue-500 px-6 hover:opacity-75 cursor-pointer mr-12"
-          onClick={() => handleSeek('00:00')}
-        >
-          <div className="text-white text-lg">Capítulo 1</div>
-          <div className="bg-opacity-50 backdrop-filter backdrop-blur-lg text-white text-sm px-2 py-1 rounded w-12">
-            00:00
+        {chapters && chapters.length > 0 ? (
+          chapters.map((chapter, index) => (
+            <div
+              key={index}
+              className="mb-4 border-l-4 border-blue-500 px-6 hover:opacity-75 cursor-pointer mr-12"
+              onClick={() => handleSeek(chapter.startTime)}
+            >
+              <div className="text-white text-lg">{chapter.title}</div>
+              <div className="bg-opacity-50 backdrop-filter backdrop-blur-lg text-white text-sm pr-2 py-1 rounded w-auto">
+                <span>{chapter.startTime} | </span>{' '}
+                <span>{chapter.endTime}</span>
+              </div>
+              <div className="text-gray-500 text-xs">
+                {convertDurationToSeconds(chapter.endTime) -
+                  convertDurationToSeconds(chapter.startTime)}{' '}
+                sec
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="text-gray-500 text-xs">
+            Nenhum capitulo cadastrado
           </div>
-          <div className="text-gray-500 text-xs">10 sec</div>
-        </div>
-        <div
-          className="mb-4 border-l-4 border-blue-500 px-6 hover:opacity-75 cursor-pointer"
-          onClick={() => handleSeek('01:00')}
-        >
-          <div className="text-white text-lg">Capítulo 2</div>
-          <div className="bg-opacity-50 backdrop-filter backdrop-blur-lg text-white text-sm px-2 py-1 rounded w-12">
-            01:00
-          </div>
-          <div className="text-gray-500 text-xs">20 sec</div>
-        </div>
-        <div
-          className="mb-4 border-l-4 border-blue-500 px-6 hover:opacity-75 cursor-pointer"
-          onClick={() => handleSeek('02:00')}
-        >
-          <div className="text-white text-lg">Capítulo 3</div>
-          <div className="bg-opacity-50 backdrop-filter backdrop-blur-lg text-white text-sm px-2 py-1 rounded w-12">
-            02:00
-          </div>
-          <div className="text-gray-500 text-xs">15 sec</div>
-        </div>
+        )}
       </Menu.Items>
     </Menu.Root>
   )

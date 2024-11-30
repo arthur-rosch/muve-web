@@ -1,8 +1,8 @@
 
 {
-  "environment": "staging",
-  "dev-host": "http://localhost:3333/api",
+  "environment": "development",
+  "dev-host": "http://localhost:3000/api",
   "qa-host": "",
   "test-host": "http://localhost:3333/api",
-  "staging-host": "https://stingray-app-l6brn.ondigitalocean.app/api"
+  "staging-host": "https://api.muveplayer.com/api"
 }

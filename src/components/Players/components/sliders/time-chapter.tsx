@@ -13,7 +13,7 @@ export const TimeChapter = () => {
               ref={forwardRef}
             >
               <TimeSlider.Track className="relative ring-sky-400 z-0 h-[5px] w-full rounded-sm bg-white/30 group-data-[focus]:ring-[3px]">
-                <TimeSlider.TrackFill className="bg-indigo-400 absolute h-full w-[var(--chapter-fill)] rounded-sm will-change-[width]" />
+                <TimeSlider.TrackFill className="bg-white absolute h-full w-[var(--chapter-fill)] rounded-sm will-change-[width]" />
                 <TimeSlider.Progress className="absolute z-10 h-full w-[var(--chapter-progress)] rounded-sm bg-white/50 will-change-[width]" />
               </TimeSlider.Track>
             </div>

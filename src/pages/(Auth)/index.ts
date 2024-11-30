@@ -1,1 +1,7 @@
+export * from './Lead'
+export * from './SignUp'
 export * from './Login'
+export * from './Thanks'
+export * from './FirstAccess'
+export * from './VerifyEmail'
+export * from './ResetPassword'

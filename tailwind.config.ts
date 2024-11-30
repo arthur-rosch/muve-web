@@ -139,6 +139,7 @@ const config: Config = {
     require('@vidstack/react/tailwind.cjs')({ prefix: 'media' }),
     require('@headlessui/tailwindcss'),
     require('@tailwindcss/forms'),
+    customVariants,
   ],
 }
 

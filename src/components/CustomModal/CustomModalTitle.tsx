@@ -1,27 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { X } from '@phosphor-icons/react'
 import type { FC } from 'react'
+import { X } from '@phosphor-icons/react'
 
 interface CustomModalTitleProps {
-  title?: string
-  children?: any
+  title: string
+  subTitle: string
   setIsOpen: (bool: boolean) => void
 }
 
 export const CustomModalTitle: FC<CustomModalTitleProps> = ({
   title,
-  children,
+  subTitle,
   setIsOpen,
 }) => {
   return (
-    <>
-      <div className="w-full flex justify-end h-5">
-        <button onClick={() => setIsOpen(false)} className="m-3">
-          <X size={28} color="white" />
-        </button>
+    <div className="w-full px-8 py-7 flex items-center justify-between border-b-[1px] border-solid border-[#333333]">
+      <div className="w-full flex flex-col items-start justify-start">
+        <span className="text-white text-xl">{title}</span>
+        <span className="text-[#C8C8C8] text-sm">{subTitle}</span>
       </div>
-      {children && children}
-      {title && <h1 className="font-bold text-white text-lg">{title}</h1>}
-    </>
+      <button
+        onClick={() => setIsOpen(false)}
+        className="text-white hover:text-[#187BF0] transactions-all duration-150"
+      >
+        <X size={20} />
+      </button>
+    </div>
   )
 }

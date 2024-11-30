@@ -1,99 +1,58 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios'
-import host from '../utils/host'
-import { Local } from './Local'
-import type { SignInVariables } from '../types'
+import { Local } from './Local';
+import host from '../utils/host';
+import axios from 'axios';
+import { getAxiosInstance } from './GetAxiosInstance';
+import { handleRequest, type ApiResponse } from './HandleRequest';
+import type { SignInVariables, Signature, User, SignUpVariables } from '@/types';
 
-export class AuthService {
-  static async signIn(signIn: SignInVariables) {
-    const url = `${host()}/sessions`
-    try {
-      const response = await axios.post(url, {
-        email: signIn.email,
-        password: signIn.password,
-      })
-      console.log(response)
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data?.message || 'Erro desconhecido',
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      console.log(error)
-      const errorMessage =
-        error.response?.data?.error || 'Erro ao logar usuário'
-      return {
-        error: errorMessage,
-        success: false,
-      }
-    }
-  }
 
-  static async checkEmailExistence(email: string) {
-    const url = `${host()}/auth/check/email`
 
-    try {
-      const response = await axios.post(url, {
-        email,
-      })
+export const AuthService = {
+  signIn: async ({ email, password }: SignInVariables): Promise<ApiResponse<{ user: User; token: string; signature: Signature }>> => {
+    const url = `${host()}/sessions`;
+    return handleRequest(axios.post(url, { email, password }));
+  },
 
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data?.message || 'Erro desconhecido',
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      console.log(error)
-      const errorMessage =
-        error.response?.data?.error || 'Erro ao procurar email'
-      return {
-        error: errorMessage,
-        success: false,
-      }
-    }
-  }
+  signUp: async ({ name, email, password, document, phone }: SignUpVariables): Promise<ApiResponse<{ user: User }>> => {
+    const url = `${host()}/users`;
+    return handleRequest(axios.post(url, { name, email, password, document, phone }));
+  },
 
-  static async checkJWT() {
-    const url = `/checkJWT`
-    try {
-      const response = await (await this.getAxiosInstance()).get(url)
+  validateVerificationCode: async ({ email, code }: { email: string; code: string }): Promise<ApiResponse<{ status: boolean }>> => {
+    const url = `${host()}/email-verification/validate`;
+    return handleRequest(axios.post(url, { email, code }));
+  },
 
-      if (response.status === 200) {
-        return { data: response.data, success: true }
-      } else {
-        return {
-          error: response.data?.message || 'Erro desconhecido',
-          success: false,
-        }
-      }
-    } catch (error: any) {
-      console.log(error)
-      const errorMessage =
-        error.response?.data?.error || 'Erro ao verificar token'
-      return {
-        error: errorMessage,
-        success: false,
-      }
-    }
-  }
+  sendVerificationCode: async ({ email }: { email: string }): Promise<ApiResponse<{ status: boolean }>> => {
+    const url = `${host()}/email-verification/send`;
+    return handleRequest(axios.post(url, { email }));
+  },
 
-  static async getAxiosInstance() {
-    const jwt = await Local.get('JWT')
+  generatePasswordResetToken: async (email: string): Promise<ApiResponse<{ message: string }>> => {
+    const url = `${host()}/send/password`;
+    return handleRequest(axios.post(url, { email }));
+  },
 
-    return axios.create({
-      baseURL: `${host()}`,
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        accept: '*/*',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    })
-  }
-}
+  forgotPassword: async (token: string, newPassword: string, confirmNewPassword: string): Promise<ApiResponse<{ user: User }>> => {
+    const url = `${host()}/forgot/password`;
+    return handleRequest(axios.post(url, { newPassword, confirmNewPassword }, { headers: { Authorization: `Bearer ${token}` } }));
+  },
+
+  checkEmailExistence: async (email: string): Promise<ApiResponse<void>> => {
+    const url = `${host()}/check/email`;
+    return handleRequest(axios.post(url, { email }));
+  },
+
+  checkJWT: async (): Promise<ApiResponse<{ user: User }>> => {
+    const url = `/checkJWT`;
+    const instance = await getAxiosInstance();
+    return handleRequest(instance.get(url));
+  },
+
+  addInfoFirstAccess: async (accountType: string, memberArea: string, videoHosting: string): Promise<ApiResponse<void>> => {
+    const url = `/first/access`;
+    const instance = await getAxiosInstance();
+    return handleRequest(instance.post(url, { accountType, memberArea, videoHosting }));
+  },
+};
+

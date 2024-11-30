@@ -3,3 +3,8 @@ export * from './useFolder'
 export * from './useVideo'
 export * from './useAnalytics'
 export * from './useTokenPlayer'
+export * from './useProfile'
+export * from './useSignature'
+export * from './useLead'
+export * from './useUpgradeModal'
+

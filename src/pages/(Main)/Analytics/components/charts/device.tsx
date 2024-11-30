@@ -35,7 +35,6 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
 
     let maxEndTime = 0
 
-    // Contagem de views por dispositivo (ViewUnique)
     analytics.viewUnique.forEach((view) => {
       const device = view.deviceType || 'Unknown'
 
@@ -46,7 +45,6 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
       totalViewsByDevice[device]++
     })
 
-    // Contagem de plays por dispositivo (ViewTimestamps)
     analytics.viewTimestamps.forEach((view) => {
       const device = view.deviceType || 'Unknown'
 
@@ -56,8 +54,7 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
 
       totalPlaysByDevice[device]++
     })
-    console.log(totalPlaysByDevice)
-    // Cálculo de retenção para cada dispositivo
+
     const filteredViews = analytics.viewTimestamps.filter(
       (view) => Math.floor(view.startTimestamp) === 0,
     )
@@ -66,7 +63,6 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
       const device = view.deviceType || 'Unknown'
       let end = Math.min(Math.floor(view.endTimestamp), totalDuration)
 
-      // Verificar se esse endTimestamp coincide com algum startTimestamp de outra view
       for (let i = index + 1; i < filteredViews.length; i++) {
         if (Math.floor(filteredViews[i].startTimestamp) === end) {
           end = Math.min(
@@ -90,7 +86,6 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
       }
     })
 
-    // Construção do gráfico de retenção
     const retentionPercentages: ChartData[] = Array.from(
       { length: maxEndTime + 1 },
       (_, index) => {
@@ -111,7 +106,6 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
       },
     )
 
-    // Preparando as métricas de dispositivos
     const metrics = Object.keys(totalViewsByDevice)
       .map((device) => ({
         device,
@@ -120,7 +114,6 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
       }))
       .sort((a, b) => b.totalViews - a.totalViews)
 
-    // Atualiza os estados com as métricas calculadas
     setChartData(retentionPercentages)
     setDeviceMetrics(metrics)
   }, [analytics, selectedVideo])
@@ -130,18 +123,18 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
   )
 
   return (
-    <div className="w-full">
+    <>
       <AreaChart
         data={chartData}
         index="date"
         yAxisWidth={60}
         categories={devices}
         valueFormatter={dataFormatter}
-        className="mt-4 w-full h-[75%]"
+        className="mt-4 w-full h-[500px]"
         onValueChange={(v) => console.log(v)}
         colors={['green', 'yellow', 'rose', 'red', 'blue', 'purple', 'indigo']}
       />
-      <div className="mt-8">
+      <div className="mt-8 hidden">
         <Table>
           <TableHead>
             <TableRow>
@@ -161,6 +154,6 @@ export const ChartDevice: FC<ChartProps> = ({ analytics, selectedVideo }) => {
           </TableBody>
         </Table>
       </div>
-    </div>
+    </>
   )
 }

@@ -1,39 +1,57 @@
 import '@vidstack/react/player/styles/base.css'
 
-import { PlayIcon } from 'lucide-react'
-import { ProgressBar } from './components'
+import { ContinueWatching } from './components'
 import { useAnalytics } from '../../hooks'
 import { VideoLayout } from './layouts/videoLayout'
 import type { PlayerDataVariables, Video } from '../../types'
-import { getYoutubeVideoId, getIPAddress, getGeolocation } from '../../utils'
+import { getIPAddress, getGeolocation, getYoutubeVideoId } from '../../utils'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   Poster,
-  PlayButton,
   MediaPlayer,
   isHLSProvider,
   MediaProvider,
-  useMediaStore,
   isYouTubeProvider,
   type MediaCanPlayEvent,
   type MediaCanPlayDetail,
   type MediaPlayerInstance,
   type MediaProviderAdapter,
   type MediaProviderChangeEvent,
+  useMediaStore,
 } from '@vidstack/react'
+
+const setVideoTimeCookie = (videoId: string, time: number) => {
+  document.cookie = `video-${videoId}-time=${time}; path=/;`
+}
+
+const getVideoTimeFromCookie = (videoId: string): number | null => {
+  const match = document.cookie.match(
+    new RegExp(`(^| )video-${videoId}-time=([^;]+)`),
+  )
+  return match ? Number(match[2]) : null
+}
 
 export function Player({ video }: { video: Video }) {
   const player = useRef<MediaPlayerInstance>(null)
 
-  const { currentTime, duration, paused } = useMediaStore(player)
+  const { ended } = useMediaStore(player)
   const { addViewTimestamps, addViewUnique } = useAnalytics()
 
-  const [progress, setProgress] = useState(0)
-  const [transitionDuration, setTransitionDuration] = useState(0)
-  const [playStartTime, setPlayStartTime] = useState<number | null>(null)
+  const [playEnd, setPlayEnd] = useState<boolean>(false)
+  const [showResumeMenu, setShowResumeMenu] = useState(false)
+  const [lastTime, setLastTime] = useState<number | null>(null)
+  const [playStartTime, setPlayStartTime] = useState<number | null>(0)
   const [playerData, setPlayerData] = useState<PlayerDataVariables>()
+
+  const urlVideo = useMemo(() => {
+    if (isYouTubeProvider(video.url)) {
+      const videoId = getYoutubeVideoId(video.url)
+      return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&controls=0&disablekb=1&playsinline=1&cc_load_policy=0&showinfo=0&modestbranding=0&rel=0&loop=0&enablejsapi=1`
+    }
+    return video.url
+  }, [video.url])
 
   function onProviderChange(
     provider: MediaProviderAdapter | null,
@@ -54,8 +72,32 @@ export function Player({ video }: { video: Video }) {
   function onCanPlay(
     detail: MediaCanPlayDetail,
     nativeEvent: MediaCanPlayEvent,
-  ) {
-    console.log(detail, nativeEvent)
+  ) {}
+
+  function onPause() {
+    const playerRef = player.current
+    if (playerRef) {
+      const currentTime = playerRef.currentTime
+      setVideoTimeCookie(video.id, currentTime)
+    }
+  }
+
+  function handleResume() {
+    const playerRef = player.current
+    if (playerRef && lastTime) {
+      playerRef.currentTime = lastTime
+      playerRef.play()
+      setShowResumeMenu(false)
+    }
+  }
+
+  function handleRestart() {
+    const playerRef = player.current
+    if (playerRef) {
+      playerRef.currentTime = 0
+      playerRef.play()
+      setShowResumeMenu(false)
+    }
   }
 
   useEffect(() => {
@@ -90,16 +132,17 @@ export function Player({ video }: { video: Video }) {
   useEffect(() => {
     if (video) {
       const handlePlay = () => {
-        setPlayStartTime(currentTime)
-        console.log('Play event triggered at:', currentTime)
+        const currentPlayTime = player.current?.currentTime || 0 // Pegue o tempo atual do player
+        setPlayStartTime(currentPlayTime)
       }
 
       const handlePause = async () => {
-        if (playStartTime) {
+        const currentPauseTime = player.current?.currentTime || 0 // Pegue o tempo atual do player
+        if (playStartTime !== null) {
           try {
             await addViewTimestamps.mutateAsync({
               ...playerData!,
-              endTimestamp: currentTime,
+              endTimestamp: currentPauseTime,
               startTimestamp: playStartTime,
               videoId: video.id,
             })
@@ -120,75 +163,74 @@ export function Player({ video }: { video: Video }) {
         }
       }
     }
-  }, [playStartTime, addViewTimestamps, playerData, video, currentTime])
+  }, [playStartTime, addViewTimestamps, playerData, video])
 
   useEffect(() => {
-    if (video && !paused) {
-      if (currentTime <= 1) {
-        const newProgress = Math.min((currentTime / 1) * 40, 40)
-        setProgress(newProgress)
-        setTransitionDuration(300)
-      } else if (duration > 1) {
-        const remainingTime = duration - 1
-        const timeElapsedSinceFastStart = currentTime - 1
-        const additionalProgress =
-          (timeElapsedSinceFastStart / remainingTime) * 60
-        const newProgress = Math.min(40 + additionalProgress, 100)
-        setProgress(newProgress)
-        setTransitionDuration(1000)
+    const savedTime = getVideoTimeFromCookie(video.id)
+    if (savedTime) {
+      setLastTime(savedTime)
+      setShowResumeMenu(true)
+    }
+  }, [video.id])
+
+  const handleEnded = async () => {
+    // Garante que a requisição será feita apenas se o vídeo terminou, e playEnd ainda não foi setado
+    if (ended && playStartTime !== null && playerData && !playEnd) {
+      const currentTime = player.current?.currentTime || 0
+      const duration = player.current?.duration || currentTime
+
+      try {
+        await addViewTimestamps.mutateAsync({
+          ...playerData,
+          endTimestamp: duration,
+          startTimestamp: playStartTime,
+          videoId: video.id,
+        })
+        setPlayEnd(true) // Marca que a requisição foi feita
+      } catch (error) {
+        console.error('Erro ao adicionar timestamps:', error)
       }
     }
-  }, [currentTime, duration, paused, video])
+  }
 
   return (
     <>
       {video && (
-        <MediaPlayer
-          crossorigin
-          playsInline
-          ref={player}
-          load="visible"
-          src={video.url}
-          posterLoad="visible"
-          onCanPlay={onCanPlay}
-          crossOrigin="anonymous"
-          aspectRatio={video.format}
-          onProviderChange={onProviderChange}
-          className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
-        >
-          <MediaProvider>
-            <Poster
-              alt="Poster image"
-              // src={`https://img.youtube.com/vi/${getYoutubeVideoId(
-              //   video.url,
-              // )}/maxresdefault.jpg`}
-              className="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 object-cover"
-            />
-          </MediaProvider>
+        <div className="relative w-full h-screen z-0">
+          <MediaPlayer
+            crossorigin
+            playsInline
+            ref={player}
+            load="visible"
+            src={urlVideo}
+            onPause={onPause}
+            posterLoad="visible"
+            onCanPlay={onCanPlay}
+            controls={false}
+            crossOrigin="anonymous"
+            onEnded={handleEnded}
+            aspectRatio={video.format}
+            onProviderChange={onProviderChange}
+            className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
+          >
+            <MediaProvider>
+              <Poster
+                alt="Poster image"
+                className="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 object-cover"
+              />
+            </MediaProvider>
 
-          {video.type === 'Vsl' && video.fictitiousProgress && paused && (
-            <PlayButton>
-              <div className="absolute inset-0 flex items-center justify-center z-10 cursor-pointer">
-                <div
-                  className={`flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
-                  style={video.color ? { backgroundColor: video.color } : {}}
-                >
-                  <PlayIcon className="w-12 h-12 translate-x-px" />
-                </div>
-              </div>
-            </PlayButton>
-          )}
+            {video.continueWatching && showResumeMenu && (
+              <ContinueWatching
+                handleRestart={handleRestart}
+                handleResume={handleResume}
+              />
+            )}
 
-          {video.type === 'Vsl' && video.fictitiousProgress && (
-            <ProgressBar
-              progress={progress}
-              transitionDuration={transitionDuration}
-              color={video.color ? video.color : 'rgb(59 130 246)'}
-            />
-          )}
-
-          <VideoLayout type={video.type} />
-        </MediaPlayer>
+            <VideoLayout video={video} chapters={video.Chapter} />
+          </MediaPlayer>
+          {/* {video.watchingNow && <WatchingNow video={video} />} */}
+        </div>
       )}
     </>
   )

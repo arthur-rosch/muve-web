@@ -16,17 +16,17 @@ interface GeolocationData {
 export async function getGeolocation(ip: string): Promise<GeolocationData> {
   try {
     const response = await axios.get(
-      `https://api.hackertarget.com/geoip?q=${ip}&output=json`,
+      `https://pro.ip-api.com/json/${ip}?key=g3x376XBH5I4fuQ`,
     )
     if (response.status !== 200) {
       throw new Error(`Erro HTTP! Status: ${response.status}`)
     }
 
     const data = response.data
-    console.log('Dados de geolocalização:', data)
+
     return {
       country: data.country || '',
-      region: data.state || '',
+      region: data.regionName || '',
       city: data.city || '',
       latitude: data.latitude || '',
       longitude: data.longitude || '',

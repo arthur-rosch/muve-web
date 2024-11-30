@@ -16,7 +16,19 @@
     "target": "ESNext",
     "useDefineForClassFields": true,
     "verbatimModuleSyntax": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@redux/*": ["src/redux/*"],
+      "@pages/*": ["src/pages/*"],
+      "@types/*": ["src/types/*"],
+      "@assets/*": ["src/assets/*"],
+      "@services/*": ["src/services/*"],
+      "@animations/*": ["src/animations/*"],
+      "@components/*": ["src/components/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/utils/chartDataFormatter.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

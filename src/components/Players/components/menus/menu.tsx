@@ -1,8 +1,13 @@
 import { Menu } from '@vidstack/react'
-import { SpeedSubmenu, QualitySubmenu } from '../'
+import { SpeedSubmenu } from '../'
+import { QualitySubmenu } from './sudMenus/qualitySubMenu'
 import { SettingsIcon } from '@vidstack/react/icons'
 
-export const MenuPlayer = () => {
+interface MenuPlayerProps {
+  menuSpeed: boolean | undefined
+}
+
+export const MenuPlayer = ({ menuSpeed }: MenuPlayerProps) => {
   return (
     <Menu.Root>
       <Menu.Button
@@ -16,8 +21,9 @@ export const MenuPlayer = () => {
         placement="top"
         offset={0}
       >
+        {menuSpeed && <SpeedSubmenu />}
+
         <QualitySubmenu />
-        <SpeedSubmenu />
       </Menu.Items>
     </Menu.Root>
   )

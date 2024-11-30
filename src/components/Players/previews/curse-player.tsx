@@ -1,7 +1,7 @@
-import { useRef } from 'react'
 import type { Video } from '../../../types'
-import { getYoutubeVideoId } from '../../../utils'
 import { VideoLayout } from '../layouts/videoLayout'
+import { getVideoTimeFromCookie, getYoutubeVideoId, setVideoTimeCookie } from '../../../utils'
+import { useEffect, useRef, useMemo, useState } from 'react'
 import {
   Poster,
   MediaPlayer,
@@ -12,18 +12,31 @@ import {
   type MediaProviderAdapter,
   isYouTubeProvider,
   isHLSProvider,
+  MediaPlayerInstance,
 } from '@vidstack/react'
 import '@vidstack/react/player/styles/base.css'
 import '@vidstack/react/player/styles/default/theme.css'
 import '@vidstack/react/player/styles/default/layouts/audio.css'
 import '@vidstack/react/player/styles/default/layouts/video.css'
+import { ContinueWatching } from '../components'
 
 interface PreviewPlayerProps {
   video: Video
 }
 
+
 export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
-  const playerRef = useRef(null)
+  const playerRef = useRef<MediaPlayerInstance>(null)
+  const [showResumeMenu, setShowResumeMenu] = useState(false)
+  const [lastTime, setLastTime] = useState<number | null>(null)
+
+  const urlVideo = useMemo(() => {
+    if (isYouTubeProvider(video.url)) {
+      const videoId = getYoutubeVideoId(video.url)
+      return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&controls=0&disablekb=1&playsinline=1&cc_load_policy=0&showinfo=0&modestbranding=0&rel=0&loop=0&enablejsapi=1`
+    }
+    return video.url
+  }, [video.url])
 
   function onCanPlay(
     detail: MediaCanPlayDetail,
@@ -46,29 +59,73 @@ export function CursePreviewPlayer({ video }: PreviewPlayerProps) {
     }
   }
 
-  return (
-    <MediaPlayer
-      crossorigin
-      playsInline
-      load="visible"
-      ref={playerRef}
-      aspectRatio={video.format}
-      posterLoad="visible"
-      onCanPlay={onCanPlay}
-      crossOrigin="anonymous"
-      onProviderChange={onProviderChange}
-      src={video.url}
-      className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
-    >
-      <MediaProvider>
-        <Poster
-          alt="Poster image"
-          src={`https://img.youtube.com/vi/${getYoutubeVideoId(video.url)}/maxresdefault.jpg`}
-          className="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 object-cover"
-        />
-      </MediaProvider>
+  function onPause() {
+    const player = playerRef.current
+    if (player) {
+      const currentTime = player.currentTime
+      setVideoTimeCookie(video.id, currentTime)
+    }
+  }
 
-      <VideoLayout type={video.type} />
-    </MediaPlayer>
+  function handleResume() {
+    const player = playerRef.current
+    if (player && lastTime) {
+      player.currentTime = lastTime
+      player.play()
+      setShowResumeMenu(false)
+    }
+  }
+
+  function handleRestart() {
+    const player = playerRef.current
+    if (player) {
+      player.currentTime = 0
+      player.play()
+      setShowResumeMenu(false)
+    }
+  }
+
+  useEffect(() => {
+    const savedTime = getVideoTimeFromCookie(video.id)
+    if (savedTime) {
+      setLastTime(savedTime)
+      setShowResumeMenu(true)
+    }
+  }, [video.id])
+
+  return (
+    <div className="relative w-full h-full z-10">
+      <MediaPlayer
+        crossorigin
+        playsInline
+        load="visible"
+        ref={playerRef}
+        aspectRatio={video.format}
+        posterLoad="visible"
+        onCanPlay={onCanPlay}
+        crossOrigin="anonymous"
+        onProviderChange={onProviderChange}
+        src={urlVideo}
+        onPause={onPause}
+        className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
+      >
+        <MediaProvider>
+          <Poster
+            src={video.thumbnail}
+            alt="Default Thumbnail"
+            className="absolute inset-0 block h-full w-full rounded-md opacity-0 transition-opacity data-[visible]:opacity-100 object-cover"
+          />
+        </MediaProvider>
+
+        <VideoLayout video={video} chapters={video.Chapter} />
+      </MediaPlayer>
+
+      {video.continueWatching && showResumeMenu && (
+        <ContinueWatching
+          handleRestart={handleRestart}
+          handleResume={handleResume}
+        />
+      )}
+    </div>
   )
 }

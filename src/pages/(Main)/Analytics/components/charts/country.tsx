@@ -1,5 +1,5 @@
 import { useEffect, useState, type FC } from 'react'
-import type { ChartProps } from '../../../../../types'
+import type { ChartProps, ViewTimestamp } from '../../../../../types'
 import { convertDurationToSeconds, dataFormatter } from '../../../../../utils'
 import {
   Table,
@@ -29,19 +29,19 @@ export const ChartCountry: FC<ChartProps> = ({ analytics, selectedVideo }) => {
   useEffect(() => {
     const totalDuration = convertDurationToSeconds(selectedVideo.duration)
 
+    // Inicializar os objetos de retenção por país
     const totalViewsByCountry: { [country: string]: number } = {}
     const totalPlaysByCountry: { [country: string]: number } = {}
-    const retentionData: { [country: string]: number[] } = {}
-
+    const retentionDataByCountry: { [country: string]: number[] } = {}
     let maxEndTime = 0
 
+    // Contagem de visualizações únicas por país
     analytics.viewUnique.forEach((view) => {
       const country = view.country || 'Unknown'
 
       if (!totalViewsByCountry[country]) {
         totalViewsByCountry[country] = 0
       }
-
       totalViewsByCountry[country]++
     })
 
@@ -52,42 +52,84 @@ export const ChartCountry: FC<ChartProps> = ({ analytics, selectedVideo }) => {
       if (!totalPlaysByCountry[country]) {
         totalPlaysByCountry[country] = 0
       }
-
       totalPlaysByCountry[country]++
     })
 
-    const filteredViews = analytics.viewTimestamps.filter(
-      (view) => Math.floor(view.startTimestamp) === 0,
-    )
+    // Criar mapas por país para armazenar as visualizações com startTimestamp rapidamente
+    const viewMapByCountry: {
+      [country: string]: Map<number, ViewTimestamp[]>
+    } = {}
 
-    filteredViews.forEach((view, index) => {
+    analytics.viewTimestamps.forEach((view) => {
       const country = view.country || 'Unknown'
-      let end = Math.min(Math.floor(view.endTimestamp), totalDuration)
+      const start = Math.floor(view.startTimestamp)
 
-      for (let i = index + 1; i < filteredViews.length; i++) {
-        if (Math.floor(filteredViews[i].startTimestamp) === end) {
-          end = Math.min(
-            Math.floor(filteredViews[i].endTimestamp),
+      if (!viewMapByCountry[country]) {
+        viewMapByCountry[country] = new Map<number, ViewTimestamp[]>()
+      }
+
+      if (!viewMapByCountry[country].has(start)) {
+        viewMapByCountry[country].set(start, [])
+      }
+
+      viewMapByCountry[country].get(start)?.push(view)
+    })
+
+    // Função para encontrar visualizações encadeadas de forma otimizada
+    const findChainedViews = (
+      startView: ViewTimestamp,
+      viewMap: Map<number, ViewTimestamp[]>,
+      totalDuration: number,
+    ) => {
+      let endTimestamp = Math.min(
+        Math.floor(startView.endTimestamp),
+        totalDuration,
+      )
+      let nextViews = viewMap.get(endTimestamp)
+
+      while (nextViews && nextViews.length > 0) {
+        const nextView = nextViews.shift() // Pegar a próxima visualização disponível
+        if (nextView) {
+          endTimestamp = Math.min(
+            Math.floor(nextView.endTimestamp),
             totalDuration,
           )
+          nextViews = viewMap.get(endTimestamp)
+        } else {
           break
         }
       }
 
-      if (!retentionData[country]) {
-        retentionData[country] = Array(totalDuration + 1).fill(0)
-      }
+      return endTimestamp
+    }
 
-      if (end > maxEndTime) {
-        maxEndTime = end
-      }
+    // Filtrar visualizações por país e calcular a retenção para cada país
+    Object.keys(viewMapByCountry).forEach((country) => {
+      const filteredViews = viewMapByCountry[country].get(0) || []
 
-      for (let i = 0; i <= end; i++) {
-        retentionData[country][i]++
-      }
+      // Inicializar o array de retenção para o país
+      retentionDataByCountry[country] = Array(totalDuration + 1).fill(0)
+
+      // Contar quantos usuários assistiram até cada segundo do vídeo
+      filteredViews.forEach((view) => {
+        const end = findChainedViews(
+          view,
+          viewMapByCountry[country],
+          totalDuration,
+        )
+
+        // Incrementar a contagem de retenção para todos os segundos até o fim da visualização encadeada
+        for (let i = 0; i <= end; i++) {
+          retentionDataByCountry[country][i]++
+        }
+
+        if (end > maxEndTime) {
+          maxEndTime = end
+        }
+      })
     })
 
-    // Construção do gráfico de retenção
+    // Calcular a porcentagem de retenção por país
     const retentionPercentages: ChartData[] = Array.from(
       { length: maxEndTime + 1 },
       (_, index) => {
@@ -99,9 +141,17 @@ export const ChartCountry: FC<ChartProps> = ({ analytics, selectedVideo }) => {
           date: formattedTime,
         }
 
-        for (const country in retentionData) {
-          dataPoint[country] =
-            (retentionData[country][index] / filteredViews.length) * 100
+        for (const country in retentionDataByCountry) {
+          const totalFilteredViews =
+            (viewMapByCountry[country].get(0) || []).length || 1 // Número total de visualizações (evitar divisão por zero)
+          dataPoint[country] = Math.min(
+            100,
+            Math.max(
+              0,
+              (retentionDataByCountry[country][index] / totalFilteredViews) *
+                100,
+            ),
+          )
         }
 
         return dataPoint
@@ -127,18 +177,18 @@ export const ChartCountry: FC<ChartProps> = ({ analytics, selectedVideo }) => {
   )
 
   return (
-    <div className="w-full">
+    <>
       <AreaChart
         data={chartData}
         index="date"
         yAxisWidth={60}
         categories={countries}
         valueFormatter={dataFormatter}
-        className="mt-4 w-full h-[75%]"
+        className="mt-4 w-full h-[500px]"
         onValueChange={(v) => console.log(v)}
         colors={['red', 'yellow', 'rose', 'blue', 'purple', 'indigo']}
       />
-      <div className="mt-8">
+      <div className="mt-8 hidden">
         <Table>
           <TableHead>
             <TableRow>
@@ -158,6 +208,6 @@ export const ChartCountry: FC<ChartProps> = ({ analytics, selectedVideo }) => {
           </TableBody>
         </Table>
       </div>
-    </div>
+    </>
   )
 }

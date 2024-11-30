@@ -1,4 +1,4 @@
-enum Role {
+export enum Role {
   ADMIN,
   MEMBER,
 }
@@ -8,17 +8,39 @@ export interface SignInVariables {
   password: string
 }
 
+export interface SignUpVariables {
+  email: string
+  name: string
+  phone: string
+  document: string
+  password: string
+}
+
+export interface LeadVariables {
+  email: string
+  name: string
+  phone: string
+  document: string
+  plan: string
+}
+
 export interface User {
   id: string
   name: string
   email: string
+  phone: string
+  document: string
   password_hash: string
+  accountType: string
+  memberArea: string
+  videoHosting: string
   role: Role
   created_at: Date
 }
 
 export interface CreateVideoVariables {
   url: string
+  name: string
   duration: string
   folderId?: string
   format: '9/16' | '16/9'
@@ -30,6 +52,12 @@ export interface CreateVideoVariables {
     endTime?: string
   }[]
   fictitiousProgress?: boolean
+}
+
+export interface CreateFolderVariables {
+  name: string
+  coverUrl?: string
+  videosId?: string[]
 }
 
 export interface ViewTimestamp {
@@ -118,23 +146,139 @@ export interface PlayerDataVariables {
   region: string
   city: string
 }
+
+export interface Chapters {
+  title: string
+  startTime: string
+  endTime: string
+}
+
+export enum StatusSignature {
+  APPROVED = 'APPROVED',
+  PENDING = 'PENDING',
+  CANCELED = 'CANCELED',
+}
+
+export enum Plan {
+  FREE = 'FREE',
+  ESSENTIAL = 'ESSENTIAL',
+  UNLIMITED = 'UNLIMITED',
+  PROFESSIONAL = 'PROFESSIONAL',
+}
+
+export enum ChargeFrequency {
+  ANNUALLY = 'ANNUALLY',
+  MONTHLY = 'MONTHLY',
+}
+
+export interface Signature {
+  id: string;
+  status: string;
+  plan: string;
+  ChargeFrequency: ChargeFrequency;
+  price: string;
+  payment_method: string;
+  userId: string;
+  kirvano_type?: string;
+  kirvano_sale_id?: string;
+  kirvano_checkout_id?: string;
+  next_charge_date?: string;
+  stripe_subscription_id?: string;
+  stripe_customer_id?: string;
+  start_date?: Date;
+  end_date?: Date;
+  trial_end_date?: Date;
+  created_at: Date;
+
+  user: User;
+}
+
+// Define a interface para o botão
+export interface VideoButton {
+  buttonType: 'below' | 'inside'
+  buttonText: string
+  buttonSize: string
+  buttonLink: string
+  startTime: string
+  endTime: string
+  buttonAfterTheVideoEnds?: boolean
+  backgroundColor: string
+  textColor: string
+  hoverBackgroundColor: string
+  hoverTextColor: string
+  buttonPosition?: string
+}
+
+export interface EditPlayerVideoProps {
+  colorSmartPlayers?: string
+  playAndPause?: boolean
+  progressBar?: boolean
+  timeTraveled?: boolean
+  videoDuration?: boolean
+  volumeButton?: boolean
+  volumeBar?: boolean
+  speed?: boolean
+  fullscreen?: boolean
+  smartAutoPlay?: boolean
+  UrlCoverSmartAutoPlay?: string
+  TextTopSmartAutoPlay?: string
+  TextButtonSmartAutoPlay?: string
+  continueWatching?: boolean
+  watchingNow?: boolean
+  watchingNowFontSize?: string
+  watchingNowBgColor?: string
+  watchingNowTextColor?: string
+  ImageVideoPause?: boolean
+  UrlCoverImageVideoPause?: string
+  ImageOfFinished?: boolean
+  UrlCoverImageOfFinished?: string
+  chapterMenu?: boolean
+  buttonsActive?: boolean
+  Chapter?: Chapters[]
+  Buttons?: VideoButton[]
+}
+
 export interface Video {
   id: string
   url: string
   tags: string
+  name: string
   duration: string
+  thumbnail: string
   folderId?: string
   format: '9/16' | '16/9'
   type: 'Vsl' | 'Curso'
   color?: string
-  chapters?: {
-    title?: string
-    startTime?: string
-    endTime?: string
-  }[]
+  Chapter: Chapters[] | []
+  VideoButtons: VideoButton[] | []
   fictitiousProgress?: boolean
   created_at: Date
 
+  colorSmartPlayers?: string
+  playAndPause?: boolean
+  progressBar?: boolean
+  timeTraveled?: boolean
+  videoDuration?: boolean
+  volumeButton?: boolean
+  volumeBar?: boolean
+  speed?: boolean
+  fullscreen?: boolean
+  smartAutoPlay?: boolean
+  UrlCoverSmartAutoPlay?: string
+  TextTopSmartAutoPlay?: string
+  TextButtonSmartAutoPlay?: string
+  continueWatching?: boolean
+  watchingNow?: boolean
+  watchingNowFontSize?: string
+  watchingNowBgColor?: string
+  watchingNowTextColor?: string
+  ImageVideoPause?: boolean
+  UrlCoverImageVideoPause?: string
+  ImageOfFinished?: boolean
+  UrlCoverImageOfFinished?: string
+  chapterMenu?: boolean
+  buttonsActive?: boolean
+  fictitiousProgressHeight?: string
   analytics: VideoAnalytics
 }
 
@@ -145,6 +289,8 @@ export interface ChartProps {
 export interface Folder {
   id: string
   name: string
+  coverUrl?: string
+  favorite: boolean
   userId: string
   created_at: Date
   videos: Video[]
