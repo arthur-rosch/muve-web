@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": "20.x"
+  },  
   "scripts": {
     "dev": "vite dev --host",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -54,8 +54,6 @@ export const EditVideo = () => {
             <Button
               type="button"
               variant="danger"
-              animation={true}
-              variants={cardVariants}
               onClick={handleAnalytics}
               className="w-48 flex items-center justify-center py-3 px-4 h-10"
             >
