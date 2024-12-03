@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "vite dev --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "vite preview --host"
   },
   "dependencies": {
     "@eslint/config-array": "^0.18.0",
