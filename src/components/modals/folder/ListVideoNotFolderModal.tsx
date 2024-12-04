@@ -2,6 +2,16 @@ import { useState } from "react";
 import type { Video } from "@/types"
 import { Folder } from "lucide-react"
 import { Input, CheckBox } from "@/components"
+import { motion } from "framer-motion";
+
+const listItemVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: { delay: i * 0.1, duration: 0.3 },
+  }),
+};
 
 export const ListVideoNotFolder = ({ videos, handleVideoSelection}: {videos: Video[], handleVideoSelection: (checked: boolean, videoId: string) => void}) => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -29,8 +39,11 @@ export const ListVideoNotFolder = ({ videos, handleVideoSelection}: {videos: Vid
             {filteredVideos.length > 0 ? (
               <div className="max-h-[280px] overflow-y-auto">
                 {filteredVideos.map((video) => (
-                  <div
+                  <motion.div
                     key={video.id}
+                    initial="hidden"
+                    animate="visible"
+                    variants={listItemVariants}
                     className="flex items-center justify-between p-4 border-b border-neutral-800 last:border-0 hover:bg-neutral-900/50 transition-colors"
                   >
                     <div className="flex items-center space-x-4">
@@ -53,7 +66,7 @@ export const ListVideoNotFolder = ({ videos, handleVideoSelection}: {videos: Vid
                         handleVideoSelection(checked as boolean, video.id)
                       }
                     />
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             ) : (

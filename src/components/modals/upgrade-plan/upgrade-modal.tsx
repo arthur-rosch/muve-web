@@ -1,7 +1,8 @@
-import { Modal } from '../'
+import { Button, Modal } from '../..'
 import { useState } from 'react'
 import { PlanCard } from './plan-card'
-import { Star, Zap, Infinity } from 'lucide-react'
+import { useSignature } from '../../../hooks'
+import { Star, Zap, Infinity, X } from 'lucide-react'
 
 const plans = [
   { name: 'Essencial', price: '97', limit: 'Até 10 vídeos', icon: Star },
@@ -11,24 +12,42 @@ const plans = [
 
 interface UpgradeModalProps {
   isOpen: boolean
+  email: string
   onClose: () => void
 }
 
-export function UpgradeModal({ isOpen, onClose }: UpgradeModalProps) {
+export function UpgradeModal({ isOpen, onClose, email }: UpgradeModalProps) {
+  const { createCheckout } = useSignature()
+  const [loading, setLoading] = useState(false)
   const [selectedPlanIndex, setSelectedPlanIndex] = useState(
     plans.findIndex((plan) => plan.popular) || 0
   )
 
-  const handleUpgrade = () => {
-    window.location.href = `/checkout?plan=${plans[selectedPlanIndex].name.toLowerCase()}`
-  }
+  const handleUpgrade = async () => {
+        setLoading(true)
 
+        const selectedPlan = plans[selectedPlanIndex]
+        const planName = selectedPlan.name.toLowerCase()
+
+        createCheckout.mutateAsync({
+          email,
+          plan: `Mensal - ${planName}`,
+        }).finally(() => {
+          setLoading(false)
+        })
+    }
   return (
     <Modal 
       isOpen={isOpen} 
       onClose={onClose}
       className="max-w-2xl p-6 md:p-8"
     >
+      <button
+          onClick={onClose}
+          className="absolute right-4 top-4 text-gray-400 hover:text-white"
+        >
+          <X className="h-5 w-5" />
+      </button>
       <div className="space-y-6">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-white mb-2">
@@ -52,12 +71,15 @@ export function UpgradeModal({ isOpen, onClose }: UpgradeModalProps) {
         </div>
 
         <div className="space-y-4">
-          <button
+          <Button
             onClick={handleUpgrade}
-            className="w-full py-3 bg-[#187BF0] hover:bg-[#1569D3] text-white font-medium rounded-lg transition-all duration-300"
+            isLoading={loading}
+            disabled={loading}
+            variant={'primary'}
+            className="w-full py-3 font-medium rounded-lg transition-all duration-300"
           >
             Fazer Upgrade Agora
-          </button>
+          </Button>
         </div>
 
         <p className="text-xs text-[#8F9BBA] text-center">

@@ -24,7 +24,7 @@ interface FormCreateVideoProps {
     onSuccess: (success: boolean) => void;
 }
 
-export const FormCreateVideo = ({ folders, onClose }: FormCreateVideoProps) => {
+export const FormCreateVideo = ({ folders, onClose, onSuccess }: FormCreateVideoProps) => {
   const { createVideo, getAllVideosByUserId } = useVideo()
   
   const [loading, setLoading] = useState(false);
@@ -60,19 +60,19 @@ export const FormCreateVideo = ({ folders, onClose }: FormCreateVideoProps) => {
   const onSubmit = async (data: VideoFormValues) => {
     setLoading(true);
 
-    await createVideo.mutateAsync(data)
+    const { success } = await createVideo.mutateAsync(data).finally(() => setLoading(false));
     
     await getAllVideosByUserId(true).refetch()
 
     setLoading(false);
-
+    onSuccess(success)
     reset()
   };
 
 
   return (
           <motion.form onSubmit={handleSubmit(onSubmit)} className="space-y-6" variants={formVariants}>
-            <div className="p-6 space-y-8 overflow-auto max-h-[30rem] h-full">
+            <div className="p-6 space-y-8 h-full">
               <div className="space-y-4">
                 <label className="text-sm font-medium text-neutral-300">
                   Tipo de Vídeo

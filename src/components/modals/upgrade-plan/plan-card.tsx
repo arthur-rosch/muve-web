@@ -1,4 +1,4 @@
-import { cn } from '../../utils'
+import { cn } from '../../../utils'
 import { Check, type LucideIcon } from 'lucide-react'
 
 interface PlanCardProps {

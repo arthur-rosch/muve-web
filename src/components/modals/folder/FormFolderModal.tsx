@@ -14,6 +14,7 @@ import { ListVideoNotFolder } from './ListVideoNotFolderModal';
 export const FormFolderModal = ({
   videos,
   onClose,
+  setSuccess,
 }: {
   videos: Video[];
   onClose: () => void;
@@ -54,13 +55,14 @@ export const FormFolderModal = ({
       name: data.folderName,
       coverUrl: data.coverUrl,
       videosId: data.videoIds,
-    })
+    }).finally(() => setLoading(false))
 
     await getAllFolderByUserId.refetch()
 
     setLoading(false)
-    
+    setSuccess(success)
     reset()
+    onClose()
   };
 
   return (

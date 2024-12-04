@@ -24,7 +24,7 @@ export * from './ui/collapsible'
 
 
 export * from './providers/modal-provider'
-export * from './pricing/upgrade-modal'
+export * from './modals/upgrade-plan/upgrade-modal'
 
 export * from './testimonials/testimonial-carousel'
 
@@ -35,4 +35,6 @@ export * from './modals/video/CardCreateVideo'
 
 export * from './modals/folder/CreateFolderModal'
 export * from './modals/folder/CardCreateFolder'
+
+export * from './modals/select-video/selectVideoModal'
 

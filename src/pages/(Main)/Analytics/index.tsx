@@ -1,12 +1,11 @@
 import { motion } from 'framer-motion'
 import { useVideo } from '../../../hooks'
 import { useSelector } from 'react-redux'
-import { SelectVideoModal } from './components'
-import { useLocation, useNavigate } from 'react-router-dom'
 import { cardVariants } from '../../../animations'
 import { ListCharts } from './components/listCharts'
 import { useState, useEffect, type FC } from 'react'
 import type { Video, VideoMetrics } from '../../../types'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeft, FolderDashed } from '@phosphor-icons/react'
 import type { State } from '../../../redux/store/configureStore'
 import { calculateVideoMetrics, convertDurationToSeconds } from '../../../utils'
@@ -16,12 +15,12 @@ import {
   HeaderFolder,
   Input,
   InputSelect,
+  SelectVideoModal,
 } from '../../../components'
 
 export const Analytics: FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { user } = useSelector((state: State) => state.user)
 
   const { getAllVideosByUserId } = useVideo()
   const { data: videos, isLoading } = getAllVideosByUserId(true)
@@ -202,9 +201,9 @@ export const Analytics: FC = () => {
       </div>
       <SelectVideoModal
         videos={videos!}
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        setSelectedVideo={setSelectedVideo}
+        isOpen={isModalOpen}
+        onVideoSelect={setSelectedVideo}
+        onClose={() => setIsModalOpen(false)}
       />
     </section>
   )

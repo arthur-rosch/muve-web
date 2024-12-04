@@ -1,9 +1,12 @@
 import type { Signature } from '../types';
 import { handleError } from './handle-error';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { SignatureService } from '../services/SignatureService';
+import { toast } from 'sonner';
 
 export const useSignature = () => {
+
+
   const { data, isLoading, error } = useQuery<Signature[]>({
     queryKey: ['getAllSignaturesByUserId'],
     refetchOnWindowFocus: true,
@@ -23,7 +26,25 @@ export const useSignature = () => {
     },
   });
 
+  const createCheckout = useMutation({
+    mutationFn: async ({email, plan}: {email: string, plan: string}) => {
+      const { data, success, error } = await SignatureService.createCheckout({
+        email, plan
+      });
+      return { data, success, error };
+    },
+    onSuccess: (response) => {
+      if (response.success) {
+        toast.success('Ira ser redirecionado para o checkout.');
+        window.location.href = response.data.url;
+      } else {
+        handleError(response.error?.message!);
+      }
+    },
+    onError: (error) => handleError(error.message),
+  });
+
   return {
-    data, isLoading, error,
+    data, isLoading, error, createCheckout,
   };
 };
