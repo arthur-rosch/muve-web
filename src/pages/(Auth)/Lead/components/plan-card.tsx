@@ -20,7 +20,7 @@ export function PlanCard({
         "relative w-full rounded-xl transition-all duration-300 cursor-pointer overflow-hidden border-2",
         selected
           ? "bg-[#187BF0] border-[#187BF0]"
-          : "bg-[#1A1F37] border-[#242B45] hover:border-[#187BF0]/50"
+          : "bg-[#1E1E1E] border-[#1E1E1E] hover:border-[#187BF0]/50"
       )}
     >
       {popular && (
@@ -97,7 +97,7 @@ export function PlanCard({
 
         <button
           className={cn(
-            "w-full py-3 rounded-lg font-medium transition-colors",
+            "w-full py-2 rounded-lg font-medium transition-colors",
             selected
               ? "bg-white text-[#187BF0] hover:bg-white/90"
               : "bg-[#187BF0] text-white hover:bg-[#1569D3]"

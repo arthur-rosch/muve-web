@@ -8,11 +8,12 @@ import { type LeadFormInputs, leadFormSchema } from "@/validation";
 import { motion } from "framer-motion";
 
 interface LeadFormProps {
+  isLoading: boolean;
   onSubmit: (data: LeadFormInputs) => Promise<void>;
   defaultPlan: string;
 }
 
-export function LeadForm({ onSubmit, defaultPlan }: LeadFormProps) {
+export function LeadForm({ onSubmit, defaultPlan, isLoading }: LeadFormProps) {
   const {
     control,
     setValue,
@@ -85,6 +86,8 @@ export function LeadForm({ onSubmit, defaultPlan }: LeadFormProps) {
         ))}
         <Button
           type="submit"
+          isLoading={isLoading}
+          disabled={isLoading}
           className="w-full py-7 mt-2 bg-[#187BF0] hover:bg-[#1569D3] text-white font-medium text-base md:text-lg"
         >
           Criar Conta
