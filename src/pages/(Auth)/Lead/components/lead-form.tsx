@@ -31,12 +31,16 @@ export function LeadForm({ onSubmit, defaultPlan }: LeadFormProps) {
       label: "Nome",
       type: "text",
       placeholder: "Seu nome completo",
+      onChange: (e: ChangeEvent<HTMLInputElement>) =>
+        setValue("name", e.target.value),
     },
     {
       id: "email",
       label: "E-mail",
       type: "email",
       placeholder: "seu@email.com",
+      onChange: (e: ChangeEvent<HTMLInputElement>) =>
+        setValue("email", e.target.value),
     },
     {
       id: "phone",
