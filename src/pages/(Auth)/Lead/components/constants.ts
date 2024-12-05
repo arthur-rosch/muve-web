@@ -3,7 +3,7 @@ import type { InputConfig } from "./types";
 
 export const plans = [
   {
-    name: "Essencial",
+    name: "Mensal - Essencial",
     price: "97",
     limit: "Até 10 vídeos",
     icon: Star,
@@ -13,10 +13,10 @@ export const plans = [
       "Analytics básico",
       "Suporte por email",
     ],
-    cta: "Começar gratuitamente",
+    cta: "Começar agora",
   },
   {
-    name: "Profissional",
+    name: "Mensal - Profissional",
     price: "147",
     limit: "Até 25 vídeos",
     popular: true,
@@ -31,7 +31,7 @@ export const plans = [
     cta: "Começar agora",
   },
   {
-    name: "Ilimitado",
+    name: "Mensal - Ilimitado",
     price: "257",
     limit: "Até 150 vídeos",
     icon: Infinity,
@@ -42,6 +42,6 @@ export const plans = [
       "SLA garantido",
       "Onboarding dedicado",
     ],
-    cta: "Falar com vendas",
+    cta: "Começar agora",
   },
 ];

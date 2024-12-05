@@ -1,8 +1,8 @@
 
 {
-  "environment": "development",
+  "environment": "staging",
   "dev-host": "https://striking-optimism-production.up.railway.app/api",
   "qa-host": "",
   "test-host": "https://api-muve-dev.vercel.app/api",
-  "staging-host": "https://api.muveplayer.com/api"
+  "staging-host": "https://api-muve-prod.vercel.app/api"
 }
