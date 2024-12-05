@@ -4,9 +4,10 @@ import { useLead } from "@/hooks";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type LeadFormInputs, leadFormSchema } from "@/validation";
-import { plans, formInputs } from "./components/constants";
+import { plans } from "./components/constants";
 import { PlanCard } from "./components/plan-card";
 import { FormField } from "./components/form-field";
+import { LeadForm } from "./components/lead-form";
 
 export function LeadCapture() {
   const { createLed } = useLead();
@@ -70,28 +71,10 @@ export function LeadCapture() {
                 <h2 className="text-2xl font-bold mb-6">
                   Comece sua jornada agora
                 </h2>
-                <form
-                  onSubmit={handleSubmit(handleLeadSubmit)}
-                  className="space-y-4"
-                >
-                  {formInputs.map(({ id, label, type, placeholder }) => (
-                    <FormField
-                      key={id}
-                      label={label}
-                      name={id}
-                      control={control}
-                      errors={errors}
-                      placeholder={placeholder}
-                      type={type}
-                    />
-                  ))}
-                  <button
-                    type="submit"
-                    className="w-full py-4 mt-4 bg-[#187BF0] hover:bg-[#1569D3] text-white font-medium rounded-lg transition-all duration-300 text-lg"
-                  >
-                    Criar Conta
-                  </button>
-                </form>
+                <LeadForm
+                  onSubmit={handleLeadSubmit}
+                  defaultPlan="Profissional"
+                />
                 <p className="text-xs text-[#8F9BBA] text-center mt-6">
                   Ao criar uma conta, você concorda com nossos{" "}
                   <a href="#" className="text-[#187BF0] hover:underline">

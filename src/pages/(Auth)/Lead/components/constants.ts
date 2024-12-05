@@ -45,30 +45,3 @@ export const plans = [
     cta: "Falar com vendas",
   },
 ];
-
-export const formInputs: InputConfig[] = [
-  {
-    id: "name",
-    label: "Nome",
-    type: "text",
-    placeholder: "Seu nome completo",
-  },
-  {
-    id: "email",
-    label: "E-mail",
-    type: "email",
-    placeholder: "seu@email.com",
-  },
-  {
-    id: "phone",
-    label: "Telefone",
-    type: "text",
-    placeholder: "(00) 00000-0000",
-  },
-  {
-    id: "cpf",
-    label: "CPF/CNPJ",
-    type: "text",
-    placeholder: "000.000.000-00",
-  },
-];

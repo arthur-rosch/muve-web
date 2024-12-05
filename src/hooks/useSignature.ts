@@ -8,6 +8,7 @@ export const useSignature = () => {
   const { data, isLoading, error } = useQuery<Signature[]>({
     queryKey: ["getAllSignaturesByUserId"],
     refetchOnWindowFocus: false,
+    enabled: false,
     queryFn: async () => {
       try {
         const { success, data, error } =
