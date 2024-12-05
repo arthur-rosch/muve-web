@@ -1,46 +1,47 @@
-import { motion } from 'framer-motion'
-import { type FC, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useProfile } from '../../../../hooks'
-import { cardVariants } from '../../../../animations'
-import type { State } from '../../../../redux/store/configureStore'
-import { Input, Button, toastSuccess, toastError } from '../../../../components'
-import { Local } from '../../../../services/Local'
-import { setUser, updateUserEmail } from '../../../../redux/actions/user'
-import type { User } from '../../../../types'
-import { useNavigate } from 'react-router-dom'
+import { motion } from "framer-motion";
+import { type FC, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useProfile } from "../../../../hooks";
+import { cardVariants } from "../../../../animations";
+import type { State } from "../../../../redux/store/configureStore";
+import { Input, Button, toastError } from "../../../../components";
+import { Local } from "../../../../services/Local";
+import { setUser, updateUserEmail } from "../../../../redux/actions/user";
+import type { User } from "../../../../types";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export const Security: FC = () => {
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const { user } = useSelector((state: State) => state.user)
-  const { updateEmail, updatePassword } = useProfile()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useSelector((state: State) => state.user);
+  const { updateEmail, updatePassword } = useProfile();
 
-  const [isEditingEmail, setIsEditingEmail] = useState(false)
-  const [isEditingPassword, setIsEditingPassword] = useState(false)
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
 
-  const [newEmail, setNewEmail] = useState('')
-  const [currentEmailPassword, setCurrentEmailPassword] = useState('')
+  const [newEmail, setNewEmail] = useState("");
+  const [currentEmailPassword, setCurrentEmailPassword] = useState("");
 
-  const [currentPassword, setCurrentPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleEditClick = (type: 'password' | 'email') => {
-    if (type === 'password') {
-      setIsEditingPassword(true)
+  const handleEditClick = (type: "password" | "email") => {
+    if (type === "password") {
+      setIsEditingPassword(true);
     } else {
-      setIsEditingEmail(true)
+      setIsEditingEmail(true);
     }
-  }
+  };
 
-  const handleCancelClick = (type: 'password' | 'email') => {
-    if (type === 'password') {
-      setIsEditingPassword(false)
+  const handleCancelClick = (type: "password" | "email") => {
+    if (type === "password") {
+      setIsEditingPassword(false);
     } else {
-      setIsEditingEmail(false)
+      setIsEditingEmail(false);
     }
-  }
+  };
 
   const handleEmailSubmit = async () => {
     if (newEmail && currentEmailPassword) {
@@ -49,37 +50,31 @@ export const Security: FC = () => {
           email: user.email,
           newEmail,
           password: currentEmailPassword,
-        })
+        });
 
         if (success) {
-          setIsEditingEmail(false)
-          toastSuccess({
-            text: 'E-mail alterado com sucesso',
-          })
+          setIsEditingEmail(false);
+          toast.success("E-mail alterado com sucesso");
 
-          // Atualiza o email no Redux
-          dispatch(updateUserEmail(newEmail))
+          dispatch(updateUserEmail(newEmail));
 
-          // Limpa os campos de input
-          setNewEmail('')
-          setCurrentEmailPassword('')
+          setNewEmail("");
+          setCurrentEmailPassword("");
         }
       } catch (error) {
-        setIsEditingPassword(false)
-        toastError({
-          text: 'Erro ao atualizar e-mail',
-        })
-        setNewEmail('')
-        setCurrentEmailPassword('')
+        setIsEditingPassword(false);
+        toast.error("Erro ao atualizar e-mail");
+        setNewEmail("");
+        setCurrentEmailPassword("");
       }
     }
-  }
+  };
 
   const handleLogout = () => {
-    Local.logout()
-    dispatch(setUser({} as User))
-    navigate('/login')
-  }
+    Local.logout();
+    dispatch(setUser({} as User));
+    navigate("/login");
+  };
 
   const handlePasswordSubmit = async () => {
     if (newPassword === confirmPassword && currentPassword) {
@@ -87,33 +82,29 @@ export const Security: FC = () => {
         const { success } = await updatePassword.mutateAsync({
           newPassword,
           password: currentPassword,
-        })
+        });
 
         if (success) {
-          setIsEditingPassword(false)
-          toastSuccess({
-            text: 'Senha alterada com sucesso',
-          })
-          setNewPassword('')
-          setCurrentPassword('')
-          setConfirmPassword('')
-          handleLogout()
+          setIsEditingPassword(false);
+          toast.success("Senha alterada com sucesso");
+          setNewPassword("");
+          setCurrentPassword("");
+          setConfirmPassword("");
+          handleLogout();
         }
       } catch (error) {
-        setIsEditingPassword(false)
-        toastError({
-          text: 'Erro ao atualizar senha',
-        })
-        setNewPassword('')
-        setCurrentPassword('')
-        setConfirmPassword('')
+        setIsEditingPassword(false);
+        toast.error("Erro ao atualizar senha");
+        setNewPassword("");
+        setCurrentPassword("");
+        setConfirmPassword("");
       }
     } else {
-      toastError({
-        text: 'As senhas não coincidem ou a senha atual não foi fornecida.',
-      })
+      toast.error(
+        "As senhas não coincidem ou a senha atual não foi fornecida."
+      );
     }
-  }
+  };
 
   return (
     <section className="w-full mt-12">
@@ -190,7 +181,7 @@ export const Security: FC = () => {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() => handleCancelClick('email')}
+                  onClick={() => handleCancelClick("email")}
                   className="mr-2 w-full p-2"
                 >
                   Cancelar
@@ -200,15 +191,20 @@ export const Security: FC = () => {
                   variant="primary"
                   className="w-full p-2"
                   onClick={handleEmailSubmit}
-                > Salvar </Button>
+                >
+                  {" "}
+                  Salvar{" "}
+                </Button>
               </div>
             ) : (
               <Button
                 type="button"
                 variant="outline"
                 className="w-[600px] p-2"
-                onClick={() => handleEditClick('email')}
-              >Editar</Button>
+                onClick={() => handleEditClick("email")}
+              >
+                Editar
+              </Button>
             )}
           </div>
         </div>
@@ -238,10 +234,8 @@ export const Security: FC = () => {
               onBlur={() => setIsEditingPassword(false)}
               onFocus={() => setIsEditingPassword(true)} // Ativa modo de edição ao focar no input
               onChange={(e) => setCurrentPassword(e.target.value)}
-          
               className="w-full mt-2"
               disabled={!isEditingPassword}
-              
             />
           </div>
           <div className="grid grid-cols-2 gap-4 w-[600px] ml-96">
@@ -278,30 +272,34 @@ export const Security: FC = () => {
               <div className="flex">
                 <Button
                   type="button"
-                  
                   variant="outline"
-                  onClick={() => handleCancelClick('password')}
+                  onClick={() => handleCancelClick("password")}
                   className="mr-2 w-full p-2"
-                >Cancelar</Button>
+                >
+                  Cancelar
+                </Button>
                 <Button
                   type="submit"
-                  
                   variant="primary"
                   className="w-full p-2"
                   onClick={handlePasswordSubmit}
-                >Salvar</Button>
+                >
+                  Salvar
+                </Button>
               </div>
             ) : (
               <Button
                 type="button"
                 variant="outline"
                 className="w-[600px] p-2"
-                onClick={() => handleEditClick('password')}
-              >Editar</Button>
+                onClick={() => handleEditClick("password")}
+              >
+                Editar
+              </Button>
             )}
           </div>
         </div>
       </motion.div>
     </section>
-  )
-}
+  );
+};

@@ -4,8 +4,7 @@ import { useFolder, useVideo } from '@/hooks'
 import { calculateDashboardMetrics } from '@/utils'
 import { Header, CreateVideoCard, CreateFolderCard } from '@/components'
 
-// Lazy loading dos componentes
-const ListFoldersLazy = lazy(() => import('./components/ListFolders'))
+const ListFoldersLazy = lazy(() => import('../../../components/folder/listFolders'))
 const VideoPerformanceLazy = lazy(() => import('./components/VideoPerformance'))
 
 export const Dashboard: FC = () => {

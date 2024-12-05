@@ -1,12 +1,12 @@
-import folderImg from '../../../../../assets/pastamuve.png'
+import folderImg from '@/assets/pastamuve.png'
+ 
 import type { FC } from 'react'
+import { useFolder } from '@/hooks'
+import { Heart } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { Heart } from '@phosphor-icons/react'
 import { useNavigate } from 'react-router-dom'
-import { useFolder } from '../../../../../hooks'
-import { cardVariants } from '../../../../../animations'
+import type { Folder as FolderType } from '../../types'
 import { AccordionMenuFolder } from './accordionMenuFolder'
-import type { Folder as FolderType } from '../../../../../types'
 
 interface FolderProps {
   folder: FolderType
@@ -44,7 +44,7 @@ export const Folder: FC<FolderProps> = ({ folder }: FolderProps) => {
       whileHover="hover"
       whileTap="tap"
     >
-      <div className="w-full h-48 flex items-center justify-center bg-[#1D1D1D] relative">
+      <div className="w-full h-48 flex items-center justify-center bg-[#1D1D1D] relative rounded">
         <img
           alt=""
           onClick={goToFolderPage}
@@ -64,7 +64,7 @@ export const Folder: FC<FolderProps> = ({ folder }: FolderProps) => {
         </div>
         <Heart
           size={24}
-          weight={folder.favorite ? 'fill' : 'regular'}
+          fill={folder.favorite ? '#187BF0' : ''}
           color={folder.favorite ? '#187BF0' : 'white'}
           className="cursor-pointer"
           onClick={() => handleAddFavoriteFolder(folder.id, !folder.favorite)}

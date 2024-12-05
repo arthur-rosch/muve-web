@@ -4,7 +4,7 @@ import { Route, Routes } from 'react-router-dom'
 import { Profile } from '../pages/(Main)/Profile'
 import { UserLayout } from '../layout/UserLayout'
 import { SplashScreen } from '../pages/SplashScreen'
-import { PlayerWrapper } from '../components/Players/playerWrapper'
+import { PlayerWrapper } from '../components/players/playerWrapper'
 import { Analytics, Dashboard, EditVideo, Folder } from '../pages/(Main)'
 import { Login, ResetPassword, FirstAccess, Thanks, LeadCapture, SignUp, VerifyEmail } from '../pages/(Auth)'
 

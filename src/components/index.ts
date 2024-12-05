@@ -1,11 +1,11 @@
-export * from './Layout/sideBar'
-export * from './Layout/header'
-export * from './Layout/headerFolder'
+export * from './layout/sideBar'
+export * from './layout/header'
+export * from './layout/headerFolder'
 export * from './CustomModal'
 
-export * from './Players/player'
-export * from './Players/previews/vsl-player'
-export * from './Players/previews/curse-player'
+export * from './players/player'
+export * from './players/previews/vsl-player'
+export * from './players/previews/curse-player'
 
 export * from './ui/card'
 export * from './ui/input'
@@ -38,3 +38,8 @@ export * from './modals/folder/CardCreateFolder'
 
 export * from './modals/select-video/selectVideoModal'
 
+export * from './modals/move-video/moveVideoModal'
+export * from './modals/preview-player/previewPlayerModal'
+
+
+export * from './folder/listFolders'

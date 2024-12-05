@@ -4,171 +4,171 @@ export enum Role {
 }
 
 export interface SignInVariables {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export interface SignUpVariables {
-  email: string
-  name: string
-  phone: string
-  document: string
-  password: string
+  email: string;
+  name: string;
+  phone: string;
+  document: string;
+  password: string;
 }
 
 export interface LeadVariables {
-  email: string
-  name: string
-  phone: string
-  document: string
-  plan: string
+  email: string;
+  name: string;
+  phone: string;
+  document: string;
+  plan: string;
 }
 
 export interface User {
-  id: string
-  name: string
-  email: string
-  phone: string
-  document: string
-  password_hash: string
-  accountType: string
-  memberArea: string
-  videoHosting: string
-  role: Role
-  created_at: Date
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  document: string;
+  password_hash: string;
+  accountType: string;
+  memberArea: string;
+  videoHosting: string;
+  role: Role;
+  created_at: Date;
 }
 
 export interface CreateVideoVariables {
-  url: string
-  name: string
-  duration: string
-  folderId?: string
-  format: '9/16' | '16/9'
-  type: 'Vsl' | 'Curso'
-  colorProgress?: string
+  url: string;
+  name: string;
+  duration: string;
+  folderId?: string;
+  format: "9/16" | "16/9";
+  type: "Vsl" | "Curso";
+  colorProgress?: string;
   chapters?: {
-    title?: string
-    startTime?: string
-    endTime?: string
-  }[]
-  fictitiousProgress?: boolean
+    title?: string;
+    startTime?: string;
+    endTime?: string;
+  }[];
+  fictitiousProgress?: boolean;
 }
 
 export interface CreateFolderVariables {
-  name: string
-  coverUrl?: string
-  videosId?: string[]
+  name: string;
+  coverUrl?: string;
+  videosId?: string[];
 }
 
 export interface ViewTimestamp {
-  id: string
-  startTimestamp: number
-  endTimestamp: number
-  videoAnalyticsId: string
-  userIp: string
-  deviceType: string
-  agent: string
-  country: string
-  region: string
-  city: string
-  created_at: Date
+  id: string;
+  startTimestamp: number;
+  endTimestamp: number;
+  videoAnalyticsId: string;
+  userIp: string;
+  deviceType: string;
+  agent: string;
+  country: string;
+  region: string;
+  city: string;
+  created_at: Date;
 }
 
 export interface ViewUnique {
-  id: string
-  videoId: string
-  userIp: string
-  deviceType: string
-  agent: string
-  country: string
-  region: string
-  city: string
-  created_at: Date
+  id: string;
+  videoId: string;
+  userIp: string;
+  deviceType: string;
+  agent: string;
+  country: string;
+  region: string;
+  city: string;
+  created_at: Date;
 }
 
 export interface VideoAnalytics {
-  id: string
-  totalPlays: number
-  totalViews: number
-  videoId: string
-  created_at: Date
-  viewTimestamps: ViewTimestamp[]
-  viewUnique: ViewUnique[]
+  id: string;
+  totalPlays: number;
+  totalViews: number;
+  videoId: string;
+  created_at: Date;
+  viewTimestamps: ViewTimestamp[];
+  viewUnique: ViewUnique[];
 }
 
 export interface AddViewTimestamps {
-  videoId: string
-  userIp: string
-  deviceType: string
-  agent: string
-  country: string
-  region: string
-  city: string
-  endTimestamp: number
-  startTimestamp: number
+  videoId: string;
+  userIp: string;
+  deviceType: string;
+  agent: string;
+  country: string;
+  region: string;
+  city: string;
+  endTimestamp: number;
+  startTimestamp: number;
 }
 
 export interface AddViewUnique {
-  videoId: string
-  userIp: string
-  deviceType: string
-  agent: string
-  country: string
-  region: string
-  city: string
+  videoId: string;
+  userIp: string;
+  deviceType: string;
+  agent: string;
+  country: string;
+  region: string;
+  city: string;
 }
 export interface VideoMetrics {
-  plays: number
-  views: number
-  playRate: number
-  engagement: number
-  uniquePlays: number
-  uniqueViews: number
+  plays: number;
+  views: number;
+  playRate: number;
+  engagement: number;
+  uniquePlays: number;
+  uniqueViews: number;
 }
 
 export interface GenerateUrlVariables {
-  videoId: string
+  videoId: string;
 }
 
 export interface ValidateUrlVariables {
-  url: string
+  url: string;
 }
 
 export interface InvalidateTokenVariables {
-  token: string
+  token: string;
 }
 
 export interface PlayerDataVariables {
-  userIp: string
-  deviceType: string
-  agent: string
-  country: string
-  region: string
-  city: string
+  userIp: string;
+  deviceType: string;
+  agent: string;
+  country: string;
+  region: string;
+  city: string;
 }
 
 export interface Chapters {
-  title: string
-  startTime: string
-  endTime: string
+  title: string;
+  startTime: string;
+  endTime: string;
 }
 
 export enum StatusSignature {
-  APPROVED = 'APPROVED',
-  PENDING = 'PENDING',
-  CANCELED = 'CANCELED',
+  APPROVED = "APPROVED",
+  PENDING = "PENDING",
+  CANCELED = "CANCELED",
 }
 
 export enum Plan {
-  FREE = 'FREE',
-  ESSENTIAL = 'ESSENTIAL',
-  UNLIMITED = 'UNLIMITED',
-  PROFESSIONAL = 'PROFESSIONAL',
+  FREE = "FREE",
+  ESSENTIAL = "ESSENTIAL",
+  UNLIMITED = "UNLIMITED",
+  PROFESSIONAL = "PROFESSIONAL",
 }
 
 export enum ChargeFrequency {
-  ANNUALLY = 'ANNUALLY',
-  MONTHLY = 'MONTHLY',
+  ANNUALLY = "ANNUALLY",
+  MONTHLY = "MONTHLY",
 }
 
 export interface Signature {
@@ -195,103 +195,138 @@ export interface Signature {
 
 // Define a interface para o botão
 export interface VideoButton {
-  buttonType: 'below' | 'inside'
-  buttonText: string
-  buttonSize: string
-  buttonLink: string
-  startTime: string
-  endTime: string
-  buttonAfterTheVideoEnds?: boolean
-  backgroundColor: string
-  textColor: string
-  hoverBackgroundColor: string
-  hoverTextColor: string
-  buttonPosition?: string
+  buttonType: "below" | "inside";
+  buttonText: string;
+  buttonSize: string;
+  buttonLink: string;
+  startTime: string;
+  endTime: string;
+  buttonAfterTheVideoEnds?: boolean;
+  backgroundColor: string;
+  textColor: string;
+  hoverBackgroundColor: string;
+  hoverTextColor: string;
+  buttonPosition?: string;
 }
 
 export interface EditPlayerVideoProps {
-  colorSmartPlayers?: string
-  playAndPause?: boolean
-  progressBar?: boolean
-  timeTraveled?: boolean
-  videoDuration?: boolean
-  volumeButton?: boolean
-  volumeBar?: boolean
-  speed?: boolean
-  fullscreen?: boolean
-  smartAutoPlay?: boolean
-  UrlCoverSmartAutoPlay?: string
-  TextTopSmartAutoPlay?: string
-  TextButtonSmartAutoPlay?: string
-  continueWatching?: boolean
-  watchingNow?: boolean
-  watchingNowFontSize?: string
-  watchingNowBgColor?: string
-  watchingNowTextColor?: string
-  ImageVideoPause?: boolean
-  UrlCoverImageVideoPause?: string
-  ImageOfFinished?: boolean
-  UrlCoverImageOfFinished?: string
-  chapterMenu?: boolean
-  buttonsActive?: boolean
-  Chapter?: Chapters[]
-  Buttons?: VideoButton[]
+  colorSmartPlayers?: string;
+  playAndPause?: boolean;
+  progressBar?: boolean;
+  timeTraveled?: boolean;
+  videoDuration?: boolean;
+  volumeButton?: boolean;
+  volumeBar?: boolean;
+  speed?: boolean;
+  fullscreen?: boolean;
+  smartAutoPlay?: boolean;
+  UrlCoverSmartAutoPlay?: string;
+  TextTopSmartAutoPlay?: string;
+  TextButtonSmartAutoPlay?: string;
+  continueWatching?: boolean;
+  watchingNow?: boolean;
+  watchingNowFontSize?: string;
+  watchingNowBgColor?: string;
+  watchingNowTextColor?: string;
+  ImageVideoPause?: boolean;
+  UrlCoverImageVideoPause?: string;
+  ImageOfFinished?: boolean;
+  UrlCoverImageOfFinished?: string;
+  chapterMenu?: boolean;
+  buttonsActive?: boolean;
+  Chapter?: Chapters[];
+  Buttons?: VideoButton[];
 }
 
 export interface Video {
-  id: string
-  url: string
-  tags: string
-  name: string
-  duration: string
-  thumbnail: string
-  folderId?: string
-  format: '9/16' | '16/9'
-  type: 'Vsl' | 'Curso'
-  color?: string
-  Chapter: Chapters[] | []
-  VideoButtons: VideoButton[] | []
-  fictitiousProgress?: boolean
-  created_at: Date
+  id: string;
+  url: string;
+  tags: string;
+  name: string;
+  duration: string;
+  thumbnail: string;
+  folderId?: string;
+  format: "9/16" | "16/9";
+  type: "Vsl" | "Curso";
+  color?: string;
+  Chapter: Chapters[] | [];
+  VideoButtons: VideoButton[] | [];
+  fictitiousProgress?: boolean;
+  created_at: Date;
 
-  colorSmartPlayers?: string
-  playAndPause?: boolean
-  progressBar?: boolean
-  timeTraveled?: boolean
-  videoDuration?: boolean
-  volumeButton?: boolean
-  volumeBar?: boolean
-  speed?: boolean
-  fullscreen?: boolean
-  smartAutoPlay?: boolean
-  UrlCoverSmartAutoPlay?: string
-  TextTopSmartAutoPlay?: string
-  TextButtonSmartAutoPlay?: string
-  continueWatching?: boolean
-  watchingNow?: boolean
-  watchingNowFontSize?: string
-  watchingNowBgColor?: string
-  watchingNowTextColor?: string
-  ImageVideoPause?: boolean
-  UrlCoverImageVideoPause?: string
-  ImageOfFinished?: boolean
-  UrlCoverImageOfFinished?: string
-  chapterMenu?: boolean
-  buttonsActive?: boolean
-  fictitiousProgressHeight?: string
-  analytics: VideoAnalytics
+  colorSmartPlayers?: string;
+  playAndPause?: boolean;
+  progressBar?: boolean;
+  timeTraveled?: boolean;
+  videoDuration?: boolean;
+  volumeButton?: boolean;
+  volumeBar?: boolean;
+  speed?: boolean;
+  fullscreen?: boolean;
+  smartAutoPlay?: boolean;
+  UrlCoverSmartAutoPlay?: string;
+  TextTopSmartAutoPlay?: string;
+  TextButtonSmartAutoPlay?: string;
+  continueWatching?: boolean;
+  watchingNow?: boolean;
+  watchingNowFontSize?: string;
+  watchingNowBgColor?: string;
+  watchingNowTextColor?: string;
+  ImageVideoPause?: boolean;
+  UrlCoverImageVideoPause?: string;
+  ImageOfFinished?: boolean;
+  UrlCoverImageOfFinished?: string;
+  chapterMenu?: boolean;
+  buttonsActive?: boolean;
+  fictitiousProgressHeight?: string;
+  analytics: VideoAnalytics;
 }
 
 export interface ChartProps {
-  analytics: VideoAnalytics
-  selectedVideo: Video
+  analytics: VideoAnalytics;
+  selectedVideo: Video;
 }
 export interface Folder {
-  id: string
-  name: string
-  coverUrl?: string
-  favorite: boolean
-  userId: string
-  created_at: Date
-  videos: Video[]
+  id: string;
+  name: string;
+  coverUrl?: string;
+  favorite: boolean;
+  userId: string;
+  created_at: Date;
+  videos: Video[];
+}
+
+export interface RetentionMetrics {
+  views: number;
+  startTime: string;
+  endTime: string;
+  status: string;
+  percentage: number;
+}
+
+export interface DeviceChartData {
+  date: string;
+  [device: string]: number | string;
+}
+
+export interface DeviceMetrics {
+  device: string;
+  totalViews: number;
+  totalPlays: number;
+}
+
+export interface CountryChartData {
+  date: string;
+  [key: string]: number | string;
+}
+
+export interface CountryMetrics {
+  country: string;
+  totalViews: number;
+  totalPlays: number;
+}
+
+export interface VideoWithAnalytics {
+  video: Video;
+  analytics: VideoAnalytics;
 }

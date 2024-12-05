@@ -1,9 +1,9 @@
-import { Button, Modal } from '../..';
-import type { Video } from '@/types';
-import { VideoList } from './videoList';
-import { useState, useEffect } from 'react';
-import { VideoSearchInput } from './VideoSearchInput';
-import { X } from 'lucide-react';
+import { Button, Modal } from "../..";
+import type { Video } from "@/types";
+import { VideoList } from "./videoList";
+import { useState, useEffect } from "react";
+import { VideoSearchInput } from "./videoSearchInput";
+import { X } from "lucide-react";
 
 interface SelectVideoModalProps {
   videos: Video[];
@@ -18,7 +18,7 @@ export function SelectVideoModal({
   onClose,
   onVideoSelect,
 }: SelectVideoModalProps) {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedVideo, setSelectedVideo] = useState<Video | undefined>();
 
   const filteredVideos = videos.filter((video) =>
@@ -36,26 +36,24 @@ export function SelectVideoModal({
 
   useEffect(() => {
     if (!isOpen) {
-      setSearchTerm('');
+      setSearchTerm("");
       setSelectedVideo(undefined);
     }
   }, [isOpen]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      className="max-w-4xl w-full"
-    >
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 text-gray-400 hover:text-white"
-        >
-          <X className="h-5 w-5" />
+    <Modal isOpen={isOpen} onClose={onClose} className="max-w-4xl w-full">
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-4 text-gray-400 hover:text-white"
+      >
+        <X className="h-5 w-5" />
       </button>
       <div className="flex flex-col">
         <div className="flex flex-col justify-center items-center border-b border-neutral-800 p-6">
-          <h2 className="text-xl font-semibold text-white">+ Selecione o video</h2>
+          <h2 className="text-xl font-semibold text-white">
+            + Selecione o video
+          </h2>
           <p className="text-sm text-gray-400 mt-1">Analise um video</p>
         </div>
 
@@ -75,18 +73,10 @@ export function SelectVideoModal({
         </div>
 
         <div className="w-full gap-4 flex items-center justify-between p-6 border-t border-[#333333]">
-          <Button
-            variant="danger"
-            onClick={onClose}
-            className="w-full"
-          >
+          <Button variant="danger" onClick={onClose} className="w-full">
             Cancelar
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleConfirm}
-            className="w-full"
-          >
+          <Button variant="primary" onClick={handleConfirm} className="w-full">
             Confirmar
           </Button>
         </div>

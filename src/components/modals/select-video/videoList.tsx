@@ -1,7 +1,7 @@
-import { CheckBox } from '../../';
-import { motion } from 'framer-motion';
-import { Folder } from 'lucide-react';
-import type { Video } from '@/types';
+import { CheckBox } from "../../";
+import { motion } from "framer-motion";
+import { Folder } from "lucide-react";
+import type { Video } from "@/types";
 
 interface VideoListProps {
   videos: Video[];
@@ -18,7 +18,11 @@ const listItemVariants = {
   }),
 };
 
-export function VideoList({ videos, selectedVideo, onVideoSelect }: VideoListProps) {
+export function VideoList({
+  videos,
+  selectedVideo,
+  onVideoSelect,
+}: VideoListProps) {
   if (videos.length === 0) {
     return (
       <motion.div
@@ -61,7 +65,9 @@ export function VideoList({ videos, selectedVideo, onVideoSelect }: VideoListPro
           </div>
           <CheckBox
             checked={selectedVideo?.id === video.id}
-            onCheckedChange={(checked) => onVideoSelect(Boolean(checked), video)}
+            onCheckedChange={(checked) =>
+              onVideoSelect(Boolean(checked), video)
+            }
           />
         </motion.div>
       ))}
