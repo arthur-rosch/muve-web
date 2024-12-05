@@ -9,6 +9,8 @@ export function FormField({
   errors,
   placeholder,
   type = "text",
+  onChange,
+  mask,
 }: FormFieldProps) {
   return (
     <div className="space-y-1.5">
@@ -28,6 +30,8 @@ export function FormField({
             type={type}
             id={name}
             placeholder={placeholder}
+            onChange={onChange}
+            mask={mask}
           />
         )}
       />
