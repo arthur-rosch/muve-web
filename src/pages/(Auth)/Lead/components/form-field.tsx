@@ -1,0 +1,41 @@
+import { Controller } from "react-hook-form";
+import { Input } from "@/components/ui/input";
+import type { FormFieldProps } from "./types";
+
+export function FormField({
+  label,
+  name,
+  control,
+  errors,
+  placeholder,
+  type = "text",
+}: FormFieldProps) {
+  return (
+    <div className="space-y-1.5">
+      <label
+        className="text-sm md:text-base font-medium text-[#8F9BBA]"
+        htmlFor={name}
+      >
+        {label}
+      </label>
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => (
+          <Input
+            {...field}
+            className="h-12 md:h-14 text-white placeholder-[#8F9BBA]/50 border-none focus-visible:ring-1 focus-visible:ring-[#187BF0] text-base"
+            type={type}
+            id={name}
+            placeholder={placeholder}
+          />
+        )}
+      />
+      {errors[name] && (
+        <p className="text-xs md:text-sm text-red-400">
+          {errors[name].message}
+        </p>
+      )}
+    </div>
+  );
+}
