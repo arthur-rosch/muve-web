@@ -1,41 +1,45 @@
-import type { Signature } from '../types';
-import { handleError } from './handle-error';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { SignatureService } from '../services/SignatureService';
-import { toast } from 'sonner';
+import type { Signature } from "../types";
+import { handleError } from "./handle-error";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { SignatureService } from "../services/SignatureService";
+import { toast } from "sonner";
 
 export const useSignature = () => {
-
-
   const { data, isLoading, error } = useQuery<Signature[]>({
-    queryKey: ['getAllSignaturesByUserId'],
-    refetchOnWindowFocus: true,
+    queryKey: ["getAllSignaturesByUserId"],
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       try {
-        const { success, data, error } = await SignatureService.getAllSignaturesByUserId();
-        
+        const { success, data, error } =
+          await SignatureService.getAllSignaturesByUserId();
+
         if (success) {
           return data;
         }
-        handleError(error?.message! || 'Erro desconhecido ao buscar assinaturas.')
+        handleError(
+          error?.message! || "Erro desconhecido ao buscar assinaturas."
+        );
         throw error;
       } catch (error: any) {
-        handleError(error?.message! || 'Erro desconhecido ao buscar assinaturas.');
+        handleError(
+          error?.message! || "Erro desconhecido ao buscar assinaturas."
+        );
         throw error;
       }
     },
   });
 
   const createCheckout = useMutation({
-    mutationFn: async ({email, plan}: {email: string, plan: string}) => {
+    mutationFn: async ({ email, plan }: { email: string; plan: string }) => {
       const { data, success, error } = await SignatureService.createCheckout({
-        email, plan
+        email,
+        plan,
       });
       return { data, success, error };
     },
     onSuccess: (response) => {
       if (response.success) {
-        toast.success('Ira ser redirecionado para o checkout.');
+        toast.success("Ira ser redirecionado para o checkout.");
         window.location.href = response.data.url;
       } else {
         handleError(response.error?.message!);
@@ -45,6 +49,9 @@ export const useSignature = () => {
   });
 
   return {
-    data, isLoading, error, createCheckout,
+    data,
+    isLoading,
+    error,
+    createCheckout,
   };
 };

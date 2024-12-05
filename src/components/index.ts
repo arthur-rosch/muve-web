@@ -22,6 +22,7 @@ export * from "./ui/select";
 export * from "./ui/collapsible";
 
 export * from "./providers/modal-provider";
+export * from "./modals/upgrade-plan/plan-card";
 export * from "./modals/upgrade-plan/upgrade-modal";
 
 export * from "./testimonials/testimonial-carousel";
