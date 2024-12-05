@@ -1,8 +1,9 @@
 // @ts-nocheck
 import { userReducer } from '../reducers';
 import storage from 'redux-persist/lib/storage';
-import { combineReducers, legacy_createStore as createStore } from 'redux';
+import { modalReducer } from '../reducers/modalReducer';
 import { persistStore, persistReducer } from 'redux-persist';
+import { combineReducers, legacy_createStore as createStore } from 'redux';
 
 const persistConfig = {
   key: 'root',
@@ -11,6 +12,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userReducer,
+  modal: modalReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -1,26 +1,41 @@
-import logo from '../../assets/logo.svg'
-import { useFolder } from '../../hooks'
+import logo from '@/assets/logo.svg'
+import { useFolder } from '@/hooks'
 import { motion } from 'framer-motion'
-import { Button } from '../Ui/button'
-import type { Folder, User } from '../../types'
+import { Local } from '@/services/Local'
+import { useState, type FC } from 'react'
 import { useDispatch } from 'react-redux'
-import { type FC, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom' // Import useLocation
-import { listItensDelay } from '../../animations'
+import type { Folder, User } from '@/types'
+import { listItensDelay } from '@/animations'
+import { setUser } from '@/redux/actions/user'
+import { useNavigate, useLocation } from 'react-router-dom'
 import {
-  Gear,
-  CaretUp,
-  CaretDown,
+  Settings,
+  ChevronUp,
+  ChevronDown,
   Newspaper,
   FolderOpen,
-  Speedometer,
-  ArrowUUpLeft,
-  CaretDoubleRight,
-  CaretDoubleLeft,
-  ProjectorScreenChart,
-} from '@phosphor-icons/react'
-import { Local } from '../../services/Local'
-import { setUser } from '../../redux/actions/user'
+  LayoutDashboard,
+  LogOut,
+  BarChart3,
+  ArrowRight,
+  ArrowLeft
+} from 'lucide-react'
+
+import {
+  Button,
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+
+  ScrollArea,
+  Separator
+} from '@/components'
+
 
 export const Sidebar: FC = () => {
   const navigate = useNavigate()
@@ -34,11 +49,11 @@ export const Sidebar: FC = () => {
   const [isFoldersOpen, setIsFoldersOpen] = useState<boolean>(false)
 
   const menuItems = [
-    { id: 'dashboard', icon: <Speedometer size={20} />, label: 'Painel' },
+    { id: 'dashboard', icon: <LayoutDashboard size={20} />, label: 'Painel' },
     { id: 'folders', icon: <FolderOpen size={20} />, label: 'Pastas' },
     {
       id: 'analytics',
-      icon: <ProjectorScreenChart size={20} />,
+      icon: <BarChart3 size={20} />,
       label: 'Análise',
     },
     {
@@ -49,8 +64,8 @@ export const Sidebar: FC = () => {
   ]
 
   const otherItems = [
-    { id: 'profile', icon: <Gear size={20} />, label: 'Configurações' },
-    { id: 'logout', icon: <ArrowUUpLeft size={20} />, label: 'Sair da conta' },
+    { id: 'profile', icon: <Settings size={20} />, label: 'Configurações' },
+    { id: 'logout', icon: <LogOut size={20} />, label: 'Sair da conta' },
   ]
 
   const handleLogout = () => {
@@ -63,145 +78,142 @@ export const Sidebar: FC = () => {
     navigate('/folder', { state: { folder } })
   }
 
+  const renderMenuItem = (item: typeof menuItems[0], isOtherItem = false) => {
+    const isActive = location.pathname === `/${item.id}`
+    const isExternalLink = item.id.startsWith('http')
+
+    if (item.id === 'folders') {
+      return (
+        <Collapsible
+          key={item.id}
+          open={isFoldersOpen}
+          onOpenChange={setIsFoldersOpen}
+          onClick={() => setIsSideBarOpen(true)}
+        >
+          <CollapsibleTrigger asChild>
+            <Button
+              variant="link"
+              className={`w-full justify-between h-10 px-3 text-zinc-400 hover:text-white hover:bg-zinc-800 ${
+                isActive ? 'bg-zinc-800 text-white' : ''
+              }`}
+            >
+              <span className="flex items-start gap-3">
+                {item.icon}
+                {isSideBarOpen && (
+                  <span className="text-sm font-medium">{item.label}</span>
+                )}
+              </span>
+              {isSideBarOpen && (isFoldersOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
+            </Button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="px-1">
+            {folders && folders.length > 0 && (
+              <ScrollArea className="h-[300px] px-1">
+                <motion.div
+                  className="space-y-1 mt-1"
+                  initial="hidden"
+                  animate="visible"
+                >
+                  {folders.map((folder, index) => (
+                    <motion.div
+                      key={folder.id}
+                      variants={listItensDelay}
+                      custom={index}
+                    >
+                      <Button
+                        variant="link"
+                        size="sm"
+                        className="w-full justify-between pl-9 font-normal text-zinc-400 hover:text-white hover:bg-zinc-800"
+                        onClick={() => goToFolderPage(folder)}
+                      >
+                        {folder.name}
+                        <span className="bg-zinc-800 text-zinc-300 rounded px-1.5 py-0.5 text-xs">
+                          {folder.videos.length}
+                        </span>
+                      </Button>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </ScrollArea>
+            )}
+          </CollapsibleContent>
+        </Collapsible>
+      )
+    }
+
+    return (
+      <TooltipProvider key={item.id}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="link"
+              className={`w-full justify-between px-3 text-zinc-400 ${
+                isActive ? 'bg-zinc-800 text-white' : ''
+              }`}
+              onClick={() => {
+                if (isExternalLink) {
+                  window.open(item.id)
+                } else if (item.id === 'logout') {
+                  handleLogout()
+                } else {
+                  navigate(`/${item.id}`)
+                }
+              }}
+            >
+              <div className='flex items-center justify-center'>
+                {item.icon}
+                {isSideBarOpen && (
+                  <span className="ml-3 text-sm font-medium">{item.label}</span>
+                )}
+              </div>
+            </Button>
+          </TooltipTrigger>
+          {!isSideBarOpen && (
+            <TooltipContent side="right" className="font-medium bg-zinc-800 text-white border-zinc-700">
+              {item.label}
+            </TooltipContent>
+          )}
+        </Tooltip>
+      </TooltipProvider>
+    )
+  }
+
   return (
     <aside
-      className={`h-screen ${isSideBarOpen ? 'w-80' : 'w-20'} rounded-xl flex flex-col items-start justify-start p-4 m-2 bg-[#1D1D1D] transition-width duration-300`}
+      className={`h-screen ${
+        isSideBarOpen ? 'w-64' : 'w-16'
+      } bg-[#1D1D1D] transition-all duration-300 p-2`}
+      onMouseEnter={() => setIsSideBarOpen(true)}
+      onMouseLeave={() => setIsSideBarOpen(false)}
     >
-      <div className="w-full flex items-center justify-between border-b-[1px] border-[#333333] border-solid pb-6">
-        <div className="flex items-center justify-center gap-4 text-white">
+      <div className="flex h-full flex-col gap-2">
+        <div className="flex items-center justify-between py-2 px-3">
           {isSideBarOpen && (
-            <img src={logo} alt="Muve Logo" className="w-32 h-w-32" />
+            <img src={logo} className="w-24 h-w-24"/>
           )}
+          <button
+            className="h-8 w-8 text-[#909090] hover:bg-[#333333] hover:text-white flex items-center justify-center rounded"
+            onClick={() => setIsSideBarOpen(!isSideBarOpen)}
+          >
+              {isSideBarOpen ? (
+                <ArrowLeft className="h-4 w-4" />
+              ) : (
+                <ArrowRight className="h-4 w-4" />
+              )}
+          </button>
         </div>
-        <button
-          onClick={() => setIsSideBarOpen(!isSideBarOpen)}
-          className="w-6 h-6 rounded flex items-center justify-center border-[1px] border-solid border-[#777777] text-[#777777] hover:bg-[#777777] hover:text-white transition-all"
-        >
-          {!isSideBarOpen ? <CaretDoubleRight /> : <CaretDoubleLeft />}
-        </button>
-      </div>
+        
+        <Separator className="bg-zinc-800" />
 
-      <div className="w-full h-full my-6 flex flex-col">
-        <span
-          className={`text-sm text-[#909090] mb-6 ${!isSideBarOpen ? 'hidden' : ''}`}
-        >
-          Menu
-        </span>
-        <div className="flex flex-col gap-3">
-          {menuItems.map((item) => {
-            const isActive = location.pathname === `/${item.id}` // Check if the current route matches the item ID
+        <nav className="flex-1 space-y-1">
+          {menuItems.map((item) => renderMenuItem(item))}
+        </nav>
 
-            if (item.id === 'folders') {
-              return (
-                <div key={item.id}>
-                  <Button
-                    type="button"
-                    variant="link"
-                    key={item.id}
-                    onClick={() => {
-                      if (!isSideBarOpen) {
-                        setIsSideBarOpen(true) // Open sidebar if closed
-                      }
-                      setIsFoldersOpen(!isFoldersOpen)
-                    }}
-                    className={`w-full p-4 flex gap-4 items-center justify-start h-12 ${isActive ? 'bg-[#333333] text-white' : ''}`}
-                  >
-                    <div className="flex gap-4 items-center">
-                      {item.icon}
-                      {isSideBarOpen && item.label}{' '}
-                      {/* Show label only if sidebar is open */}
-                    </div>
-                    {isFoldersOpen && isSideBarOpen ? (
-                      <CaretUp size={20} />
-                    ) : (
-                      <CaretDown size={20} />
-                    )}
-                  </Button>
-                  {isFoldersOpen && isSideBarOpen && (
-                    <motion.div
-                      className="ml-8 mt-6 max-h-72 flex flex-col gap-2 overflow-x-auto"
-                      initial="hidden"
-                      animate="visible"
-                    >
-                      {folders &&
-                        folders.map((folder, index) => (
-                          <motion.div
-                            key={index}
-                            className="flex items-center justify-between p-4 text-[#909090] hover:bg-[#343434] hover:text-white cursor-pointer rounded text-sm"
-                            variants={listItensDelay}
-                            custom={index}
-                            onClick={() => goToFolderPage(folder)}
-                          >
-                            {folder.name}
-                            <div className="w-5 h-5 flex items-center justify-center p-1 rounded-sm bg-[#343434] text-white text-xs font-medium">
-                              {folder.videos.length}
-                            </div>
-                          </motion.div>
-                        ))}
-                    </motion.div>
-                  )}
-                </div>
-              )
-            }
+        <Separator className="bg-zinc-800" />
 
-            return (
-              <Button
-                type="button"
-                variant="link"
-                key={item.id}
-                className={`w-full p-4 flex gap-4 items-center justify-start h-12 ${
-                  isActive ? 'bg-[#333333] text-white' : ''
-                }`}
-                onClick={() => {
-                  if (
-                    item.id ===
-                    'https://ajuda.muveplayer.com/novidades/novidades-no-muve'
-                  ) {
-                    window.open(item.id)
-                  } else {
-                    navigate(`/${item.id}`)
-                  }
-                }}
-              >
-                {item.icon}
-                {isSideBarOpen && item.label}{' '}
-                {/* Show label only if sidebar is open */}
-              </Button>
-            )
-          })}
-        </div>
-      </div>
-
-      <div className="w-full h-full my-6 flex flex-col">
-        <span
-          className={`text-sm text-[#909090] mb-6 ${!isSideBarOpen ? 'hidden' : ''}`}
-        >
-          Outros
-        </span>
-        <div className="flex flex-col gap-3">
-          {otherItems.map((item) => {
-            const isActive = location.pathname === `/${item.id}`
-            return (
-              <div
-                key={item.id}
-                className={`w-full p-4 flex gap-4 rounded items-center justify-start h-12 text-sm text-[#909090] ${isActive ? 'bg-[#333333] text-white' : ''} transition-all cursor-pointer`}
-                onClick={() => {
-                  if (item.id === 'logout') {
-                    handleLogout()
-                  } else if (item.id === 'https://ajuda.muveplayer.com/') {
-                    window.location.href = item.id // Redirect to the help URL
-                  } else {
-                    navigate(`/${item.id}`)
-                  }
-                }}
-              >
-                {item.icon}
-                {isSideBarOpen && item.label}{' '}
-                {/* Show label only if sidebar is open */}
-              </div>
-            )
-          })}
-        </div>
+        <nav className="space-y-1">
+          {otherItems.map((item) => renderMenuItem(item, true))}
+        </nav>
       </div>
     </aside>
   )

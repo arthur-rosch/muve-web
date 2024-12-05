@@ -150,8 +150,6 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
             <Button
               type="button"
               variant="primary"
-              animation={true}
-              variants={cardVariants}
               className="w-full flex items-center justify-center py-3 px-4 h-10"
               onClick={() => {
                 setIsModalOpen(false)
@@ -294,7 +292,7 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
                         {...field}
                         id="startTime"
                         type="text"
-                        isMask={true}
+                        onChange={(e) => setValue('startTime', e.target.value)}
                         mask="99:99:99"
                         placeholder="hh:mm:ss"
                         className="w-full h-10 mt-2 mb-2"
@@ -320,8 +318,8 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
                         {...field}
                         id="endTime"
                         type="text"
-                        isMask={true}
                         mask="99:99:99"
+                        onChange={(e) => setValue('endTime', e.target.value)}
                         placeholder="hh:mm:ss"
                         className="w-full h-10 mt-2 mb-2"
                       />
@@ -514,8 +512,6 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
             <Button
               type="button"
               variant="danger"
-              animation={true}
-              variants={cardVariants}
               onClick={() => setIsModalOpen(false)}
               className="w-full flex items-center justify-center py-3 px-4 h-10"
             >
@@ -524,8 +520,6 @@ export const AddButtonModal: FC<AddButtonModalProps> = ({
             <Button
               type="button"
               variant="primary"
-              animation={true}
-              variants={cardVariants}
               onClick={handleSubmit(onSubmit)}
               className="w-full flex items-center justify-center py-3 px-4 h-10"
             >

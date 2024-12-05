@@ -1,43 +1,38 @@
-import { z } from 'zod'
-import { motion } from 'framer-motion'
-import { useState, type FC } from 'react'
-import { useForm, Controller } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { cardVariants } from '../../../../animations'
-import {
-  Input,
-  Button,
-  CustomModal,
-  toastSuccess,
-  toastError,
-} from '../../../../components'
-import { useDispatch, useSelector } from 'react-redux'
-import type { State } from '../../../../redux/store/configureStore'
-import { useProfile } from '../../../../hooks'
-import { setUser } from '../../../../redux/actions/user'
+import { z } from "zod";
+import { motion } from "framer-motion";
+import { useState, type FC } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cardVariants } from "../../../../animations";
+import { Input, Button, CustomModal } from "../../../../components";
+import { useDispatch, useSelector } from "react-redux";
+import type { State } from "../../../../redux/store/configureStore";
+import { useProfile } from "../../../../hooks";
+import { setUser } from "../../../../redux/actions/user";
+import { toast } from "sonner";
 
 const schema = z.object({
-  name: z.string().min(1, 'Nome da pasta é obrigatório').optional(),
+  name: z.string().min(1, "Nome da pasta é obrigatório").optional(),
   phone: z.string().optional(),
   document: z.string().optional(),
-})
+});
 
-type FormValues = z.infer<typeof schema>
+type FormValues = z.infer<typeof schema>;
 
 interface EditProfileModalProps {
-  isModalOpen: boolean
-  setIsModalOpen: (value: boolean) => void
+  isModalOpen: boolean;
+  setIsModalOpen: (value: boolean) => void;
 }
 
 export const EditProfileModal: FC<EditProfileModalProps> = ({
   isModalOpen,
   setIsModalOpen,
 }) => {
-  const dispatch = useDispatch()
-  const { updateProfile } = useProfile()
-  const { user } = useSelector((state: State) => state.user)
+  const dispatch = useDispatch();
+  const { updateProfile } = useProfile();
+  const { user } = useSelector((state: State) => state.user);
 
-  const [createdSuccess, setCreatedSuccess] = useState(false)
+  const [createdSuccess, setCreatedSuccess] = useState(false);
 
   const {
     handleSubmit,
@@ -50,50 +45,40 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({
       name: user.name,
       phone: user.phone,
     },
-  })
+  });
 
   const onSubmit = async (data: FormValues) => {
-    console.log(data)
+    console.log(data);
 
-    // Tenta realizar a mutação para atualizar o perfil
     const { success } = await updateProfile.mutateAsync({
       document: data.document ? data.document : user.document!,
       name: data.name ? data.name : user.name!,
       phone: data.phone ? data.phone : user.phone!,
-    })
+    });
 
-    // Verifica se a mutação foi bem-sucedida
     if (success) {
-      // Exibe um toast de sucesso
-      toastSuccess({
-        text: 'Perfil editado com sucesso',
-      })
+      toast.success("Perfil editado com sucesso");
 
-      // Atualiza o estado do usuário no Redux com os novos dados
       dispatch(
         setUser({
           ...user,
           document: data.document ? data.document : user.document!,
           name: data.name ? data.name : user.name!,
           phone: data.phone ? data.phone : user.phone!,
-        }),
-      )
+        })
+      );
 
-      // Define o estado de sucesso como verdadeiro para exibir a tela de confirmação
-      setCreatedSuccess(true)
+      setCreatedSuccess(true);
     } else {
-      // Exibe um toast de erro caso a mutação falhe
-      toastError({
-        text: 'Ocorreu um erro ao editar o perfil',
-      })
+      toast.error("Ocorreu um erro ao editar o perfil");
     }
-  }
+  };
 
   return (
     <CustomModal.Root
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      styles={'h-auto w-[50rem] flex flex-col'}
+      styles={"h-auto w-[50rem] flex flex-col"}
     >
       <CustomModal.Title
         title="Editar Perfil"
@@ -107,8 +92,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({
             <Button
               type="button"
               variant="primary"
-              animation={true}
-              variants={cardVariants}
               onClick={() => setIsModalOpen(false)}
               className="w-full flex items-center justify-center py-3 px-4 h-10"
             >
@@ -213,8 +196,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({
             <Button
               type="button"
               variant="danger"
-              animation={true}
-              variants={cardVariants}
               onClick={() => setIsModalOpen(false)}
               className="w-full flex items-center justify-center py-3 px-4 h-10"
             >
@@ -223,8 +204,6 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({
             <Button
               type="button"
               variant="primary"
-              animation={true}
-              variants={cardVariants}
               className="w-full flex items-center justify-center py-3 px-4 h-10"
               onClick={handleSubmit(onSubmit)}
             >
@@ -234,5 +213,5 @@ export const EditProfileModal: FC<EditProfileModalProps> = ({
         </>
       )}
     </CustomModal.Root>
-  )
-}
+  );
+};

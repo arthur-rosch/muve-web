@@ -22,6 +22,9 @@ export function verifySignature(signature: Signature) {
     case 'active':
       return null; // Assinatura válida
 
+    case 'free':
+      return null; // Assinatura válida
+
     default:
       return 'Assinatura inválida.';
   }

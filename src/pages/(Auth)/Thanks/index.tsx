@@ -14,12 +14,13 @@ export const Thanks = () => {
             <p className="text-lg">Estamos felizes em tê-lo conosco.</p>
             
             <Button
-                className="w-[20%] h-12 mt-4"
                 type="submit"
                 variant="primary"
-                text="Fazer login"
+                className="w-[20%] h-12 mt-4"
                 onClick={() => navigate("/login")}
-              />
+              >
+                Fazer Login
+            </Button>
         </div>
     );
 };

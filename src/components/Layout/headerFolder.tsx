@@ -1,10 +1,14 @@
 import type { FC } from 'react'
+import { motion } from 'framer-motion'
 import AccordionMenuProfile from './AccordionMenuProfile'
 import { Bell, FolderOpen, Gear } from '@phosphor-icons/react'
 
+
 export const HeaderFolder: FC<{ name: string }> = ({ name }) => {
   return (
-    <header className="w-full flex items-center justify-between mt-9 px-10 border-b-[1px] border-[#333333] border-solid pb-4">
+    <motion.header className="w-full flex items-center justify-between mt-9 px-10 border-b-[1px] border-[#333333] border-solid pb-4"         
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}>
       <span className="text-[#909090] text-sm font-semibold flex items-center justify-center gap-2">
         <FolderOpen size={18} />
         Pastas /{' '}
@@ -19,6 +23,6 @@ export const HeaderFolder: FC<{ name: string }> = ({ name }) => {
         </button>
         <AccordionMenuProfile />
       </div>
-    </header>
+    </motion.header>
   )
 }

@@ -1,8 +1,7 @@
 import { type FC, useState } from 'react'
 import { motion } from 'framer-motion'
-import { cardVariants } from '../../../animations'
+import { FolderArchive, ArrowLeft } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { ArrowLeft, FolderDashed } from '@phosphor-icons/react'
 import type { Folder as FolderType, Video } from '../../../types'
 import { CardVideo, HeaderFolder, Input } from '../../../components'
 
@@ -34,9 +33,8 @@ export const Folder: FC = () => {
       <div className="w-full h-full max-h-screen flex flex-col mt-10 overflow-auto pb-96">
         <motion.header
           className="flex flex-col"
-          initial="hidden"
-          animate="visible"
-          variants={cardVariants}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
         >
           <span className="text-white text-lg flex items-start justify-start">
             <ArrowLeft
@@ -53,9 +51,7 @@ export const Folder: FC = () => {
 
         <Input
           type="text"
-          animation={true}
           className="w-full mt-8"
-          variants={cardVariants}
           placeholder="Pesquisar vídeo"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -66,20 +62,17 @@ export const Folder: FC = () => {
             {filteredVideos.map((video) => (
               <CardVideo
                 key={video.id}
-                animation={true}
                 video={video as Video}
-                variant={cardVariants}
               />
             ))}
           </div>
         ) : (
           <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={cardVariants}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
             className="w-full h-full flex flex-col items-center justify-center mt-12 gap-4"
           >
-            <FolderDashed size={64} color="white" />
+            <FolderArchive size={64} color="white" />
             <span className="text-white text-sm">
               {searchTerm ? 'Nenhum vídeo encontrado' : 'Sem vídeos criados'}
             </span>

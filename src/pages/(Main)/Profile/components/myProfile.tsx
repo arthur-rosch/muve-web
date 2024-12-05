@@ -36,10 +36,8 @@ export const MyProfile: FC = () => {
         <div className="w-[600px] ml-96">
           <Input
             type="text"
-            animation={true}
             className="w-full"
             disabled={true}
-            variants={cardVariants}
             placeholder={user.name}
           />
         </div>

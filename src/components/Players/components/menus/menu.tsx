@@ -1,5 +1,5 @@
 import { Menu } from '@vidstack/react'
-import { SpeedSubmenu } from '../'
+import { SpeedSubmenu } from '..'
 import { QualitySubmenu } from './sudMenus/qualitySubMenu'
 import { SettingsIcon } from '@vidstack/react/icons'
 

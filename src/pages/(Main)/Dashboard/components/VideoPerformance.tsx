@@ -21,13 +21,14 @@ export const VideoPerformance: FC<VideoPerformanceProps> = ({
   totalMinutesWatched,
 }) => {
   return (
-    <section className="w-[25%] h-screen border-l-[1px] border-[#333333] border-solid px-4">
+    <motion.section className="w-[25%] h-screen border-l-[1px] border-[#333333] border-solid px-4"         initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}>
       <span className="text-white text-base font-semibold">Videos</span>
 
       <Card
         animation={true}
         variant="secondary"
-        variants={cardVariants}
+
         className="w-full h-44 px-4 py-5 rounded-lg mt-6"
       >
         <span className="text-[#909090] text-base font-semibold flex items-center justify-start gap-4">
@@ -43,12 +44,11 @@ export const VideoPerformance: FC<VideoPerformanceProps> = ({
         className="flex mt-2 gap-2 mb-10"
         initial="hidden"
         animate="visible"
-        variants={cardVariants}
       >
         <Card
           animation={true}
           variant="secondary"
-          variants={cardVariants}
+
           className="w-full h-32 px-4 py-5 rounded-lg"
         >
           <span className="text-[#909090] text-base font-semibold flex items-center justify-start gap-4">
@@ -61,7 +61,6 @@ export const VideoPerformance: FC<VideoPerformanceProps> = ({
         <Card
           animation={true}
           variant="secondary"
-          variants={cardVariants}
           className="w-full h-32 px-4 py-5 rounded-lg"
         >
           <span className="text-[#909090] text-base font-semibold flex items-center justify-start gap-4">
@@ -103,6 +102,7 @@ export const VideoPerformance: FC<VideoPerformanceProps> = ({
           </motion.div>
         ))}
       </div>
-    </section>
+    </motion.section>
   )
 }
+export default VideoPerformance; 

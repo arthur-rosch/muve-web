@@ -1,4 +1,11 @@
-import type { User } from '../../types'
+import { Role, type User } from '../../types'
+
+const initialState: UserReducerType = {
+  user: {} as User, 
+  jwt: '', 
+};
+
+
 import {
   SET_USER,
   SET_JWT,
@@ -7,7 +14,6 @@ import {
   UPDATE_INFO_FIRST_ACCESS,
 } from '../constants'
 
-// Definir o tipo de cada ação
 interface SetUserAction {
   type: typeof SET_USER;
   payload: User;
@@ -33,7 +39,6 @@ interface UpdateInfoFirstAccessAction {
   payload: Partial<Pick<User, 'accountType' | 'memberArea' | 'videoHosting'>>;
 }
 
-// Unir todas as ações em um tipo
 export type UserActionTypes =
   | SetUserAction
   | SetJwtAction
@@ -42,14 +47,9 @@ export type UserActionTypes =
   | UpdateInfoFirstAccessAction;
 
 
-type UserReducerType = {
+export type UserReducerType = {
   user: User
   jwt?: string
-}
-
-const initialState: UserReducerType = {
-  user: {} as User,
-  jwt: '',
 }
 
 export const userReducer = (
