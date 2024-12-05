@@ -1,10 +1,14 @@
 import { motion } from 'framer-motion'
 import { useState, type FC } from 'react'
-import type { Folder } from '../../../../../types'
-import { useFolder } from '../../../../../hooks'
+import { useNavigate } from 'react-router-dom'
+import { FolderOpen, Trash } from 'lucide-react'
 import { DotsThreeOutlineVertical } from '@phosphor-icons/react'
-import { toastError, toastSuccess } from '../../../../../components'
-import { itemVariants, menuVariants } from '../../../../../animations'
+
+import { useFolder } from '@/hooks'
+import type { Folder } from '@/types'
+import { itemVariants, menuVariants } from '@/animations'
+
+
 
 interface AccordionMenuFolderProps {
   folder: Folder
@@ -13,6 +17,7 @@ interface AccordionMenuFolderProps {
 export const AccordionMenuFolder: FC<AccordionMenuFolderProps> = ({
   folder,
 }) => {
+  const navigate = useNavigate()
   const { deleteFolder, getAllFolderByUserId } = useFolder()
 
   const [isOpen, setIsOpen] = useState(false)
@@ -22,19 +27,12 @@ export const AccordionMenuFolder: FC<AccordionMenuFolderProps> = ({
   }
 
   const handleDeleteFolder = async () => {
-    const { success } = await deleteFolder.mutateAsync(folder.id)
+    await deleteFolder.mutateAsync(folder.id)
+    await getAllFolderByUserId.refetch()
+  }
 
-    if (success) {
-      toastSuccess({
-        text: `Pasta excluída com sucesso`,
-      })
-
-      await getAllFolderByUserId.refetch()
-    } else {
-      toastError({
-        text: `Algo deu errado, tente mais tarde`,
-      })
-    }
+  const handleOpenFolder = async () => {
+   navigate('/folder', { state: { folder } })
   }
 
   return (
@@ -49,18 +47,25 @@ export const AccordionMenuFolder: FC<AccordionMenuFolderProps> = ({
 
         {isOpen && (
           <motion.div
-            className="absolute top-10 right-0 mt-2 w-40 bg-[#1D1D1D] border-[1px] border-[#333333] border-solid shadow-lg"
+            className="absolute top-10 right-0 mt-2 w-40 bg-[#1D1D1D] border-[1px] border-[#333333] border-solid shadow-lg rounded"
             initial="hidden"
             animate="visible"
             variants={menuVariants}
           >
             <ul className="py-2">
               <motion.li
-                onClick={handleDeleteFolder}
-                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm"
+                onClick={handleOpenFolder}
+                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm flex items-start justify-start gap-2"
                 variants={itemVariants}
               >
-                Delete
+                <FolderOpen size={22} color="#707070"/> Abrir
+              </motion.li>
+              <motion.li
+                onClick={handleDeleteFolder}
+                className="px-4 py-2 hover:bg-[#333333] cursor-pointer text-white text-sm flex items-start justify-start gap-2"
+                variants={itemVariants}
+              >
+                <Trash size={22} color="red"/> Deletar
               </motion.li>
             </ul>
           </motion.div>

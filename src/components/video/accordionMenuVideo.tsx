@@ -1,11 +1,12 @@
+import { toast } from 'sonner'
 import { motion } from 'framer-motion'
-import { useVideo } from '../../hooks'
-import type { Video } from '../../types'
 import { useState, type FC } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { toastError, toastSuccess } from '../ui/toast'
-import { PreviewPlayerModal } from './previewPlayerModal'
-import { itemVariants, menuVariants } from '../../animations'
+
+import { useFolder, useVideo } from '@/hooks'
+import type { Video } from '@/types'
+import { itemVariants, menuVariants } from '@/animations'
+import { PreviewPlayerModal, MoveVideoModal } from '@/components'
 import {
   Code,
   Trash,
@@ -14,7 +15,6 @@ import {
   ArrowsOutCardinal,
   DotsThreeOutlineVertical,
 } from '@phosphor-icons/react'
-import { MoveVideoModal } from './moveVideoModal'
 
 
 interface AccordionMenuVideoProps {
@@ -23,7 +23,8 @@ interface AccordionMenuVideoProps {
 
 export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
   const navigate = useNavigate()
-  const { deleteVideo, getAllVideosByUserId } = useVideo()
+  const { getAllFolderByUserId } = useFolder()
+  const { deleteVideo, getManyVideosNotFolderId } = useVideo()
 
   const [isOpen, setIsOpen] = useState(false)
   const [isMoveModalOpen, setIsMoveModalOpen] = useState(false)
@@ -48,15 +49,12 @@ export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
 
     if (success) {
       toggleMenu()
-      toastSuccess({
-        text: `Vídeo excluído com sucesso`,
-      })
+      toast.success(`Vídeo excluído com sucesso`)
 
-      await getAllVideosByUserId(true).refetch()
+      await getManyVideosNotFolderId(true).refetch()
+      await getAllFolderByUserId.refetch()
     } else {
-      toastError({
-        text: `Algo deu errado, tente mais tarde`,
-      })
+      toast.error(`Algo deu errado, tente mais tarde`)
     }
   }
 
@@ -124,13 +122,13 @@ export const AccordionMenuVideo: FC<AccordionMenuVideoProps> = ({ video }) => {
       </div>
       <PreviewPlayerModal
         video={video}
-        isModalOpen={isPreviewModalOpen}
-        setIsModalOpen={setIsPreviewModalOpen}
+        isOpen={isPreviewModalOpen}
+        onClose={() => setIsPreviewModalOpen(false)}
       />
       <MoveVideoModal 
         video={video}
-        isModalOpen={isMoveModalOpen} 
-        setIsModalOpen={setIsMoveModalOpen} 
+        isOpen={isMoveModalOpen} 
+        onClose={() => setIsMoveModalOpen(false)} 
       />
     </>
   )

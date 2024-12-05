@@ -1,5 +1,1 @@
-export * from './ListFolders'
 export * from './VideoPerformance'
-export * from '../../../../components/modals/folder/CardCreateFolder'
-export * from '../../../../components/modals/video/CardCreateVideo'
-export * from '../../../../components/Layout/AccordionMenuProfile'

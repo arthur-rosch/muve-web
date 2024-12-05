@@ -11,7 +11,7 @@ export const errorMessages: Record<string, string> = {
   'E-mail already exists.': 'Esse e-mail já está sendo usado.', 
   'User already exists.': 'Esse e-mail já está sendo usado.', 
   'User not found': 'Usuário não encontrado.', 
-  'Trial expired.': 'Seu periodo de teste acabou, renove assinatura', 
+  'Trial expired.': 'Seu período de teste acabou, renove assinatura', 
   'Video limit exceeded.': 'Limite de vídeos excedido. Atualize seu plano para continuar.', 
   'Invalid subscription.': 'Assinatura inválida. Por favor, entre em contato com o suporte.', 
   'Internal server error.': 'Erro interno do servidor. Tente novamente mais tarde.', 

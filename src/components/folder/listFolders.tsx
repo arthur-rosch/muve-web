@@ -2,10 +2,9 @@ import { Folder } from './folder'
 import { motion } from 'framer-motion'
 import { useState, type FC } from 'react'
 import { FolderDashed } from '@phosphor-icons/react'
-import { recentFolders } from '../../../../../utils'
-import { cardVariants, listItensDelay } from '../../../../../animations'
-import { Button, CardVideo, Input } from '../../../../../components'
-import type { Folder as FolderType, Video } from '../../../../../types'
+import { recentFolders } from '../../utils'
+import { Button, CardVideo, Input } from '..'
+import type { Folder as FolderType, Video } from '../../types'
 
 interface ButtonData {
   id: string
@@ -97,9 +96,7 @@ const ListFolders: FC<ListFoldersProps> = ({
             ? displayedItems.map((video) => (
                 <CardVideo
                   key={video.id}
-                  animation={true}
                   video={video as Video}
-                  variant={listItensDelay}
                 />
               ))
             : displayedItems.map((folder) => (

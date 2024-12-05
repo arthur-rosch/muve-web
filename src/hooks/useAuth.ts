@@ -17,57 +17,47 @@ export const useAuth = () => {
 
 
 const signIn = useMutation({
-    mutationFn: (variables: SignInVariables) => AuthService.signIn(variables),
-    onSuccess: async (response, variables) => {
-      if (response.success && response.data) {
-        dispatch(setUser(response.data.user));
-        Local.setJWT(response.data.token);
-        Local.setPlan(
-          response.data.signature.plan,
-          response.data.signature.next_charge_date!,
-          response.data.signature.ChargeFrequency
-        );
+  mutationFn: (variables: SignInVariables) => AuthService.signIn(variables),
+  onSuccess: async (response, variables) => {
+    if (response.success && response.data) {
+      dispatch(setUser(response.data.user));
+      Local.setJWT(response.data.token);
+      Local.setPlan(
+        response.data.signature.plan,
+        response.data.signature.next_charge_date!,
+        response.data.signature.ChargeFrequency
+      );
 
-        toast.success('Login feito com sucesso');
-        navigate(response.data.user.accountType === null ? '/access' : '/dashboard');
+      toast.success('Login feito com sucesso');
+      navigate(response.data.user.accountType === null ? '/access' : '/dashboard');
+    } else {
+      if (response.error?.message === 'Email verification not found or not verified.') {
+        await sendVerificationCode.mutateAsync({
+          email: variables.email,
+        });
+        toast.success("Um novo código foi enviado para o e-mail cadastrado. Verifique sua conta.");
+        navigate('/verify-email', { state: { email: variables.email } });
       } else {
-        if (response.error?.message === 'Email verification not found or not verified.') {
-          await sendVerificationCode.mutateAsync({
-            email: variables.email,
-          });
-          toast.success("Um novo código foi enviado para o e-mail cadastrado. Verifique sua conta.");
-          navigate('/verify-email', { state: { email: variables.email } });
-        } else {
-          const upgradeErrors = [
-            'Late subscription.',
-            'Subscription paused.',
-            'Subscription cancelled.',
-          ];
+        const upgradeErrors = [
+          'Late subscription.',
+          'Subscription paused.',
+          'Subscription cancelled.',
+        ];
 
-          if (upgradeErrors.includes(response.error?.message!)) {
-            handleError(response.error?.message!);
-            onOpen();
-          } else {
-            handleError(response.error?.message!);
-          }
+        if (upgradeErrors.includes(response.error?.message!)) {
+          handleError(response.error?.message!);
+          onOpen(variables.email);
+        } else {
+          handleError(response.error?.message!);
         }
       }
-    },
-    onError: (error) => {
-      const upgradeErrors = [
-        'Late subscription.',
-        'Subscription paused.',
-        'Subscription cancelled.',
-      ];
+    }
+  },
+  onError: (error) => {
+    handleError(error.message!);
+  },
+});
 
-      if (upgradeErrors.includes(error.message!)) {
-        handleError(error.message!);
-        onOpen();
-      } else {
-        handleError(error.message!);
-      }
-    },
-  });
 
 
   const signUp = useMutation({

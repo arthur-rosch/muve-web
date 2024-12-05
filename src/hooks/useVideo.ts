@@ -1,10 +1,15 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { VideoService } from './../services/VideoService'
 import { toast } from 'sonner'
+import { useSelector } from 'react-redux';
 import { handleError } from './handle-error'
+import { useUpgradeModal } from './useUpgradeModal'
+import { VideoService } from './../services/VideoService'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import type { CreateVideoVariables, Video, EditPlayerVideoProps } from '@/types'
+import type { State } from '@/redux/store/configureStore';
 
 export const useVideo = (getByVideoId?: string) => {
+  const { onOpen } = useUpgradeModal();
+  const { user } = useSelector((state: State) => state.user)
 
   const createVideo = useMutation({
     mutationFn: async (video: CreateVideoVariables) => {
@@ -13,7 +18,11 @@ export const useVideo = (getByVideoId?: string) => {
     onSuccess: (response) => {
       if (response.success && response.data) {
         toast.success('Vídeo criado com sucesso!')
-      } else {
+      } if (response.error?.message === 'Video limit exceeded.') {
+        handleError(response.error?.message!);
+        onOpen(user.email)
+      }
+      else {
         handleError(response.error?.message || 'Erro ao criar vídeo.')
       }
     },

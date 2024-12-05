@@ -25,8 +25,8 @@ export function Modal({ isOpen, onClose, children, className }: ModalProps) {
       <AnimatePresence>
         {isOpen && (
           <Dialog.Portal forceMount>
-            <div className="fixed inset-0 z-50 overflow-y-auto">
-              <div className="min-h-full flex items-center justify-center p-4 text-center">
+            <div className="fixed inset-0 z-50">
+              <div className="min-h-screen flex items-center justify-center">
                 <Dialog.Overlay asChild>
                   <motion.div
                     className="fixed inset-0 bg-black/80 backdrop-blur-sm"
@@ -41,8 +41,10 @@ export function Modal({ isOpen, onClose, children, className }: ModalProps) {
                 <Dialog.Content asChild>
                   <motion.div
                     className={cn(
-                      "relative w-full rounded-2xl bg-secondary p-6 shadow-xl bg-[#121212]",
+                      "relative w-full mx-auto rounded-2xl bg-secondary p-6 shadow-xl bg-[#121212]",
                       "focus:outline-none z-50",
+                      "my-4 max-h-[calc(100vh-2rem)] overflow-y-auto",
+                      "scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent",
                       className
                     )}
                     initial="hidden"

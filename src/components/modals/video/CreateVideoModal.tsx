@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Video as VideoIcon } from 'lucide-react';
+import { Video as VideoIcon, X } from 'lucide-react';
 
 import type { Folder } from '@/types';
 import { formVariants } from '@/animations';
@@ -23,6 +23,12 @@ export function CreateVideoModal({ isOpen, onClose, folders }: CreateVideoModalP
       onClose={onClose}
       className="max-w-4xl w-full"
     >
+      <button
+          onClick={onClose}
+          className="absolute right-4 top-4 text-gray-400 hover:text-white"
+        >
+          <X className="h-5 w-5" />
+      </button>
       <div className="space-y-6">
         <div className="flex flex-col justify-center items-center border-b border-neutral-800 p-6">
             <h2 className="text-xl font-semibold text-white">Novo Vídeo</h2>

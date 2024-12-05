@@ -6,49 +6,17 @@ import { DotsThreeOutlineVertical } from '@phosphor-icons/react'
 import { AccordionMenuVideo } from './accordionMenuVideo'
 
 interface CardVideoProps {
-  animation: boolean
-  variant?: Variants
   video: Video
 }
 
 export const CardVideo: FC<CardVideoProps> = ({
-  animation,
-  variant,
   video,
 }) => {
-  const cardVideoComponent = (
-    <div className="w-auto h-60 relative mt-5">
-      <img
-        alt=""
-        className="rounded w-full mb-4"
-        src={video.thumbnail ? video.thumbnail : logo}
-      />
-      <DotsThreeOutlineVertical
-        weight="fill"
-        size={24}
-        className="absolute top-2 right-2 cursor-pointer text-white"
-      />
-      <div className="absolute bottom-7 left-0 cursor-pointer text-white bg-[#000000] bg-opacity-60 py-1 px-3">
-        <span className="text-white text-sm">10:22</span>
-      </div>
-      <div className="w-full flex items-center justify-between">
-        <div className="flex flex-col items-start justify-start gap-3">
-          <span className="text-white text-sm">Teste</span>
-          <span className="text-[#909090] text-sm">Formato | 16/9</span>
-        </div>
-        <span className="text-[#909090] text-sm"> 01 / 05</span>
-      </div>
-    </div>
-  )
-
   return (
-    <>
-      {animation ? (
-        <motion.div
+    <motion.div
           className="w-auto h-60 relative my-12"
-          initial="hidden"
-          animate="visible"
-          variants={variant}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
         >
           <img
             alt=""
@@ -75,9 +43,5 @@ export const CardVideo: FC<CardVideoProps> = ({
             </div>
           </div>
         </motion.div>
-      ) : (
-        cardVideoComponent
-      )}
-    </>
   )
 }

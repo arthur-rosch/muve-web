@@ -13,7 +13,7 @@ export const VideoService = {
   deleteVideo: async (videoId: string): Promise<ApiResponse<any>> => {
     const url = `${host()}/video/${videoId}`;
     const instance = await getAxiosInstance(); 
-    return handleRequest(instance.post(url)); 
+    return handleRequest(instance.delete(url)); 
   },
 
   ediFolderIdVideo: async (videoId: string, folderId: string): Promise<ApiResponse<any>> => {

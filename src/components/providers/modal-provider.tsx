@@ -13,12 +13,13 @@ export function ModalProvider() {
   if (!isMounted) {
     return null
   }
-
+  console.log(upgradeModal.email)
   return (
     <>
       <UpgradeModal 
         isOpen={upgradeModal.isOpen}
         onClose={upgradeModal.onClose}
+        email={upgradeModal.email || ''}
       />
     </>
   )
