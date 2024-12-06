@@ -45,7 +45,7 @@ export function LeadCapture() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#121212] to-[#1E1E1E] text-white overflow-auto flex items-center justify-center">
+    <div className="max-h-full h-full bg-gradient-to-b from-[#121212] to-[#1E1E1E] text-white overflow-auto flex items-center justify-center">
       <div className="container mx-auto px-4 py-6 md:py-8 lg:py-12">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center space-x-2 w-48 h-w-48 mb-8">

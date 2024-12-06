@@ -4,7 +4,7 @@ import type { InputConfig } from "./types";
 export const plans = [
   {
     name: "Mensal - Essencial",
-    price: "97",
+    price: "79",
     limit: "Até 10 vídeos",
     icon: Star,
     features: [
