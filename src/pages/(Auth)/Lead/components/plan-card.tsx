@@ -17,47 +17,58 @@ export function PlanCard({
     <div
       onClick={onClick}
       className={cn(
-        "relative w-full rounded-xl transition-all duration-300 cursor-pointer overflow-hidden border-2",
+        "text-white relative w-full rounded-xl transition-all duration-300 cursor-pointer overflow-hidden border-2",
+        "p-4 sm:p-5 md:p-6", // Adjusted padding for different screen sizes
         selected
           ? "bg-[#187BF0] border-[#187BF0]"
           : "bg-[#1E1E1E] border-[#1E1E1E] hover:border-[#187BF0]/50"
       )}
     >
-      {popular && (
-        <div className="absolute top-4 right-4">
-          <span className="inline-flex items-center rounded-full bg-green-500/10 px-3 py-1 text-xs font-medium text-green-500">
-            Mais popular
-          </span>
-        </div>
-      )}
-      <div className="p-6">
-        <div className="flex items-center space-x-3 mb-4">
-          <Icon
-            className={cn(
-              "w-6 h-6",
-              selected ? "text-white" : "text-[#187BF0]"
-            )}
-          />
-          <div>
-            <h3 className="font-bold text-xl">{name}</h3>
-            <p
+      <div className="flex justify-between items-start gap-4">
+        <div className="flex-1 min-w-0">
+          {" "}
+          {/* Added min-w-0 to prevent text overflow */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Icon
               className={cn(
-                "text-sm",
-                selected ? "text-white/90" : "text-[#8F9BBA]"
+                "w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0", // Made icon smaller on mobile
+                selected ? "text-white" : "text-[#187BF0]"
               )}
-            >
-              {limit}
-            </p>
+            />
+            <div className="min-w-0">
+              {" "}
+              {/* Added min-w-0 to prevent text overflow */}
+              <h3 className="font-bold text-lg sm:text-xl flex flex-wrap gap-2 items-center">
+                <span className="truncate">{name}</span>
+                {popular && (
+                  <span className="inline-flex items-center rounded-full bg-green-500/10 px-2 py-1 text-[10px] font-medium text-green-500 whitespace-nowrap">
+                    Mais popular
+                  </span>
+                )}
+              </h3>
+              <p
+                className={cn(
+                  "text-sm truncate", // Added truncate
+                  selected ? "text-white/90" : "text-[#8F9BBA]"
+                )}
+              >
+                {limit}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="mb-6">
-          <div className="flex items-baseline">
-            <span className="text-sm">R$</span>
-            <span className="text-4xl font-bold mx-1">{price}</span>
+        <div className="text-right flex-shrink-0">
+          {" "}
+          {/* Added flex-shrink-0 */}
+          <div className="flex items-baseline justify-end">
+            <span className="text-xs sm:text-sm">R$</span>
+            <span className="text-2xl sm:text-3xl md:text-4xl font-bold mx-1">
+              {price}
+            </span>
             <span
               className={cn(
-                "text-sm",
+                "text-xs sm:text-sm",
                 selected ? "text-white/90" : "text-[#8F9BBA]"
               )}
             >
@@ -66,38 +77,19 @@ export function PlanCard({
           </div>
           <p
             className={cn(
-              "text-xs mt-2",
+              "text-[10px] sm:text-xs mt-1 sm:mt-2",
               selected ? "text-white/90" : "text-[#8F9BBA]"
             )}
           >
             7 dias grátis
           </p>
         </div>
+      </div>
 
-        {/* <div className="space-y-3 mb-6">
-          {features.map((feature) => (
-            <div key={feature} className="flex items-start space-x-3">
-              <Check
-                className={cn(
-                  "w-5 h-5 mt-0.5",
-                  selected ? "text-white" : "text-[#187BF0]"
-                )}
-              />
-              <span
-                className={cn(
-                  "text-sm",
-                  selected ? "text-white/90" : "text-[#8F9BBA]"
-                )}
-              >
-                {feature}
-              </span>
-            </div>
-          ))}
-        </div> */}
-
+      <div className="mt-4 sm:mt-5 md:mt-6">
         <button
           className={cn(
-            "w-full py-2 rounded-lg font-medium transition-colors",
+            "w-full py-2 rounded-lg font-medium transition-colors text-sm sm:text-base", // Added responsive text size
             selected
               ? "bg-white text-[#187BF0] hover:bg-white/90"
               : "bg-[#187BF0] text-white hover:bg-[#1569D3]"
