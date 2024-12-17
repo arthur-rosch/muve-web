@@ -18,7 +18,8 @@ import {
   LogOut,
   BarChart3,
   ArrowRight,
-  ArrowLeft
+  ArrowLeft,
+  Users
 } from 'lucide-react'
 
 import {
@@ -58,7 +59,7 @@ export const Sidebar: FC = () => {
     },
     {
       id: 'lead/video',
-      icon: <BarChart3 size={20} />,
+      icon: <Users size={20} />,
       label: 'Leads',
     },
     {
@@ -98,9 +99,8 @@ export const Sidebar: FC = () => {
           <CollapsibleTrigger asChild>
             <Button
               variant="link"
-              className={`w-full justify-between h-10 px-3 text-zinc-400 hover:text-white hover:bg-zinc-800 ${
-                isActive ? 'bg-zinc-800 text-white' : ''
-              }`}
+              className={`w-full justify-between h-10 px-3 text-zinc-400 hover:text-white hover:bg-zinc-800 ${isActive ? 'bg-zinc-800 text-white' : ''
+                }`}
             >
               <span className="flex items-start gap-3">
                 {item.icon}
@@ -152,9 +152,8 @@ export const Sidebar: FC = () => {
           <TooltipTrigger asChild>
             <Button
               variant="link"
-              className={`w-full justify-between px-3 text-zinc-400 ${
-                isActive ? 'bg-zinc-800 text-white' : ''
-              }`}
+              className={`w-full justify-between px-3 text-zinc-400 ${isActive ? 'bg-zinc-800 text-white' : ''
+                }`}
               onClick={() => {
                 if (isExternalLink) {
                   window.open(item.id)
@@ -185,29 +184,28 @@ export const Sidebar: FC = () => {
 
   return (
     <aside
-      className={`h-screen ${
-        isSideBarOpen ? 'w-64' : 'w-16'
-      } bg-[#1D1D1D] transition-all duration-300 p-2`}
+      className={`h-screen ${isSideBarOpen ? 'w-64' : 'w-16'
+        } bg-[#1D1D1D] transition-all duration-300 p-2`}
       onMouseEnter={() => setIsSideBarOpen(true)}
       onMouseLeave={() => setIsSideBarOpen(false)}
     >
       <div className="flex h-full flex-col gap-2">
         <div className="flex items-center justify-between py-2 px-3">
           {isSideBarOpen && (
-            <img src={logo} className="w-24 h-w-24"/>
+            <img src={logo} className="w-24 h-w-24" />
           )}
           <button
             className="h-8 w-8 text-[#909090] hover:bg-[#333333] hover:text-white flex items-center justify-center rounded"
             onClick={() => setIsSideBarOpen(!isSideBarOpen)}
           >
-              {isSideBarOpen ? (
-                <ArrowLeft className="h-4 w-4" />
-              ) : (
-                <ArrowRight className="h-4 w-4" />
-              )}
+            {isSideBarOpen ? (
+              <ArrowLeft className="h-4 w-4" />
+            ) : (
+              <ArrowRight className="h-4 w-4" />
+            )}
           </button>
         </div>
-        
+
         <Separator className="bg-zinc-800" />
 
         <nav className="flex-1 space-y-1">

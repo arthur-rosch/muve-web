@@ -28,9 +28,9 @@ export const Form = () => {
   });
 
   const handleAccess = async (data: FirstAccessFormInputs) => {
-      setIsLoading(true)
-      await addInfoFirstAccess.mutateAsync(data);
-      setIsLoading(false)
+    setIsLoading(true)
+    await addInfoFirstAccess.mutateAsync(data);
+    setIsLoading(false)
   };
 
   const optionsAccountType = [
@@ -70,7 +70,7 @@ export const Form = () => {
   ];
 
   return (
-    <motion.form variants={formVariants} onSubmit={handleSubmit(handleAccess)} className="space-y-6">
+    <motion.form variants={formVariants} onSubmit={handleSubmit(handleAccess)} className="space-y-4 sm:space-y-6 py-8 overflow-y-auto px-1 w-full h-full">
       <div className="space-y-2">
         <label className="text-sm font-medium text-gray-200">Tipo de Conta</label>
         <Controller

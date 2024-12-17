@@ -92,6 +92,20 @@ export const useVideo = (getByVideoId?: string) => {
       enabled,
   })
 
+  const getUserVideosContainingForm = (enabled: boolean) =>
+    useQuery<Video[], Error>({
+      queryKey: ['getUserVideosContainingForm'],
+      queryFn: async () => {
+        const { success, data, error } = await VideoService.getUserVideosContainingForm()
+        if (success) {
+          return data.videos
+        }
+        handleError(error?.message || 'Erro ao buscar vídeos.')
+        throw error
+      },
+      enabled,
+  })
+
   const getVideoById = (enabled: boolean, getByVideoId: string | null) =>
     useQuery<Video, Error>({
       queryKey: ['getVideoById', getByVideoId],
@@ -131,5 +145,6 @@ export const useVideo = (getByVideoId?: string) => {
     ediFolderIdVideo,
     getAllVideosByUserId,
     getManyVideosNotFolderId,
+    getUserVideosContainingForm,
   }
 }

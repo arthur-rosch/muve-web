@@ -251,6 +251,8 @@ export interface VideoForm {
   isActive: boolean;
   showIn: string;
   videoId: string;
+
+  LeadFormVideo?: LeadFormVideo[]
 }
 
 export interface Video {
@@ -345,4 +347,14 @@ export interface CountryMetrics {
 export interface VideoWithAnalytics {
   video: Video;
   analytics: VideoAnalytics;
+}
+
+export interface LeadFormVideo {
+  id: string;
+  email?: string;
+  phone?: string;
+  name?: string;
+
+  videoId: string
+  videoForm: string
 }

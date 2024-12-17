@@ -33,6 +33,12 @@ export const VideoService = {
     return handleRequest(instance.get(url)); 
   },
 
+  getUserVideosContainingForm: async (): Promise<ApiResponse<any>> => {
+    const url = `${host()}/video/form`;
+    const instance = await getAxiosInstance(); 
+    return handleRequest(instance.get(url)); 
+  },
+
   getManyVideosNotFolderId: async (): Promise<ApiResponse<any>> => {
     const url = `${host()}/video/not/folder`;
     const instance = await getAxiosInstance(); 

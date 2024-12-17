@@ -1,16 +1,29 @@
-import { cardVariants } from "@/animations"
-import { Button, Input } from "@/components"
 import { motion } from "framer-motion"
 import { ArrowLeft } from "lucide-react"
 
-export const Header = () => {
+import { cardVariants } from "@/animations"
+import { Button, Input, SelectVideoModal } from "@/components"
+import { useState } from "react"
+import type { Video } from "@/types"
+import { useLocation } from "react-router-dom"
+
+interface HeaderProps {
+    listVideos: Video[]
+    searchTerm: string;
+    onSearchTermChange: (searchTerm: string) => void;
+    onVideoSelected: (video: Video | undefined) => void;
+}
+
+export const Header = ({ listVideos, onVideoSelected, onSearchTermChange, searchTerm }: HeaderProps) => {
+    const location = useLocation()
+    const [isModalOpen, setIsModalOpen] = useState(location.state?.videoId ? false : true)
+
     return (
         <>
             <motion.header
                 className="flex flex-col md:flex-row justify-between items-center my-4"
-                initial="hidden"
-                animate="visible"
-                variants={cardVariants}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
             >
                 <div>
                     <span className="text-white text-lg flex items-start justify-start">
@@ -28,12 +41,12 @@ export const Header = () => {
                 >
 
                     <div className="flex gap-4 mt-4 md:mt-0">
-                        <Button>
+                        <Button onClick={() => setIsModalOpen(!isModalOpen)}>
                             Selecionar Vídeo
                         </Button>
-                        <Button>
+                        {/* <Button>
                             Exportar
-                        </Button>
+                        </Button> */}
                     </div>
                 </motion.header>
             </motion.header>
@@ -43,10 +56,11 @@ export const Header = () => {
                     type="text"
                     placeholder="Buscar por nome, email ou telefone..."
                     className="w-full border rounded"
-                // value={searchTerm}
-                // onChange={(e) => setSearchTerm(e.target.value)}
+                    value={searchTerm}
+                    onChange={(e) => onSearchTermChange(e.target.value)}
                 />
             </div>
+            <SelectVideoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)} onVideoSelect={onVideoSelected} videos={listVideos} />
         </>
     )
 }

@@ -221,16 +221,6 @@ export const ConfigMenuCurse: FC<ConfigMenuProps> = ({ setVideo, video }) => {
       dataEdit: data as EditPlayerVideoProps,
       videoId: video.id,
     })
-
-    if (success) {
-      toastSuccess({
-        text: 'Player editado com sucesso',
-      })
-    } else {
-      toastError({
-        text: 'Algo deu errado, tente mais tarde',
-      })
-    }
   }
 
   useEffect(() => {

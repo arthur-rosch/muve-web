@@ -1,9 +1,9 @@
+import { toast } from 'sonner';
+import { X } from 'lucide-react';
 import type { Video } from '@/types';
 import { CodeBlock } from './codeBlock';
 import { useState, type FC } from 'react';
 import { Modal, VslPreviewPlayer, CursePreviewPlayer } from '@/components';
-import { toast } from 'sonner';
-import { X } from 'lucide-react';
 
 interface PreviewPlayerModalProps {
   video: Video;
@@ -16,11 +16,11 @@ export const PreviewPlayerModal: FC<PreviewPlayerModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  const iframeCode16 = `<div style="width:100%;max-width:60rem;margin:auto"><div style="position:relative;width:100%;overflow:hidden;padding-top:56.25%;transition:0.25s;"><iframe style="position:absolute;top:0;left:0;bottom:0;right:0;width:100%;height:100%" src="https://web.muveplayer.com/player?videoId=${video.id}" scrolling="no" frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe></div></div>`;
-  const iframeCode9 = `<div style="width:100%;max-width:360px;margin:auto"><div style="position:relative;width:100%;overflow:hidden;padding-top:177.7%;transition:0.25s;"><iframe style="position:absolute;top:0;left:0;bottom:0;right:0;width:100%;height:100%" src="https://web.muveplayer.com/player?videoId=${video.id}" scrolling="no" frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe></div></div>`;
+  const iframeCode16 = `<div style="width:100%;max-width:60rem;margin:auto"><div style="position:relative;width:100%;overflow:hidden;padding-top:56.25%;transition:0.25s;"><iframe style="position:absolute;top:0;left:0;bottom:0;right:0;width:100%;height:100%" src="https://player.muveplayer.com/?videoId=${video.id}" scrolling="no" frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe></div></div>`;
+  const iframeCode9 = `<div style="width:100%;max-width:360px;margin:auto"><div style="position:relative;width:100%;overflow:hidden;padding-top:177.7%;transition:0.25s;"><iframe style="position:absolute;top:0;left:0;bottom:0;right:0;width:100%;height:100%" src="https://player.muveplayer.com/?videoId=${video.id}" scrolling="no" frameborder="0" allowfullscreen="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe></div></div>`;
 
   const iframeCode = video.format === '16/9' ? iframeCode16 : iframeCode9;
-  const videoLink = `https://web.muveplayer.com/player?videoId=${video.id}`;
+  const videoLink = `https://player.muveplayer.com/?videoId=${video.id}`;
 
   const handleCopyIframe = () => {
     navigator.clipboard.writeText(iframeCode).then(() => {
@@ -40,11 +40,11 @@ export const PreviewPlayerModal: FC<PreviewPlayerModalProps> = ({
       onClose={onClose}
       className="max-w-[50rem] flex flex-col"
     >
-    <button
-          onClick={onClose}
-          className="absolute right-4 top-4 text-gray-400 hover:text-white"
-        >
-          <X className="h-5 w-5" />
+      <button
+        onClick={onClose}
+        className="absolute right-4 top-4 text-gray-400 hover:text-white"
+      >
+        <X className="h-5 w-5" />
       </button>
       <div className="flex justify-between items-center mb-4">
         <div>
