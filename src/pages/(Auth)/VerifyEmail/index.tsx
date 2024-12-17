@@ -1,5 +1,4 @@
 import logo from '../../../assets/logo.svg'
-
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { Form } from './components/form';
@@ -14,7 +13,6 @@ export function VerifyEmail() {
 
   const email = location.state?.email;
   const [countdown, setCountdown] = useState(60);
-
 
   useEffect(() => {
     if (!email) {
@@ -39,25 +37,26 @@ export function VerifyEmail() {
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="w-full lg:w-1/2 p-8 flex items-center justify-center"
+        className="w-full lg:w-1/2 p-4 sm:p-6 md:p-8 flex items-center justify-center relative overflow-y-auto h-screen"
       >
-        <div className="max-w-md w-full space-y-8">
-         <div className="flex items-center space-x-2 w-48 h-w-48">
-            <img src={logo} alt="" />
+        <div className="max-w-md w-full h-full space-y-6 sm:space-y-8 py-4">
+          <div className="flex items-center space-x-2 w-32 sm:w-40 md:w-48">
+            <img src={logo} alt="" className="w-full h-auto" />
           </div>
-          <div className="text-center space-y-6">
-            <motion.div 
+
+          <div className="text-center space-y-4 sm:space-y-6">
+            <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", duration: 0.6 }}
-              className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto"
+              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto"
             >
-              <Mail className="h-12 w-12 text-primary" color='white'/>
+              <Mail className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 text-primary" color='white' />
             </motion.div>
-            
-            <div className="space-y-2">
-              <h2 className="text-3xl font-bold text-white">Verifique seu email</h2>
-              <p className="text-gray-400">
+
+            <div className="space-y-1 sm:space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white">Verifique seu email</h2>
+              <p className="text-sm sm:text-base text-gray-400">
                 Digite o código de 6 dígitos enviado para{' '}
                 <span className="text-white font-medium">{email}</span>
               </p>
@@ -65,15 +64,15 @@ export function VerifyEmail() {
 
             <Form />
 
-            <div className="bg-secondary/30 p-4 rounded-lg backdrop-blur-sm">
-              <div className="flex items-start space-x-3">
-                <CheckCircle2 className="h-5 w-5 text-primary mt-0.5" color='white'/>
+            <div className="bg-secondary/30 p-3 sm:p-4 rounded-lg backdrop-blur-sm">
+              <div className="flex items-start space-x-2 sm:space-x-3">
+                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-primary mt-0.5" color='white' />
                 <div className="text-left">
-                  <p className="text-sm text-white font-medium">Não recebeu o código?</p>
+                  <p className="text-xs sm:text-sm text-white font-medium">Não recebeu o código?</p>
                   <Button
                     type="button"
                     variant="link"
-                    className="text-primary p-0 h-auto text-sm hover:underline text-[#187BF0]"
+                    className="text-primary p-0 h-auto text-xs sm:text-sm hover:underline text-[#187BF0]"
                     onClick={handleResendEmail}
                     disabled={countdown > 0}
                   >
@@ -86,19 +85,19 @@ export function VerifyEmail() {
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <Button
               type="button"
               variant="link"
-              className="w-full"
+              className="w-full text-sm sm:text-base"
               onClick={() => navigate('/login')}
             >
-              <ArrowLeft className="mr-2 h-4 w-4" />
+              <ArrowLeft className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               Voltar para o login
             </Button>
           </div>
 
-          <p className="text-center text-sm text-gray-400">
+          <p className="text-center text-xs sm:text-sm text-gray-400">
             Problemas para verificar?{' '}
             <button
               onClick={() => navigate('/signup')}
@@ -115,7 +114,7 @@ export function VerifyEmail() {
         animate={{ opacity: 1, scale: 1 }}
         className="hidden lg:block w-[70%] bg-[#1A1A1A] relative overflow-hidden"
       >
-        <TestimonialCarousel/>
+        <TestimonialCarousel />
       </motion.div>
     </div>
   );

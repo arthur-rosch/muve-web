@@ -1,26 +1,11 @@
 import "@vidstack/react/player/styles/base.css";
-
-import { ContinueWatching } from "./components";
-import { useAnalytics } from "../../hooks";
+import { useEffect, useMemo, useState } from "react";
+import { MediaPlayer, MediaProvider, Poster } from "@vidstack/react";
 import { VideoLayout } from "./layouts/videoLayout";
-import type { PlayerDataVariables, Video } from "../../types";
-import { getIPAddress, getGeolocation, getYoutubeVideoId } from "../../utils";
-
-import { useEffect, useMemo, useRef, useState } from "react";
-
-import {
-  Poster,
-  MediaPlayer,
-  isHLSProvider,
-  MediaProvider,
-  isYouTubeProvider,
-  type MediaCanPlayEvent,
-  type MediaCanPlayDetail,
-  type MediaPlayerInstance,
-  type MediaProviderAdapter,
-  type MediaProviderChangeEvent,
-  useMediaStore,
-} from "@vidstack/react";
+import { ContinueWatching } from "./components";
+import type { Video } from "../../types";
+import { useVideoPlayer } from "../../hooks/useVideoPlayer";
+import { configureProvider, getVideoUrl } from "../providers/video-provider";
 
 const setVideoTimeCookie = (videoId: string, time: number) => {
   document.cookie = `video-${videoId}-time=${time}; path=/;`;
@@ -34,51 +19,16 @@ const getVideoTimeFromCookie = (videoId: string): number | null => {
 };
 
 export function Player({ video }: { video: Video }) {
-  const player = useRef<MediaPlayerInstance>(null);
-
-  const { ended } = useMediaStore(player);
-  const { addViewTimestamps, addViewUnique } = useAnalytics();
-
-  const [playEnd, setPlayEnd] = useState<boolean>(false);
+  const { player, handleEnded } = useVideoPlayer(video.id);
   const [showResumeMenu, setShowResumeMenu] = useState(false);
   const [lastTime, setLastTime] = useState<number | null>(null);
-  const [playStartTime, setPlayStartTime] = useState<number | null>(0);
-  const [playerData, setPlayerData] = useState<PlayerDataVariables>();
 
-  const urlVideo = useMemo(() => {
-    if (isYouTubeProvider(video.url)) {
-      const videoId = getYoutubeVideoId(video.url);
-      return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&controls=0&disablekb=1&playsinline=1&cc_load_policy=0&showinfo=0&modestbranding=0&rel=0&loop=0&enablejsapi=1`;
-    }
-    return video.url;
-  }, [video.url]);
-
-  function onProviderChange(
-    provider: MediaProviderAdapter | null,
-    nativeEvent: MediaProviderChangeEvent
-  ) {
-    if (provider) {
-      if (isYouTubeProvider(provider)) {
-        provider.cookies = true;
-      }
-      if (isHLSProvider(provider)) {
-        provider.library =
-          "https://cdn.jsdelivr.net/npm/hls.js@^1.0.0/dist/hls.min.js";
-        provider.config = {};
-      }
-    }
-  }
-
-  function onCanPlay(
-    detail: MediaCanPlayDetail,
-    nativeEvent: MediaCanPlayEvent
-  ) {}
+  const urlVideo = useMemo(() => getVideoUrl(video.url), [video.url]);
 
   function onPause() {
     const playerRef = player.current;
     if (playerRef) {
-      const currentTime = playerRef.currentTime;
-      setVideoTimeCookie(video.id, currentTime);
+      setVideoTimeCookie(video.id, playerRef.currentTime);
     }
   }
 
@@ -101,97 +51,12 @@ export function Player({ video }: { video: Video }) {
   }
 
   useEffect(() => {
-    const view = async () => {
-      try {
-        const ipAddress = await getIPAddress();
-        const geoData = await getGeolocation(ipAddress);
-
-        const playerData = {
-          ...geoData,
-          userIp: ipAddress,
-          agent: navigator.userAgent,
-          deviceType: /Mobi|Android/i.test(navigator.userAgent)
-            ? "Mobile"
-            : "Desktop",
-        };
-
-        setPlayerData(playerData);
-
-        await addViewUnique.mutateAsync({
-          ...playerData,
-          videoId: video.id,
-        });
-      } catch (error) {
-        console.error("Erro ao adicionar visualização única:", error);
-      }
-    };
-
-    view();
-  }, [video.id]);
-
-  useEffect(() => {
-    if (video) {
-      const handlePlay = () => {
-        const currentPlayTime = player.current?.currentTime || 0; // Pegue o tempo atual do player
-        setPlayStartTime(currentPlayTime);
-      };
-
-      const handlePause = async () => {
-        const currentPauseTime = player.current?.currentTime || 0; // Pegue o tempo atual do player
-        if (playStartTime !== null) {
-          try {
-            await addViewTimestamps.mutateAsync({
-              ...playerData!,
-              endTimestamp: currentPauseTime,
-              startTimestamp: playStartTime,
-              videoId: video.id,
-            });
-          } catch (error) {
-            console.error("Erro ao adicionar timestamps:", error);
-          }
-        }
-      };
-
-      const playerInstance = player.current;
-      if (playerInstance) {
-        playerInstance.addEventListener("play", handlePlay);
-        playerInstance.addEventListener("pause", handlePause);
-
-        return () => {
-          playerInstance.removeEventListener("play", handlePlay);
-          playerInstance.removeEventListener("pause", handlePause);
-        };
-      }
-    }
-  }, [playStartTime, addViewTimestamps, playerData, video]);
-
-  useEffect(() => {
     const savedTime = getVideoTimeFromCookie(video.id);
     if (savedTime) {
       setLastTime(savedTime);
       setShowResumeMenu(true);
     }
   }, [video.id]);
-
-  const handleEnded = async () => {
-    // Garante que a requisição será feita apenas se o vídeo terminou, e playEnd ainda não foi setado
-    if (ended && playStartTime !== null && playerData && !playEnd) {
-      const currentTime = player.current?.currentTime || 0;
-      const duration = player.current?.duration || currentTime;
-
-      try {
-        await addViewTimestamps.mutateAsync({
-          ...playerData,
-          endTimestamp: duration,
-          startTimestamp: playStartTime,
-          videoId: video.id,
-        });
-        setPlayEnd(true); // Marca que a requisição foi feita
-      } catch (error) {
-        console.error("Erro ao adicionar timestamps:", error);
-      }
-    }
-  };
 
   return (
     <>
@@ -205,12 +70,11 @@ export function Player({ video }: { video: Video }) {
             src={urlVideo}
             onPause={onPause}
             posterLoad="visible"
-            onCanPlay={onCanPlay}
             controls={false}
             crossOrigin="anonymous"
             onEnded={handleEnded}
             aspectRatio={video.format}
-            onProviderChange={onProviderChange}
+            onProviderChange={configureProvider}
             className="w-full h-full relative text-white bg-transparent font-sans overflow-hidden rounded-md ring-media-focus data-[focus]:ring-4"
           >
             <MediaProvider>
@@ -229,7 +93,6 @@ export function Player({ video }: { video: Video }) {
 
             <VideoLayout video={video} chapters={video.Chapter} />
           </MediaPlayer>
-          {/* {video.watchingNow && <WatchingNow video={video} />} */}
         </div>
       )}
     </>

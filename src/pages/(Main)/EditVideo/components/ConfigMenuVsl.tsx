@@ -1,17 +1,17 @@
-import { z } from 'zod'
-import { motion } from 'framer-motion'
-import { useEffect, useState, type FC } from 'react'
-import { useVideo } from '../../../../hooks'
-import { filterObject } from '../../../../utils'
-import { useForm, Controller, useFieldArray } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { cardVariants } from '../../../../animations'
-import { AddButtonModal, addButtonSchema } from './AddButtonModal'
+import { z } from "zod";
+import { motion } from "framer-motion";
+import { useEffect, useState, type FC } from "react";
+import { useVideo } from "../../../../hooks";
+import { filterObject } from "../../../../utils";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cardVariants } from "../../../../animations";
+import { AddButtonModal, addButtonSchema } from "./AddButtonModal";
 import type {
   EditPlayerVideoProps,
   Video,
   VideoButton,
-} from '../../../../types'
+} from "../../../../types";
 import {
   Button,
   CheckBox,
@@ -19,8 +19,8 @@ import {
   InputSelect,
   toastError,
   toastSuccess,
-} from '../../../../components'
-import * as Accordion from '@radix-ui/react-accordion'
+} from "../../../../components";
+import * as Accordion from "@radix-ui/react-accordion";
 import {
   ClockCounterClockwise,
   DotsThree,
@@ -30,19 +30,19 @@ import {
   Link,
   Play,
   UsersThree,
-} from '@phosphor-icons/react'
-import { ChevronDownIcon, VideoIcon } from 'lucide-react'
-import { AccordionMenuButton } from './AccordionMenuButton'
+} from "@phosphor-icons/react";
+import { ChevronDownIcon, VideoIcon } from "lucide-react";
+import { AccordionMenuButton } from "./AccordionMenuButton";
 
 interface ConfigMenuProps {
-  video: Video
-  setVideo: (video: Video | ((prevVideo: Video) => Video)) => void
+  video: Video;
+  setVideo: (video: Video | ((prevVideo: Video) => Video)) => void;
 }
 
 const schema = z.object({
   name: z.string().optional(),
   thumbnail: z.string().optional(),
-  format: z.enum(['9/16', '16/9']).optional(),
+  format: z.enum(["9/16", "16/9"]).optional(),
   color: z.string().optional(),
   colorSmartPlayers: z.string().optional(),
   playAndPause: z.boolean().optional(),
@@ -69,90 +69,96 @@ const schema = z.object({
   buttonsActive: z.boolean().optional(),
   VideoButtons: z.array(addButtonSchema).optional(),
   fictitiousProgressHeight: z.string().optional(),
-})
+  isFormActive: z.boolean().optional(),
+  showIn: z.string().optional(),
+  inputEmail: z.boolean().optional(),
+  inputName: z.boolean().optional(),
+  inputPhone: z.boolean().optional(),
+});
 
-type FormValues = z.infer<typeof schema>
+type FormValues = z.infer<typeof schema>;
 
 export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
-  const { editPlayerVideo } = useVideo()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const { editPlayerVideo } = useVideo();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditButton, setIsEditButton] = useState<{
-    button: VideoButton
-    index: number
-  }>()
+    button: VideoButton;
+    index: number;
+  }>();
 
   const {
     watch,
     control,
     setValue,
+    register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-  })
+  });
 
-  const watchedFields = watch()
+  const watchedFields = watch();
 
   const { append, remove, update } = useFieldArray({
     control,
-    name: 'VideoButtons',
-  })
+    name: "VideoButtons",
+  });
 
   const handleAddButton = (button: VideoButton) => {
-    append(button)
+    append(button);
 
-    return 'success'
-  }
+    return "success";
+  };
 
   const handleEditButton = (updatedButton: VideoButton, index: number) => {
-    update(index, updatedButton)
+    update(index, updatedButton);
 
-    return 'success'
-  }
+    return "success";
+  };
 
   const onSubmit = async (data: FormValues) => {
-    const { success } = await editPlayerVideo.mutateAsync({
+    await editPlayerVideo.mutateAsync({
       dataEdit: data as EditPlayerVideoProps,
       videoId: video.id,
-    })
-    if (success) {
-      toastSuccess({
-        text: 'Player editado com sucesso',
-      })
-    } else {
-      toastError({
-        text: 'Algo deu errado, tente mais tarde',
-      })
-    }
-  }
+    });
+  };
 
   useEffect(() => {
     setVideo((prevVideo: Video) => {
       const updatedVideo: Video = {
+        VideoForm: {
+          id: "1",
+          videoId: "1",
+          isActive: true,
+          showIn: "00:00:10",
+          inputEmail: true,
+          inputName: true,
+          inputPhone: true,
+        },
         ...prevVideo,
         ...(watchedFields as unknown as Partial<Video>),
-      }
-
+      };
+      console.log(updatedVideo);
       if (JSON.stringify(updatedVideo) !== JSON.stringify(prevVideo)) {
-        return updatedVideo
+        return updatedVideo;
       }
 
-      return prevVideo
-    })
-  }, [watchedFields, setVideo])
+      return prevVideo;
+    });
+  }, [watchedFields, setVideo]);
 
   useEffect(() => {
-    const schemaKeys = Object.keys(schema.shape) as (keyof FormValues)[]
+    const schemaKeys = Object.keys(schema.shape) as (keyof FormValues)[];
 
-    const filteredVideoData = filterObject(video, schemaKeys)
+    const filteredVideoData = filterObject(video, schemaKeys);
 
     schemaKeys.forEach((key) => {
-      const value = filteredVideoData[key]
+      const value = filteredVideoData[key];
       if (value !== null && value !== undefined) {
-        setValue(key, value)
+        setValue(key, value);
       }
-    })
-  }, [video, setValue])
+    });
+  }, [video, setValue]);
 
   return (
     <>
@@ -238,10 +244,10 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                         render={({ field }) => (
                           <CheckBox
                             onCheckedChange={(checked) => {
-                              field.onChange(checked ? '9/16' : undefined)
-                              console.log('Formato 9/16', checked)
+                              field.onChange(checked ? "9/16" : undefined);
+                              console.log("Formato 9/16", checked);
                             }}
-                            checked={field.value === '9/16'}
+                            checked={field.value === "9/16"}
                           />
                         )}
                       />
@@ -257,10 +263,10 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                         render={({ field }) => (
                           <CheckBox
                             onCheckedChange={(checked) => {
-                              field.onChange(checked ? '16/9' : undefined)
-                              console.log('Formato 16/9', checked)
+                              field.onChange(checked ? "16/9" : undefined);
+                              console.log("Formato 16/9", checked);
                             }}
-                            checked={field.value === '16/9'}
+                            checked={field.value === "16/9"}
                           />
                         )}
                       />
@@ -375,11 +381,11 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                       <InputSelect
                         {...field}
                         options={[
-                          { value: '12px', label: '12px' },
-                          { value: '14px', label: '14px' },
-                          { value: '16px', label: '16px' },
-                          { value: '18px', label: '18px' },
-                          { value: '20px', label: '20px' },
+                          { value: "12px", label: "12px" },
+                          { value: "14px", label: "14px" },
+                          { value: "16px", label: "16px" },
+                          { value: "18px", label: "18px" },
+                          { value: "20px", label: "20px" },
                         ]}
                         className="w-full h-10 mt-4 mb-4"
                         placeholder="Tamanho da fonte"
@@ -576,20 +582,20 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                       <InputSelect
                         {...field}
                         options={[
-                          { value: '12px', label: '12px' },
-                          { value: '14px', label: '14px' },
-                          { value: '16px', label: '16px' },
-                          { value: '18px', label: '18px' },
-                          { value: '20px', label: '20px' },
-                          { value: '24px', label: '24px' },
-                          { value: '26px', label: '26px' },
-                          { value: '28px', label: '28px' },
-                          { value: '30px', label: '30px' },
-                          { value: '32px', label: '32px' },
-                          { value: '34px', label: '34px' },
-                          { value: '36px', label: '36px' },
-                          { value: '38px', label: '38px' },
-                          { value: '40px', label: '40px' },
+                          { value: "12px", label: "12px" },
+                          { value: "14px", label: "14px" },
+                          { value: "16px", label: "16px" },
+                          { value: "18px", label: "18px" },
+                          { value: "20px", label: "20px" },
+                          { value: "24px", label: "24px" },
+                          { value: "26px", label: "26px" },
+                          { value: "28px", label: "28px" },
+                          { value: "30px", label: "30px" },
+                          { value: "32px", label: "32px" },
+                          { value: "34px", label: "34px" },
+                          { value: "36px", label: "36px" },
+                          { value: "38px", label: "38px" },
+                          { value: "40px", label: "40px" },
                         ]}
                         className="w-full h-10 mt-4 mb-4"
                         placeholder="Tamanho da fonte"
@@ -691,7 +697,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                               />
                             </div>
                           </div>
-                        )
+                        );
                       })}
                   </div>
 
@@ -699,9 +705,10 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     type="button"
                     variant="outline"
                     className="w-full h-14"
-                    
                     onClick={() => setIsModalOpen(!isModalOpen)}
-                  >Adicionar botão</Button>
+                  >
+                    Adicionar botão
+                  </Button>
                 </motion.div>
               </Accordion.Content>
             </Accordion.Item>
@@ -739,6 +746,97 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                     />
                     <span className="text-[#909090] text-sm">Ativo</span>
                   </div>
+                </motion.div>
+              </Accordion.Content>
+            </Accordion.Item>
+
+            <Accordion.Item
+              value="form"
+              className="bg-[#1D1D1D] text-white rounded-lg py-5 px-4"
+            >
+              <Accordion.Header className="flex justify-between items-center">
+                <Accordion.Trigger className="w-full flex items-center justify-start gap-2">
+                  <ClockCounterClockwise size={20} />
+                  Formulário
+                </Accordion.Trigger>
+                <Accordion.Trigger className="flex items-center">
+                  <ChevronDownIcon className="transition-transform duration-300 ease-in-out AccordionChevron" />
+                </Accordion.Trigger>
+              </Accordion.Header>
+              <Accordion.Content className="mt-2">
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={cardVariants}
+                >
+                  <div className="flex gap-2 my-4">
+                    <Controller
+                      control={control}
+                      name="isFormActive"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">Ativo</span>
+                  </div>
+                  <div className="flex gap-2 my-4">
+                    <Controller
+                      control={control}
+                      name="inputEmail"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">
+                      Input E-mail Ativo
+                    </span>
+                  </div>
+                  <div className="flex gap-2 my-4">
+                    <Controller
+                      control={control}
+                      name="inputName"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">
+                      Input Name Ativo
+                    </span>
+                  </div>
+                  <div className="flex gap-2 my-4">
+                    <Controller
+                      control={control}
+                      name="inputPhone"
+                      render={({ field }) => (
+                        <CheckBox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <span className="text-[#909090] text-sm">
+                      Input Telefone Ativo
+                    </span>
+                  </div>
+                  <span className="text-[#909090] text-sm">Mostrar em:</span>
+                  <Input
+                    {...register("showIn")}
+                    id="showIn"
+                    type="text"
+                    mask="99:99:99"
+                    placeholder="hh:mm:ss"
+                    className="w-full h-10 mt-2 mb-2"
+                    onChange={(e) => setValue("showIn", e.target.value)}
+                  />
                 </motion.div>
               </Accordion.Content>
             </Accordion.Item>
@@ -923,7 +1021,7 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
                   />
 
                   <p className="text-[#909090] text-sm">
-                    Indicamos hospedar as imagens no{' '}
+                    Indicamos hospedar as imagens no{" "}
                     <a
                       href="https://postimages.org"
                       className="text-[#187BF0]"
@@ -985,5 +1083,5 @@ export const ConfigMenuVsl: FC<ConfigMenuProps> = ({ setVideo, video }) => {
         handleEditButton={handleEditButton}
       />
     </>
-  )
-}
+  );
+};

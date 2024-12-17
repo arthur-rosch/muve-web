@@ -57,6 +57,11 @@ export const Sidebar: FC = () => {
       label: 'Análise',
     },
     {
+      id: 'lead/video',
+      icon: <BarChart3 size={20} />,
+      label: 'Leads',
+    },
+    {
       id: 'https://ajuda.muveplayer.com/novidades/novidades-no-muve',
       icon: <Newspaper size={20} />,
       label: 'Novidades',

@@ -27,8 +27,8 @@ export const EditVideo = () => {
   const [video, setVideo] = useState<Video>(location.state.video)
 
   return (
-    <section className="w-full max-h-screen mx-8 overflow-auto pr-4  pb-28">
-      <HeaderFolder name="Teste" />
+    <section className="w-full max-h-screen mx-8 overflow-auto pr-4 pb-28">
+      <HeaderFolder name={video.name} />
 
       <div className="flex w-full max-h-[40rem]">
         <div className="w-full">

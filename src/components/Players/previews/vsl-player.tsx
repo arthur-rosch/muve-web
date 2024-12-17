@@ -1,15 +1,16 @@
-import { SpeakerSimpleSlash } from '@phosphor-icons/react'
-import { PlayIcon } from 'lucide-react'
-import type { Video } from '../../../types'
+import { SpeakerSimpleSlash } from "@phosphor-icons/react";
+import { PlayIcon } from "lucide-react";
+import type { Video } from "../../../types";
 import {
   ProgressBar,
   WatchingNow,
   VideoButtonCtaBelow,
   VideoButtonCtaInside,
   ContinueWatching,
-} from '../components'
-import { useEffect, useRef, useState, useMemo } from 'react'
-import { VideoLayout } from '../layouts/videoLayout'
+  VideoFormModal,
+} from "../components";
+import { useEffect, useRef, useState, useMemo } from "react";
+import { VideoLayout } from "../layouts/videoLayout";
 
 import {
   Poster,
@@ -24,139 +25,148 @@ import {
   isYouTubeProvider,
   isHLSProvider,
   MediaPlayerInstance,
-} from '@vidstack/react'
+} from "@vidstack/react";
 
-import '@vidstack/react/player/styles/base.css'
-import '@vidstack/react/player/styles/default/theme.css'
-import '@vidstack/react/player/styles/default/layouts/audio.css'
-import '@vidstack/react/player/styles/default/layouts/video.css'
-import { getVideoTimeFromCookie, getYoutubeVideoId, setVideoTimeCookie } from '../../../utils'
+import "@vidstack/react/player/styles/base.css";
+import "@vidstack/react/player/styles/default/theme.css";
+import "@vidstack/react/player/styles/default/layouts/audio.css";
+import "@vidstack/react/player/styles/default/layouts/video.css";
+import {
+  getVideoTimeFromCookie,
+  getYoutubeVideoId,
+  setVideoTimeCookie,
+} from "../../../utils";
 
 interface PreviewPlayerProps {
-  video: Video
+  video: Video;
 }
 
 export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
-  const playerRef = useRef<MediaPlayerInstance>(null)
+  const playerRef = useRef<MediaPlayerInstance>(null);
 
-  const [progress, setProgress] = useState(0)
-  const [showResumeMenu, setShowResumeMenu] = useState(false)
-  const [lastTime, setLastTime] = useState<number | null>(null)
-  const [transitionDuration, setTransitionDuration] = useState(0)
+  const [progress, setProgress] = useState(0);
+  const [showResumeMenu, setShowResumeMenu] = useState(false);
+  const [lastTime, setLastTime] = useState<number | null>(null);
+  const [transitionDuration, setTransitionDuration] = useState(0);
 
-  const [overlayVisible, setOverlayVisible] = useState(!!video.smartAutoPlay)
-  const [smartAutoPlay, setSmartAutoPlay] = useState(false)
+  const [overlayVisible, setOverlayVisible] = useState(!!video.smartAutoPlay);
+  const [smartAutoPlay, setSmartAutoPlay] = useState(false);
 
-  const { currentTime, duration, paused, ended } = useMediaStore(playerRef)
+  const { currentTime, duration, paused, ended } = useMediaStore(playerRef);
 
   useEffect(() => {
     if (video.smartAutoPlay) {
-      setSmartAutoPlay(true)
-      const player = playerRef.current
+      setSmartAutoPlay(true);
+      const player = playerRef.current;
       if (player) {
-        player.muted = true
-        player.play()
-        player.play()
-        setOverlayVisible(true)
+        player.muted = true;
+        player.play();
+        setOverlayVisible(true);
       }
     }
-  }, [video.smartAutoPlay])
+    if (video.VideoForm?.isActive) {
+      const player = playerRef.current;
+      if (player) {
+        player.muted = true;
+        player.play();
+      }
+    }
+  }, [video.smartAutoPlay, video.VideoForm?.isActive]);
 
   useEffect(() => {
     if (!paused) {
       if (currentTime <= 1) {
-        const newProgress = Math.min((currentTime / 1) * 40, 40)
-        setProgress(newProgress)
-        setTransitionDuration(300)
+        const newProgress = Math.min((currentTime / 1) * 40, 40);
+        setProgress(newProgress);
+        setTransitionDuration(300);
       } else if (duration > 1) {
-        const remainingTime = duration - 1
-        const timeElapsedSinceFastStart = currentTime - 1
+        const remainingTime = duration - 1;
+        const timeElapsedSinceFastStart = currentTime - 1;
         const additionalProgress =
-          (timeElapsedSinceFastStart / remainingTime) * 60
-        const newProgress = Math.min(40 + additionalProgress, 100)
-        setProgress(newProgress)
-        setTransitionDuration(1000)
+          (timeElapsedSinceFastStart / remainingTime) * 60;
+        const newProgress = Math.min(40 + additionalProgress, 100);
+        setProgress(newProgress);
+        setTransitionDuration(1000);
       }
     }
-  }, [currentTime, duration, paused])
+  }, [currentTime, duration, paused]);
 
   function onCanPlay(
     detail: MediaCanPlayDetail,
-    nativeEvent: MediaCanPlayEvent,
+    nativeEvent: MediaCanPlayEvent
   ) {
     // Função para lidar com o evento onCanPlay
   }
 
   function onProviderChange(
     provider: MediaProviderAdapter | null,
-    nativeEvent: MediaProviderChangeEvent,
+    nativeEvent: MediaProviderChangeEvent
   ) {
     if (provider) {
       if (isYouTubeProvider(provider)) {
-        provider.cookies = true
+        provider.cookies = true;
       }
 
       if (isHLSProvider(provider)) {
-        provider.config = {}
+        provider.config = {};
       }
     } else {
-      console.error('Provider não está disponível.', provider)
+      console.error("Provider não está disponível.", provider);
     }
   }
 
   function handleResume() {
-    const player = playerRef.current
+    const player = playerRef.current;
     if (player && lastTime) {
-      player.currentTime = lastTime
-      player.play()
-      setShowResumeMenu(false)
+      player.currentTime = lastTime;
+      player.play();
+      setShowResumeMenu(false);
     }
   }
 
   function handleRestart() {
-    const player = playerRef.current
+    const player = playerRef.current;
     if (player) {
-      player.currentTime = 0
-      player.play()
-      setShowResumeMenu(false)
+      player.currentTime = 0;
+      player.play();
+      setShowResumeMenu(false);
     }
   }
 
-
   const urlVideo = useMemo(() => {
     if (isYouTubeProvider(video.url)) {
-      const videoId = getYoutubeVideoId(video.url)
-      return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&controls=0&disablekb=1&playsinline=1&cc_load_policy=0&showinfo=0&modestbranding=0&rel=0&loop=0&enablejsapi=1`
+      const videoId = getYoutubeVideoId(video.url);
+      return `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&controls=0&disablekb=1&playsinline=1&cc_load_policy=0&showinfo=0&modestbranding=0&rel=0&loop=0&enablejsapi=1`;
     }
-    return video.url
-  }, [video.url])
+    return video.url;
+  }, [video.url]);
 
   function handlePlay() {
-    const player = playerRef.current
+    const player = playerRef.current;
     if (player) {
-      player.muted = false
+      player.muted = false;
       if (overlayVisible) {
-        player.currentTime = 0
+        player.currentTime = 0;
       }
-      player.play()
-      setOverlayVisible(false)
+      player.play();
+      setOverlayVisible(false);
     }
   }
 
   function onPause() {
-    const player = playerRef.current
+    const player = playerRef.current;
     if (player) {
-      const currentTime = player.currentTime
-      setVideoTimeCookie(video.id, currentTime)
+      const currentTime = player.currentTime;
+      setVideoTimeCookie(video.id, currentTime);
     }
   }
   useEffect(() => {
-    const savedTime = getVideoTimeFromCookie(video.id)
+    const savedTime = getVideoTimeFromCookie(video.id);
     if (savedTime) {
-      setLastTime(savedTime)
-      setShowResumeMenu(true)
+      setLastTime(savedTime);
+      setShowResumeMenu(true);
     }
-  }, [video.id])
+  }, [video.id]);
 
   return (
     <div className="relative w-full h-full z-0">
@@ -197,7 +207,7 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
                   className="w-full h-auto rounded-md" // Estilos opcionais para a imagem
                 />
                 <PlayButton
-                  className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
+                  className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? "bg-blue-500" : ""}`}
                   style={video.color ? { backgroundColor: video.color } : {}}
                 >
                   <PlayIcon className="w-12 h-12 translate-x-px" />
@@ -205,7 +215,7 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
               </div>
             ) : (
               <PlayButton
-                className={`flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
+                className={`flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? "bg-blue-500" : ""}`}
                 style={video.color ? { backgroundColor: video.color } : {}}
               >
                 <PlayIcon className="w-12 h-12 translate-x-px" />
@@ -228,7 +238,7 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
                 />
 
                 <PlayButton
-                  className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
+                  className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? "bg-blue-500" : ""}`}
                   style={video.color ? { backgroundColor: video.color } : {}}
                 >
                   <PlayIcon className="w-12 h-12 translate-x-px" />
@@ -236,7 +246,7 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
               </div>
             ) : (
               <PlayButton
-                className={`flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? 'bg-blue-500' : ''}`}
+                className={`flex items-center justify-center play-button bg-opacity-80 w-32 h-32 rounded-full hover:opacity-100 ${!video.color ? "bg-blue-500" : ""}`}
                 style={video.color ? { backgroundColor: video.color } : {}}
               >
                 <PlayIcon className="w-12 h-12 translate-x-px" />
@@ -270,7 +280,7 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
             progress={progress}
             size={video.fictitiousProgressHeight}
             transitionDuration={transitionDuration}
-            color={video.color ? video.color : 'rgb(59 130 246)'}
+            color={video.color ? video.color : "rgb(59 130 246)"}
           />
         )}
 
@@ -295,13 +305,20 @@ export function VslPreviewPlayer({ video }: PreviewPlayerProps) {
           overlayVisible={overlayVisible}
         />
       )}
-      
-       {video.continueWatching && showResumeMenu && (
+      {video.VideoForm && (
+        <VideoFormModal
+          videoForm={video.VideoForm}
+          handleSubmit={() => console.log("oi")}
+          handleClose={() => console.log("oi")}
+        />
+      )}
+
+      {video.continueWatching && showResumeMenu && (
         <ContinueWatching
           handleRestart={handleRestart}
           handleResume={handleResume}
         />
       )}
     </div>
-  )
+  );
 }

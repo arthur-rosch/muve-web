@@ -1,32 +1,32 @@
-import { useEffect, type FC } from 'react'
-import type { Video } from '../../../../types'
-import { cardVariants } from '../../../../animations'
+import { useEffect, type FC } from "react";
+import type { Video } from "../../../../types";
+import { cardVariants } from "../../../../animations";
 import {
   Input,
   Button,
   CustomModal,
   toastError,
   toastSuccess,
-} from '../../../../components'
+} from "../../../../components";
 
 interface ChapterData {
-  title: string
-  startTime: string
-  endTime: string
+  title: string;
+  startTime: string;
+  endTime: string;
 }
 
 interface AddChapterModalProps {
-  video: Video
-  isModalOpen: boolean
-  chapterData: ChapterData
-  handleAddChapter: () => string
-  handleEditChapter: (index: number) => string
-  setIsModalOpen: (value: boolean) => void
-  setChapterData: React.Dispatch<React.SetStateAction<ChapterData>>
+  video: Video;
+  isModalOpen: boolean;
+  chapterData: ChapterData;
+  handleAddChapter: () => string;
+  handleEditChapter: (index: number) => string;
+  setIsModalOpen: (value: boolean) => void;
+  setChapterData: React.Dispatch<React.SetStateAction<ChapterData>>;
   isEditChapter?: {
-    chapter: ChapterData
-    index: number
-  }
+    chapter: ChapterData;
+    index: number;
+  };
 }
 
 export const AddChapterModal: FC<AddChapterModalProps> = ({
@@ -40,55 +40,55 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
   handleAddChapter,
 }) => {
   const handleValidationsChapters = () => {
-    let result
+    let result;
     if (isEditChapter) {
-      result = handleEditChapter(isEditChapter.index)
+      result = handleEditChapter(isEditChapter.index);
     } else {
-      result = handleAddChapter()
+      result = handleAddChapter();
     }
 
     const errorMessages = {
       durationError:
-        'Não é possível adicionar um capítulo que ultrapassa a duração do vídeo',
+        "Não é possível adicionar um capítulo que ultrapassa a duração do vídeo",
       overlapError:
-        'Não é possível adicionar um capítulo que sobreponha um intervalo existente.',
-      fieldError: 'Todos os campos são obrigatório',
+        "Não é possível adicionar um capítulo que sobreponha um intervalo existente.",
+      fieldError: "Todos os campos são obrigatório",
       timeError:
-        'O horário de início não pode ser maior ou igual ao horário de término.',
-    }
+        "O horário de início não pode ser maior ou igual ao horário de término.",
+    };
 
     // Verifica os erros de validação
     if (Object.values(errorMessages).includes(result)) {
-      toastError({ text: result })
+      toastError({ text: result });
     }
     // Se não houver erro, exibe a mensagem de sucesso
-    else if (result === 'success') {
-      toastSuccess({ text: 'Capítulo adicionado com sucesso' })
+    else if (result === "success") {
+      toastSuccess({ text: "Capítulo adicionado com sucesso" });
     }
-  }
+  };
 
   useEffect(() => {
     setChapterData({
-      title: isEditChapter?.chapter.title ?? '',
-      startTime: isEditChapter?.chapter.startTime ?? '',
-      endTime: isEditChapter?.chapter.endTime ?? '',
-    })
+      title: isEditChapter?.chapter.title ?? "",
+      startTime: isEditChapter?.chapter.startTime ?? "",
+      endTime: isEditChapter?.chapter.endTime ?? "",
+    });
   }, [
     isEditChapter?.chapter.endTime,
     isEditChapter?.chapter.startTime,
     isEditChapter?.chapter.title,
     setChapterData,
-  ])
+  ]);
 
   function setValue() {
-    throw new Error('Function not implemented.')
+    throw new Error("Function not implemented.");
   }
 
   return (
     <CustomModal.Root
       isOpen={isModalOpen}
       setIsOpen={setIsModalOpen}
-      styles={'h-auto w-[50rem] flex flex-col m-auto'}
+      styles={"h-auto w-[50rem] flex flex-col m-auto"}
     >
       <CustomModal.Title
         title={video.name}
@@ -130,15 +130,12 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
                   placeholder="hh:mm:ss"
                   className="w-full h-10 mt-2 mb-2"
                   value={chapterData.startTime}
-                  onChange={(e) =>
-                  {
+                  onChange={(e) => {
                     setChapterData((prev: ChapterData) => ({
                       ...prev,
                       startTime: e.target.value,
-                    }))
-                  }
-
-                  }
+                    }));
+                  }}
                 />
               </div>
 
@@ -149,7 +146,6 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
                 <Input
                   id="endTime"
                   type="text"
-                  
                   mask="99:99:99"
                   placeholder="hh:mm:ss"
                   className="w-full h-10 mt-2 mb-2"
@@ -169,8 +165,6 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
           <Button
             type="button"
             variant="danger"
-            
-            
             onClick={() => setIsModalOpen(false)}
             className="w-full flex items-center justify-center py-3 px-4 h-10"
           >
@@ -179,8 +173,6 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
           <Button
             type="button"
             variant="primary"
-            
-            
             onClick={handleValidationsChapters}
             className="w-full flex items-center justify-center py-3 px-4 h-10"
           >
@@ -189,5 +181,5 @@ export const AddChapterModal: FC<AddChapterModalProps> = ({
         </div>
       </>
     </CustomModal.Root>
-  )
-}
+  );
+};

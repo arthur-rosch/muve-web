@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { ChevronUp } from "lucide-react";
-import { PlanCard } from "./plan-card";
 import { BottomSheet } from "./BottomSheet";
 import { motion } from "framer-motion";
 import { plans } from "./constants";
+import { PlanCard } from "@/components";
 
 interface Plan {
   name: string;
@@ -26,7 +26,7 @@ export function PlanDisplay({
   return (
     <>
       {/* Mobile View */}
-      <div className="block lg:hidden space-y-4">
+      <div className="block space-y-4">
         <PlanCard {...plans[selectedPlanIndex]} selected={true} />
         <button
           onClick={() => setIsBottomSheetOpen(true)}
@@ -63,17 +63,6 @@ export function PlanDisplay({
         </BottomSheet>
       </div>
 
-      {/* Desktop View */}
-      <div className="hidden lg:block space-y-4">
-        {plans.map((plan, index) => (
-          <PlanCard
-            key={plan.name}
-            {...plan}
-            selected={selectedPlanIndex === index}
-            onClick={() => onPlanSelect(index)}
-          />
-        ))}
-      </div>
     </>
   );
 }

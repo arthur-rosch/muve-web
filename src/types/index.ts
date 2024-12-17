@@ -234,8 +234,23 @@ export interface EditPlayerVideoProps {
   UrlCoverImageOfFinished?: string;
   chapterMenu?: boolean;
   buttonsActive?: boolean;
+  isFormActive?: boolean;
+  showIn?: string;
+  inputName?: boolean;
+  inputPhone?: boolean;
+  inputEmail?: boolean;
   Chapter?: Chapters[];
   Buttons?: VideoButton[];
+}
+
+export interface VideoForm {
+  id: string;
+  inputEmail: boolean;
+  inputPhone: boolean;
+  inputName: boolean;
+  isActive: boolean;
+  showIn: string;
+  videoId: string;
 }
 
 export interface Video {
@@ -249,6 +264,7 @@ export interface Video {
   format: "9/16" | "16/9";
   type: "Vsl" | "Curso";
   color?: string;
+  VideoForm?: VideoForm;
   Chapter: Chapters[] | [];
   VideoButtons: VideoButton[] | [];
   fictitiousProgress?: boolean;

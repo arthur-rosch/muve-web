@@ -10,3 +10,6 @@ export * from "./useUpgradeModal";
 export * from "./useRetentionData";
 export * from "./useDeviceData";
 export * from "./useCountryData";
+export * from "./useVideoAnalytics";
+export * from "./useVideoPlayer";
+export * from "./useVideoPlayer";

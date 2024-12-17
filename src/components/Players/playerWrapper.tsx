@@ -1,71 +1,43 @@
-import axios from "axios";
+import { useEffect } from "react";
 import { Player } from "./player";
-import host from "../../utils/host";
+import { useVideo } from "../../hooks";
 import { PlayerVsl } from "./playerVsl";
-import type { Video } from "../../types";
-import { useEffect, useState } from "react";
+import { setupPreconnect } from "../../utils";
+import { LoadingState, ErrorState } from "../";
 import { useLocation } from "react-router-dom";
 
-export function PlayerWrapper() {
+function useVideoId() {
   const location = useLocation();
-  const [video, setVideo] = useState<Video | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const searchParams = new URLSearchParams(location.search);
+  return searchParams.get("videoId");
+}
 
-  const getVideoIdFromQuery = () => {
-    const searchParams = new URLSearchParams(location.search);
-    return searchParams.get("videoId");
-  };
-  const fetchVideo = async () => {
-    const videoId = getVideoIdFromQuery();
+export function PlayerWrapper() {
+  const videoId = useVideoId();
+  const { getVideoById } = useVideo(videoId!);
+  const { data, isLoading, error } = getVideoById(true, videoId);
 
-    if (!videoId) {
-      setErrorMessage("ID do vídeo não encontrado na URL.");
-      setIsLoading(false);
-      return;
-    }
+  //web.muveplayer.com/player?videoId=77d21fb3-d35e-40ee-8631-a42fbbce3f4b
 
-    try {
-      const response = await axios.get(`${host()}/video/${videoId}`);
-      const video = response.data.video;
-      if (video) {
-        setVideo(video);
-      } else {
-        setErrorMessage(response.data.message);
-      }
-    } catch (error: any) {
-      const errorMsg = error.response?.data?.message || "Erro ao buscar vídeo.";
-      console.error(errorMsg);
-      setErrorMessage(errorMsg);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const initializePlayer = async () => {
-      setIsLoading(true);
-      await fetchVideo();
-    };
-
-    initializePlayer();
-  }, [location.search]);
+  https: useEffect(() => {
+    setupPreconnect();
+  }, []);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingState />;
   }
 
-  if (errorMessage) {
-    return <div>{errorMessage}</div>;
+  if (error) {
+    return <ErrorState message={error.message} />;
   }
 
-  return video ? (
-    video.type === "Vsl" ? (
-      <PlayerVsl video={video} />
-    ) : (
-      <Player video={video} />
-    )
+  if (!data) {
+    return <ErrorState message="Vídeo não encontrado" />;
+  }
+
+  return data.type === "Vsl" ? (
+    <PlayerVsl video={data} />
   ) : (
-    <div>Vídeo não encontrado</div>
+    <Player video={data} />
   );
 }

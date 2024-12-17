@@ -86,9 +86,10 @@ export function LeadForm({ onSubmit, defaultPlan, isLoading }: LeadFormProps) {
         ))}
         <Button
           type="submit"
+          variant={"primary"}
           isLoading={isLoading}
           disabled={isLoading}
-          className="w-full py-7 mt-2 bg-[#187BF0] hover:bg-[#1569D3] text-white font-medium text-base md:text-lg"
+          className="w-full py-7 mt-2 font-medium text-base md:text-lg"
         >
           Criar Conta
         </Button>

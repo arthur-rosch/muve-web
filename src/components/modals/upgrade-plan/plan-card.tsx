@@ -50,7 +50,7 @@ export function PlanCard({
             <p className={cn(
               'text-xs mt-1',
               selected
-                ? 'text-white font-bold bg-[#1569D3] px-2 py-0.5 rounded-full inline-block'
+                ? 'text-white font-bold bg-green-500 px-2 py-0.5 rounded-full inline-block'
                 : 'text-[#8F9BBA]'
             )}>
               7 dias grátis
@@ -65,7 +65,7 @@ export function PlanCard({
         )}
       </div>
       {popular && (
-        <div className="bg-[#187BF0] text-center py-1 text-xs font-medium text-white">
+        <div className="bg-green-500 text-center py-1 text-xs font-medium text-white">
           Mais popular
         </div>
       )}

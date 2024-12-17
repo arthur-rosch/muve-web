@@ -26,7 +26,7 @@ export function FormField({
         render={({ field }) => (
           <Input
             {...field}
-            className="h-12 md:h-14 text-white placeholder-[#8F9BBA]/50 border-none focus-visible:ring-1 focus-visible:ring-[#187BF0] text-base"
+            className="h-12 md:h-12 text-base"
             type={type}
             id={name}
             placeholder={placeholder}

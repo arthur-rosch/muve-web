@@ -19,3 +19,4 @@ export * from "./errorMessages";
 export * from "./calculateRetentionData";
 export * from "./calculateDeviceData";
 export * from "./calculateCountryData";
+export * from "./preconnect";

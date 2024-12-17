@@ -5,7 +5,7 @@ import { Profile } from '../pages/(Main)/Profile'
 import { UserLayout } from '../layout/UserLayout'
 import { SplashScreen } from '../pages/SplashScreen'
 import { PlayerWrapper } from '../components/players/playerWrapper'
-import { Analytics, Dashboard, EditVideo, Folder } from '../pages/(Main)'
+import { Analytics, Dashboard, EditVideo, Folder, LeadVideos } from '../pages/(Main)'
 import { Login, ResetPassword, FirstAccess, Thanks, LeadCapture, SignUp, VerifyEmail } from '../pages/(Auth)'
 
 export function Router() {
@@ -29,7 +29,9 @@ export function Router() {
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/edit/video" element={<EditVideo />} />
+        <Route path="/lead/video" element={<LeadVideos />} />
       </Route>
+
 
       <Route path="/player" element={<PlayerWrapper />} />
     </Routes>
