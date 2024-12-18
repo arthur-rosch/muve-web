@@ -142,15 +142,20 @@ const signIn = useMutation({
   const checkJWT = useMutation({
     mutationFn: () => AuthService.checkJWT(),
     onSuccess: (response) => {
-      if(response.success && response.data) {
+      if (response.success && response.data) {
         dispatch(setUser(response.data.user));
-        navigate('/dashboard');
+        const currentPath = window.location.pathname;
+
+        if (currentPath === '/') {
+          navigate('/dashboard', { replace: true });
+        } else if (currentPath === '/login') {
+          navigate('/dashboard', { replace: true });
+        }
       } else {
-        console.log(response.error?.message!)
+        console.error(response.error?.message);
         handleError(response.error?.message!)
-        navigate('/login');
+        navigate('/login', { replace: true });
       }
-      
     },
     onError: (error) => handleError(error.message ),
   });
